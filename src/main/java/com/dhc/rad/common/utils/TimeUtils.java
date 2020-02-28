@@ -422,12 +422,12 @@ public class TimeUtils {
      * @Author: zhengXiang
      * @Date: 2020/2/28
      */
-    public static String getNextWeekEatDate() {
+    public static List<String> getNextWeekEatDate() {
         //获取当前时间下一周时间集合
         List<String> dateList = getNextWeekDateList();
         //去除下一周节假日日期
-        List<String> eatDateList = new ArrayList<>();
-        eatDateList = dateList.stream()
+        List<String> nextEatDateList = new ArrayList<>();
+        nextEatDateList = dateList.stream()
                 .filter(date -> {
                     Holiday holiday = holidayDao.getByDate(date);
                     return holiday == null;
@@ -435,9 +435,9 @@ public class TimeUtils {
                 .collect(Collectors.toList());
 
         //根据当前用户id 根据当前时间获取下一周1-7时间
-        String nextDate = eatDateList.stream().collect(Collectors.joining(","));
+//        String nextDate = eatDateList.stream().collect(Collectors.joining(","));
 
-        return nextDate;
+        return nextEatDateList;
     }
 
     /**
@@ -447,12 +447,12 @@ public class TimeUtils {
      * @Author: zhengXiang
      * @Date: 2020/2/28
      */
-    public static String getCurrentWeekEatDate() {
+    public static List<String> getCurrentWeekEatDate() {
         //获取当前时间当前周时间集合
         List<String> dateList = getCurrentWeekDateList();
         //去除当前周节假日日期
-        List<String> eatDateList = new ArrayList<>();
-        eatDateList = dateList.stream()
+        List<String> currentEatDateList = new ArrayList<>();
+        currentEatDateList = dateList.stream()
                 .filter(date -> {
                     Holiday holiday = holidayDao.getByDate(date);
                     return holiday == null;
@@ -460,9 +460,9 @@ public class TimeUtils {
                 .collect(Collectors.toList());
 
         //根据当前用户id 根据当前时间获取当前周1-7时间
-        String currentDate = eatDateList.stream().collect(Collectors.joining(","));
+//        String currentDate = eatDateList.stream().collect(Collectors.joining(","));
 
-        return currentDate;
+        return currentEatDateList;
     }
 
 }

@@ -189,7 +189,8 @@ public class WxOrderController extends BaseController {
     public Map<String,Object> findOrderNextWeekById(){
         Map<String,Object> returnMap = new HashMap<>();
         //获取nextWeekEatDate
-        String nextWeekEatDate = TimeUtils.getNextWeekEatDate();
+        List<String> nextWeekEatDateList = TimeUtils.getNextWeekEatDate();
+        String nextWeekEatDate = nextWeekEatDateList.stream().collect(Collectors.joining(","));
 
         String userId = UserUtils.getUser().getId();
         PzOrder order = new PzOrder();
@@ -197,7 +198,7 @@ public class WxOrderController extends BaseController {
         order.setEatDate(nextWeekEatDate);
         List<PzOrder> list = pzOrderService.findList(order);
 
-        returnMap.put("order", list.get(0));
+        returnMap.put("nextOrder", list.get(0));
         return returnMap;
     }
 
@@ -214,7 +215,8 @@ public class WxOrderController extends BaseController {
     public Map<String,Object> findOrderCurrentWeek(){
         Map<String,Object> returnMap = new HashMap<>();
         //获取currentWeekEatDate
-        String currentWeekEatDate = TimeUtils.getCurrentWeekEatDate();
+        List<String> currentWeekEatDateList = TimeUtils.getCurrentWeekEatDate();
+        String currentWeekEatDate = currentWeekEatDateList.stream().collect(Collectors.joining(","));
 
         String userId = UserUtils.getUser().getId();
         PzOrder order = new PzOrder();
@@ -222,7 +224,7 @@ public class WxOrderController extends BaseController {
         order.setEatDate(currentWeekEatDate);
         List<PzOrder> list = pzOrderService.findList(order);
 
-        returnMap.put("order", list.get(0));
+        returnMap.put("currentOrder", list.get(0));
         return returnMap;
     }
 

@@ -5,8 +5,12 @@ package com.dhc.rad.common.utils;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
+import com.dhc.rad.modules.holiday.dao.HolidayDao;
+import com.dhc.rad.modules.holiday.entity.Holiday;
 import org.apache.commons.lang3.time.DateFormatUtils;
+
 
 /**
  * 时间计算工具类
@@ -16,48 +20,9 @@ import org.apache.commons.lang3.time.DateFormatUtils;
  */
 public class TimeUtils {
 
-    /**
-     * @Description: 获取当前日期的下周一到下周日的所有日期集合
-     * @Param: null
-     * @return:  List<String>
-     * @Author: zhengXiang
-     * @Date: 2021/4/28
-     */
-    public static List<String> getNextWeekDateList() {
-        Calendar cal1 = Calendar.getInstance();
-        Calendar cal2 = Calendar.getInstance();
+    public static SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    private static HolidayDao holidayDao = SpringContextHolder.getBean(HolidayDao.class);
 
-        cal1.setTime(new Date());
-
-        cal2.setTime(new Date());
-        // 获得当前日期是一个星期的第几天
-        int dayWeek = cal1.get(Calendar.DAY_OF_WEEK);
-
-        if (dayWeek == 1) {
-            cal1.add(Calendar.DAY_OF_MONTH, 1);
-            cal2.add(Calendar.DAY_OF_MONTH, 7);
-        } else {
-            cal1.add(Calendar.DAY_OF_MONTH, 1 - dayWeek + 8);
-            cal2.add(Calendar.DAY_OF_MONTH, 1 - dayWeek + 14);
-        }
-        Calendar cStart = Calendar.getInstance();
-        cStart.setTime(cal1.getTime());
-
-        List<String> dateList = new ArrayList();
-        //别忘了，把起始日期加上
-        dateList.add(new SimpleDateFormat("yyyy-MM-dd").format(cal1.getTime()));
-        // 此日期是否在指定日期之后
-        while (cal2.getTime().after(cStart.getTime())) {
-            // 根据日历的规则，为给定的日历字段添加或减去指定的时间量
-            cStart.add(Calendar.DAY_OF_MONTH, 1);
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-            String dateStr = format.format(cStart.getTime());
-            dateList.add(dateStr);
-        }
-        //过滤周六 周日
-//      dateList = dateList.stream().limit(5).collect(Collectors.toList());
-        return dateList;
-    }
 
     public static String toTimeString(long time) {
         TimeUtils t = new TimeUtils(time);
@@ -376,6 +341,128 @@ public class TimeUtils {
             return false;
         }
         return true;
+    }
+
+    /**
+     * @Description: 根据当前时间获取当前周1-7
+     * @Param: null
+     * @return: List<String>
+     * @Author: zhengXiang
+     * @Date: 2020/2/28
+     */
+    public static List<String> getCurrentWeekDateList() {
+        List<String> list = new ArrayList<>();
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date());
+        // 获得当前日期是一个星期的第几天
+        int dayWeek = cal.get(Calendar.DAY_OF_WEEK);
+        if (1 == dayWeek) {
+            cal.add(Calendar.DAY_OF_MONTH, -1);
+        }
+        // 设置一个星期的第一天，按中国的习惯一个星期的第一天是星期一
+        cal.setFirstDayOfWeek(Calendar.MONDAY);
+        // 获得当前日期是一个星期的第几天
+        int day = cal.get(Calendar.DAY_OF_WEEK);
+        cal.add(Calendar.DATE, cal.getFirstDayOfWeek() - day);
+        list.add(simpleDateFormat.format(cal.getTime()));
+        for (int i = 1; i < 7; i++) {
+            cal.add(Calendar.DAY_OF_MONTH, 1);
+            list.add(simpleDateFormat.format(cal.getTime()));
+        }
+        return list;
+    }
+
+    /**
+     * @Description: 获取当前日期的下周一到下周日的所有日期集合
+     * @Param: null
+     * @return: List<String>
+     * @Author: zhengXiang
+     * @Date: 2021/4/28
+     */
+    public static List<String> getNextWeekDateList() {
+        Calendar cal1 = Calendar.getInstance();
+        Calendar cal2 = Calendar.getInstance();
+
+        cal1.setTime(new Date());
+
+        cal2.setTime(new Date());
+        // 获得当前日期是一个星期的第几天
+        int dayWeek = cal1.get(Calendar.DAY_OF_WEEK);
+
+        if (dayWeek == 1) {
+            cal1.add(Calendar.DAY_OF_MONTH, 1);
+            cal2.add(Calendar.DAY_OF_MONTH, 7);
+        } else {
+            cal1.add(Calendar.DAY_OF_MONTH, 1 - dayWeek + 8);
+            cal2.add(Calendar.DAY_OF_MONTH, 1 - dayWeek + 14);
+        }
+        Calendar cStart = Calendar.getInstance();
+        cStart.setTime(cal1.getTime());
+
+        List<String> dateList = new ArrayList();
+        //别忘了，把起始日期加上
+        dateList.add(simpleDateFormat.format(cal1.getTime()));
+        // 此日期是否在指定日期之后
+        while (cal2.getTime().after(cStart.getTime())) {
+            // 根据日历的规则，为给定的日历字段添加或减去指定的时间量
+            cStart.add(Calendar.DAY_OF_MONTH, 1);
+
+            String dateStr = simpleDateFormat.format(cStart.getTime());
+            dateList.add(dateStr);
+        }
+        //过滤周六 周日
+//      dateList = dateList.stream().limit(5).collect(Collectors.toList());
+        return dateList;
+    }
+
+    /**
+     * @Description: 根据当前时间获取下一周eatDate
+     * @Param: null
+     * @return: String
+     * @Author: zhengXiang
+     * @Date: 2020/2/28
+     */
+    public static String getNextWeekEatDate() {
+        //获取当前时间下一周时间集合
+        List<String> dateList = getNextWeekDateList();
+        //去除下一周节假日日期
+        List<String> eatDateList = new ArrayList<>();
+        eatDateList = dateList.stream()
+                .filter(date -> {
+                    Holiday holiday = holidayDao.getByDate(date);
+                    return holiday == null;
+                })
+                .collect(Collectors.toList());
+
+        //根据当前用户id 根据当前时间获取下一周1-7时间
+        String nextDate = eatDateList.stream().collect(Collectors.joining(","));
+
+        return nextDate;
+    }
+
+    /**
+     * @Description: 根据当前时间获取当前周的eatDate
+     * @Param: null
+     * @return: String
+     * @Author: zhengXiang
+     * @Date: 2020/2/28
+     */
+    public static String getCurrentWeekEatDate() {
+        //获取当前时间当前周时间集合
+        List<String> dateList = getCurrentWeekDateList();
+        //去除当前周节假日日期
+        List<String> eatDateList = new ArrayList<>();
+        eatDateList = dateList.stream()
+                .filter(date -> {
+                    Holiday holiday = holidayDao.getByDate(date);
+                    return holiday == null;
+                })
+                .collect(Collectors.toList());
+
+        //根据当前用户id 根据当前时间获取当前周1-7时间
+        String currentDate = eatDateList.stream().collect(Collectors.joining(","));
+
+        return currentDate;
     }
 
 }

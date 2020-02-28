@@ -3,6 +3,7 @@ package com.dhc.rad.modules.wx.controller;
 import com.dhc.rad.common.config.Global;
 import com.dhc.rad.common.utils.StringUtils;
 import com.dhc.rad.common.utils.TimeUtils;
+import com.dhc.rad.common.utils.WeekUtils;
 import com.dhc.rad.common.web.BaseController;
 import com.dhc.rad.modules.holiday.entity.Holiday;
 import com.dhc.rad.modules.holiday.service.HolidayService;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.math.BigDecimal;
+import java.sql.Time;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -175,27 +177,49 @@ public class WxOrderController extends BaseController {
         return returnMap;
     }
 
+    /**
+    * @Description:  查询当前用户下一周的订餐信息
+    * @Param:  null
+    * @return:  Map<String,Object>
+    * @Author: zhengXiang
+    * @Date: 2021/4/29
+    */
     @RequestMapping(value = "findOrderNextWeek", method = RequestMethod.POST)
     @ResponseBody
     public Map<String,Object> findOrderNextWeekById(){
         Map<String,Object> returnMap = new HashMap<>();
-        //获取当前时间下一周时间集合
-        List<String> dateList = TimeUtils.getNextWeekDateList();
-        //去除下一周节假日日期
-        List<String> eatDateList = new ArrayList<>();
-        eatDateList = dateList.stream()
-                .filter(date -> {
-                    Holiday holiday = holidayService.getByDate(date);
-                    return holiday == null;
-                })
-                .collect(Collectors.toList());
+        //获取nextWeekEatDate
+        String nextWeekEatDate = TimeUtils.getNextWeekEatDate();
 
-        //根据当前用户id 根据当前时间获取下一周1-7时间
-        String nextDate = eatDateList.stream().collect(Collectors.joining(","));
         String userId = UserUtils.getUser().getId();
         PzOrder order = new PzOrder();
         order.setUserId(userId);
-        order.setEatDate(nextDate);
+        order.setEatDate(nextWeekEatDate);
+        List<PzOrder> list = pzOrderService.findList(order);
+
+        returnMap.put("order", list.get(0));
+        return returnMap;
+    }
+
+
+    /**
+     * @Description:  查询当前用户当前周的订餐信息
+     * @Param:  null
+     * @return:  Map<String,Object>
+     * @Author: zhengXiang
+     * @Date: 2021/4/29
+     */
+    @RequestMapping(value = "findOrderCurrentWeek", method = RequestMethod.POST)
+    @ResponseBody
+    public Map<String,Object> findOrderCurrentWeek(){
+        Map<String,Object> returnMap = new HashMap<>();
+        //获取currentWeekEatDate
+        String currentWeekEatDate = TimeUtils.getCurrentWeekEatDate();
+
+        String userId = UserUtils.getUser().getId();
+        PzOrder order = new PzOrder();
+        order.setUserId(userId);
+        order.setEatDate(currentWeekEatDate);
         List<PzOrder> list = pzOrderService.findList(order);
 
         returnMap.put("order", list.get(0));

@@ -37,9 +37,6 @@ public class WxOrderController extends BaseController {
     private WxOrderService wxOrderService;
 
     @Autowired
-    private HolidayService holidayService;
-
-    @Autowired
     private PzMenuService pzMenuService;
 
     @Autowired
@@ -57,18 +54,10 @@ public class WxOrderController extends BaseController {
         String userId = user.getId();
 
         //获取当前时间下一周时间集合
-        List<String> dateList = TimeUtils.getNextWeekDateList();
-        //去除下一周节假日日期
-        List<String> eatDateList = new ArrayList<>();
-        eatDateList = dateList.stream()
-                .filter(date -> {
-                    Holiday holiday = holidayService.getByDate(date);
-                    return holiday == null;
-                })
-                .collect(Collectors.toList());
+        List<String> nextWeekDateList = TimeUtils.getNextWeekDateList();
 
         //根据当前用户id 根据当前时间获取下一周1-7时间
-        String nextDate = eatDateList.stream().collect(Collectors.joining(","));
+        String nextDate = nextWeekDateList.stream().collect(Collectors.joining(","));
 
         PzOrder order = new PzOrder();
         order.setEatDate(nextDate);
@@ -102,7 +91,7 @@ public class WxOrderController extends BaseController {
         }
 
         //计算餐券数
-        BigDecimal couponCount = BigDecimal.valueOf(eatDateList.size());
+        BigDecimal couponCount = BigDecimal.valueOf(nextWeekDateList.size());
         //剩余积分
         BigDecimal remainIntegral = userIntegral.subtract(couponCount);
         //如果不足，返回 重新充值
@@ -132,8 +121,7 @@ public class WxOrderController extends BaseController {
         //套餐积分
         pzOrder.setMenuIntegral(couponCount);
         //吃饭日期
-        String eatDate = eatDateList.stream().collect(Collectors.joining(","));
-        pzOrder.setEatDate(eatDate);
+        pzOrder.setEatDate(nextDate);
         //餐厅id
         PzMenu pzMenu = pzMenuService.get(menuId);
         if (pzMenu == null) {

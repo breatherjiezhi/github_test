@@ -1,0 +1,216 @@
+﻿Object Report
+	Version='6.5.0.0'
+	Object Font
+		Name='宋体'
+		Size=105000,0
+		Weight=400
+		Charset=134
+	End
+	Object Printer
+		Size=256
+		Width=8
+		Height=4
+		LeftMargin=0
+		TopMargin=0
+		RightMargin=0
+		BottomMargin=0
+	End
+	Object DetailGrid
+		Object Recordset
+			ConnectionString='Provider=OraOLEDB.Oracle.1;Password=crrcdt@zhl;Persist Security Info=True;User ID=zhl;Data Source=118.178.20.31:1521/ORCL;Extended Properties=""'
+			QuerySQL='SELECT M.MATERIEL_CODE,\r\n       M.MATERIEL_NAME,\r\n       M.MATERIEL_FORNAME,\r\n       M.MATERIEL_SPECS\r\nFROM ZHL_C_ENWARE_DE CENWD\r\nLEFT JOIN ZHL_BASIS_MATERIEL M ON CENWD.MATERIEL_CODE = M.MATERIEL_CODE\r\nWHERE CENWD.DEL_FLAG = '0'\r\nAND CENWD.C_ENWARE_ID = '''
+			Items Field
+				Item
+					Name='MATERIEL_CODE'
+				End
+				Item
+					Name='MATERIEL_NAME'
+				End
+				Item
+					Name='MATERIEL_FORNAME'
+				End
+				Item
+					Name='MATERIEL_SPECS'
+				End
+			End
+		End
+		Items Column
+			Item
+				Name='Column1'
+				Width=7.99042
+				FixedWidth=T
+			End
+		End
+		Object ColumnContent
+			Height=3.81
+			Items ColumnContentCell
+				Item
+					Column='Column1'
+					FreeCell=T
+					Items Control
+						Item
+							Type=StaticBox
+							Name='StaticBox1'
+							Left=0.396875
+							Top=0.238125
+							Width=2.01083
+							Height=0.582083
+							Object Font
+								Name='宋体'
+								Size=90000,0
+								Bold=T
+								Charset=134
+							End
+							TextAlign=MiddleRight
+							Text='物资编码:'
+						End
+						Item
+							Type=MemoBox
+							Name='MemoBox1'
+							Left=2.40771
+							Top=0.238125
+							Width=2.80458
+							Height=0.582083
+							Object Font
+								Name='宋体'
+								Size=90000,0
+								Bold=T
+								Charset=134
+							End
+							Text='[#MATERIEL_CODE#]'
+						End
+						Item
+							Type=Barcode
+							Name='Barcode1'
+							Left=5.3975
+							Top=0.211667
+							Width=2.40771
+							Height=3.20146
+							BarcodeType=QRCode
+							Text='[#MATERIEL_CODE#]'
+						End
+						Item
+							Type=StaticBox
+							Name='StaticBox2'
+							Left=0.396875
+							Top=1.03188
+							Width=2.01083
+							Height=0.79375
+							Object Font
+								Name='宋体'
+								Size=90000,0
+								Bold=T
+								Charset=134
+							End
+							TextAlign=MiddleRight
+							Text='物资名称:'
+						End
+						Item
+							Type=StaticBox
+							Name='StaticBox4'
+							Left=-0.343958
+							Top=2.03729
+							Width=2.64583
+							Height=0.582083
+							Object Font
+								Name='宋体'
+								Size=90000,0
+								Bold=T
+								Charset=134
+							End
+							TextAlign=MiddleRight
+							Text='物资英文名称:'
+						End
+						Item
+							Type=MemoBox
+							Name='MemoBox2'
+							Left=2.40771
+							Top=1.03188
+							Width=2.80458
+							Height=0.79375
+							Object Font
+								Name='宋体'
+								Size=90000,0
+								Bold=T
+								Charset=134
+							End
+							Text='[#MATERIEL_NAME#]'
+						End
+						Item
+							Type=StaticBox
+							Name='StaticBox5'
+							Left=0.396875
+							Top=2.83104
+							Width=2.01083
+							Height=0.608542
+							Object Font
+								Name='宋体'
+								Size=90000,0
+								Bold=T
+								Charset=134
+							End
+							TextAlign=MiddleRight
+							Text='物资规格:'
+						End
+						Item
+							Type=MemoBox
+							Name='MemoBox3'
+							Left=2.40771
+							Top=2.03729
+							Width=2.80458
+							Height=0.582083
+							Object Font
+								Name='宋体'
+								Size=90000,0
+								Bold=T
+								Charset=134
+							End
+							Text='[#MATERIEL_FORNAME#]'
+						End
+						Item
+							Type=MemoBox
+							Name='MemoBox4'
+							Left=2.40771
+							Top=2.83104
+							Width=2.80458
+							Height=0.608542
+							Object Font
+								Name='宋体'
+								Size=90000,0
+								Bold=T
+								Charset=134
+							End
+							Text='[#MATERIEL_SPECS#]'
+						End
+					End
+					BorderCustom=T
+					Object Border
+						Styles=[]
+						Object Pen
+							Width=0
+							Color=White
+						End
+						Object InnerPen
+							Width=0
+							Color=White
+						End
+					End
+				End
+			End
+		End
+		Object ColumnTitle
+			Height=0
+			Items ColumnTitleCell
+				Item
+					GroupTitle=F
+					Column='Column1'
+					TextAlign=MiddleCenter
+					PaddingLeft=0
+					PaddingRight=0
+					PaddingTop=0
+					PaddingBottom=0
+				End
+			End
+		End
+	End
+End

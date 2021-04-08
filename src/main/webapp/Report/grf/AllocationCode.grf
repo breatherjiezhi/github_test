@@ -1,0 +1,82 @@
+﻿Object Report
+	Version='6.5.0.0'
+	Object Font
+		Name='宋体'
+		Size=105000,0
+		Weight=400
+		Charset=134
+	End
+	Object Printer
+		Size=256
+		Width=8
+		Height=4
+		LeftMargin=0
+		TopMargin=0
+		RightMargin=0
+		BottomMargin=0
+	End
+	Object DetailGrid
+		Object Recordset
+			ConnectionString='Provider=OraOLEDB.Oracle.1;Password=crrcdt@zhl;Persist Security Info=True;User ID=zhl;Data Source=118.178.20.31:1521/ORCL;Extended Properties=""'
+			QuerySQL='SELECT A.ALLOCATION_CODE\r\n  FROM ZHL_BASIS_ALLOCATION A\r\n WHERE A.ID IN ''\r\n   AND A.DEL_FLAG = '0'\r\n ORDER BY A.ALLOCATION_CODE'
+			Items Field
+				Item
+					Name='ALLOCATION_CODE'
+				End
+			End
+		End
+		Items Column
+			Item
+				Name='Column1'
+				Width=7.99042
+				FixedWidth=T
+			End
+		End
+		Object ColumnContent
+			Height=3.99521
+			Items ColumnContentCell
+				Item
+					Column='Column1'
+					FreeCell=T
+					Items Control
+						Item
+							Type=Barcode
+							Name='Barcode1'
+							ShiftMode=Never
+							Width=8
+							Height=3.59833
+							BarcodeType=QRCode
+							Text='[#ALLOCATION_CODE#]'
+						End
+					End
+					BorderCustom=T
+					Object Border
+						Styles=[]
+						Object Pen
+							Width=0
+							Color=White
+						End
+						Object InnerPen
+							Width=0
+							Color=White
+						End
+					End
+				End
+			End
+		End
+		Object ColumnTitle
+			Height=0
+			Items ColumnTitleCell
+				Item
+					GroupTitle=F
+					Column='Column1'
+					TextAlign=MiddleCenter
+					PaddingLeft=0
+					PaddingRight=0
+					PaddingTop=0
+					PaddingBottom=0
+				End
+			End
+		End
+	End
+End

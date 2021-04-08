@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<template>
+	<name>service</name>
+	<filePath>src/main/java/${packageName}/${moduleName}/service/${subModuleName}</filePath>
+	<fileName>${ClassName}Service.java</fileName>
+	<content><![CDATA[
+package ${packageName}.${moduleName}.service<#if subModuleName != "">.${subModuleName}</#if>;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.dhc.rad.common.persistence.Page;
+import com.dhc.rad.common.service.CrudService;
+import ${packageName}.${moduleName}.entity<#if subModuleName != "">.${subModuleName}</#if>.${ClassName};
+import ${packageName}.${moduleName}.dao<#if subModuleName != "">.${subModuleName}</#if>.${ClassName}Dao;
+
+/**
+ * ${functionName}Service
+ * @author ${functionAuthor}
+ * @version ${functionVersion}
+ */
+@Service
+@Transactional(readOnly = true)
+public class ${ClassName}Service extends CrudService<${ClassName}Dao, ${ClassName}> {
+	@Autowired
+	private ${ClassName}Dao ${className}Dao ;
+
+	public ${ClassName} get(String id) {
+		return ${className}Dao.get(id);
+	}
+
+	public List<${ClassName}> findList(${ClassName} ${className}) {
+		return ${className}Dao.findList(${className});
+	}
+
+	public Page<${ClassName}> findPage(Page<${ClassName}> page, ${ClassName} ${className}){
+		// 设置分页参数
+		${className}.setPage(page);
+		// 执行分页查询
+		page.setList(${className}Dao.findList(${className}));
+		return page;
+	}
+
+	/*保存*/
+	@Transactional(readOnly = false)
+	public int insert(${ClassName} ${className}) {
+		${className}.preInsert();
+		return ${className}Dao.insert(${className});
+	}
+
+	/*编辑*/
+	@Transactional(readOnly = false)
+	public int update(${ClassName} ${className}) {
+		${className}.preUpdate();
+		return ${className}Dao.update(${className});
+	}
+
+	/*刪除*/
+	@Transactional(readOnly = false)
+	public void delete(List<String> list) {
+		${className}Dao.doDelete(list);
+	}
+	
+}]]>
+    </content>
+</template>

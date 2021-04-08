@@ -1,0 +1,196 @@
+html {
+	overflow-x:hidden;
+	}
+
+body{
+	  background-color: #FFFFFF;
+}
+	
+*:focus {
+	outline: none;
+}
+
+a,a:focus {
+	outline: none;
+}
+
+.nowrap{
+	white-space: nowrap;
+}
+
+.l2m-no-header {
+	padding-top:20px;
+}
+
+.breadcrumbs-fixed + .l2m-no-header {
+    padding-top: 61px;
+}
+
+form .form-group:first-child {
+  margin-top: 15px;
+}
+form.form-inline .form-group:first-child {
+  margin-top: 0px;
+}
+
+.ui-jqgrid-view > .ui-jqgrid-titlebar {
+    background: #f7f7f7 none repeat scroll 0 0;
+    border: 1px solid #ddd;
+    box-sizing: content-box;
+    color: #669fc7;
+    padding-left: 12px;
+    position: relative;
+}
+
+.jqgrid-compact .ui-jqgrid-view > .ui-jqgrid-titlebar {
+    min-height: 30px;
+    height:30px;
+}
+.jqgrid-compact.ui-jqgrid .ui-jqgrid-title {
+    line-height: 28px;
+}
+
+.jqgrid-compact .ui-jqgrid-view > .ui-jqgrid-titlebar {
+    line-height: 18px;
+}
+
+.ui-jqgrid .ui-jqgrid-pager {
+    background-color: #eff3f8 !important;
+    border: 1px solid #e1e1e1 !important;
+    height: 55px;
+    line-height: 15px;
+    padding-bottom: 5px !important;
+    padding-top: 3px !important;
+}
+
+.jqgrid-compact.ui-jqgrid .ui-jqgrid-pager  {
+    height: 35px;
+}
+
+.jqgrid-compact.ui-jqgrid .ui-jqgrid-htable th div {
+    padding-bottom: 27px;
+    padding-top: 7px;
+}
+
+.ui-jqgrid-labels th[id*="_cb"]:first-child > div {
+    padding-top: 0;
+    text-align: center !important;
+}
+
+.jqgrid-compact.ui-jqgrid .ui-jqgrid-htable th span.ui-jqgrid-resize {
+    height: 40px !important;
+}
+
+.jqgrid-compact.ui-jqgrid .ui-pager-control {
+    height: 20px;
+}
+
+.ui-jqgrid .ui-jqgrid-titlebar-close .ui-icon::before {
+    color: #aaa;
+}
+
+.ui-jqgrid .ui-jqgrid-title {
+    display: inline;
+    float: left;
+    font-weight: lighter;
+    line-height: 30px;
+    margin: 0;
+    padding: 0;
+}
+
+.widget-compact .widget-header {
+    min-height: 30px;
+}
+
+.widget-compact .widget-header > .widget-title {
+    line-height: 28px;
+}
+
+.widget-compact .widget-toolbar {
+    line-height: 29px;
+}
+
+.form-horizontal .check-out ~ .form-control-feedback {
+    top: 0;
+    right: -15px;
+}
+.form-horizontal .check-out .form-control-feedback {
+    top: 0;
+    right: -30px;
+}
+
+.widget-box .treeview li.list-group-item{
+  border-left: 0px;
+  border-right: 0px;
+  border-top: 1px solid #dddddd;
+  border-bottom: 1px solid #dddddd;
+}
+.widget-box .treeview li.list-group-item:first-child{
+  border-top: 0px;
+}
+
+.ui-jqgrid .ui-jqgrid-labels th:last-child {
+    border-right: 1px solid #e1e1e1 !important;
+}
+.ui-jqgrid-toppager ~ .ui-jqgrid-hdiv .ui-jqgrid-htable.ui-common-table{
+	border-top:0px;
+}
+.jqgrid-compact.ui-jqgrid .ui-jqgrid-toppager .ui-pager-control{
+	height:28px;
+    padding-left:0px;
+}
+
+.ui-jqgrid .ui-jqgrid-toppager .ui-pg-table {
+    margin: 2px;
+}
+
+.ui-jqgrid .ui-jqgrid-toppager {
+    border-left: 1px solid #e1e1e1 !important;
+    border-right: 1px solid #e1e1e1 !important;
+}
+.profile-contact-links span{
+	margin-top:5px;
+	margin-bottom:5px;
+}
+.editable-popup{
+	position:fixed;
+}
+
+.carousel-control.right {
+	background-image:none;
+    background-repeat: repeat-x;
+    left: auto;
+    right: 0;
+}
+
+.carousel-control.left {
+	background-image:none;
+    background-repeat: repeat-x;
+}
+
+.ui-dialog-title .widget-toolbar{
+	margin-top: -10px !important;
+	padding-right: 50px !important;
+}
+
+.ui-dialog-title .widget-toolbar button{
+	margin: 0 5px !important;
+}
+
+#actionDetail button{
+	margin:2px;
+}
+
+#actionDetail{
+	font-size: 16px;
+}
+.ace-settings-container{
+	margin-top:35px;
+}
+img.editable-click {
+    border: 0;
+}
+
+.page-content {
+	padding-bottom: 0px;
+}

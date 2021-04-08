@@ -1,0 +1,62 @@
+#workprocess_section span{
+	color:#8E8E8E;
+	
+}
+#actiondetail_section ol li button{
+	margin:2px;
+}
+#nextstep{
+	background-color:#438EB9;
+}
+header{
+    background-color: #438EB9;
+}
+#jingle_popup{
+	/*
+	padding:10px;*/
+	background-color:white;
+	
+}
+/*---自定义弹出层栅格格式begin---*/
+.mypopup-grid {
+	margin:10px;
+	border: 1px solid #DCEBF7;
+}
+.mypopup-grid>.col-1 div{
+	color: #336199;
+	background-color: #EDF3F4;
+	border-top: 1px solid #F7FBFF;
+	text-align: right;
+	padding: 2px 5px 2px 4px;
+	vertical-align: middle;
+}
+.mypopup-grid>.col-1>.col-1{
+	border-top: none;
+}
+.mypopup-grid>.col-2 div{
+	border-top: 1px dotted #DCEBF7;
+	padding: 2px 4px 2px 5px;
+	vertical-align: middle;
+}
+.mypopup-grid>.col-2>.col-1{
+	border-top: none;
+}
+/*---自定义弹出层栅格格式end---*/
+.text-error{
+	color:red;
+	font-size:18px;
+	margin-left:5px;
+	margin-right:5px;
+}
+button.btn.btn-info {
+	background-color: #6fb3e0 !important;
+	border-color: #6fb3e0 ;
+}
+button.btn.btn-success	{
+	background-color: #629b58 !important;
+	border-color: #87b87f;
+}
+button.btn.btn-danger	{
+	background-color: #d15b47 !important;
+	border-color: #d15b47;
+}

@@ -1,0 +1,498 @@
+﻿Object Report
+	Version='6.5.0.0'
+	Object Font
+		Name='宋体'
+		Size=105000,0
+		Weight=400
+		Charset=134
+	End
+	ConnectionString='Provider=OraOLEDB.Oracle.1;Password=crrcdt@zhl;Persist Security Info=True;User ID=zhl;Data Source=118.178.20.31:1521/ORCL;Extended Properties=""'
+	QuerySQL='select\r\n      P.APPROVED_BY AS approvedBy,\r\n      U.NAME AS loginName,\r\n      D.DESCRIPTION AS description\r\n      FROM ZHL_PURCHASE P\r\n      LEFT JOIN ZHL_PURCHASE_DES D ON P.PURCHASE_ID = D.PK_PURCHASE\r\n      LEFT JOIN SYS_USER U ON U.ID = P.CREATE_BY\r\n      WHERE P.PURCHASE_ID='AD7B26EC108B4E61991BDF7AB0B72A58'  AND P.DEL_FLAG = '0''
+	Object Printer
+		PrinterName='TSC TTP-342 Pro (副本 1)'
+		Size=256
+		Width=24.1
+		Height=27.9
+		Oriention=Landscape
+		LeftMargin=1.2
+		TopMargin=3.7571
+		RightMargin=0
+		BottomMargin=0.873125
+	End
+	Object DetailGrid
+		Object Recordset
+			ConnectionString='Provider=OraOLEDB.Oracle.1;Password=crrcdt@zhl;Persist Security Info=True;User ID=zhl;Data Source=118.178.20.31:1521/ORCL;Extended Properties=""'
+			QuerySQL='select\r\n      P.APPROVED_BY AS approvedBy,\r\n      U.NAME AS loginName,\r\n      D.DESCRIPTION AS description\r\n      FROM ZHL_PURCHASE P\r\n      LEFT JOIN ZHL_PURCHASE_DES D ON P.PURCHASE_ID = D.PK_PURCHASE\r\n      LEFT JOIN SYS_USER U ON U.ID = P.CREATE_BY\r\n      WHERE P.PURCHASE_ID='AD7B26EC108B4E61991BDF7AB0B72A58'  AND P.DEL_FLAG = '0''
+			Items Field
+				Item
+					Name='APPROVEDBY'
+				End
+				Item
+					Name='LOGINNAME'
+				End
+				Item
+					Name='DESCRIPTION'
+				End
+			End
+		End
+		Items Column
+			Item
+				Name='DESCRIPTION'
+				Width=26.5642
+			End
+		End
+		Object ColumnContent
+			Height=0.79375
+			Items ColumnContentCell
+				Item
+					Column='DESCRIPTION'
+					Object Font
+						Name='宋体'
+						Size=142500,0
+						Weight=400
+						Charset=134
+					End
+					DataField='DESCRIPTION'
+				End
+			End
+		End
+		Object ColumnTitle
+			Height=1.00542
+			RepeatStyle=OnPage
+			Items ColumnTitleCell
+				Item
+					GroupTitle=F
+					Column='DESCRIPTION'
+					Object Font
+						Name='宋体'
+						Size=217500,0
+						Bold=T
+						Charset=134
+					End
+					TextAlign=MiddleCenter
+					Text='编 制 说 明'
+				End
+			End
+		End
+		Items Group
+			Item
+				Name='分页分组'
+				Object GroupHeader
+					Height=0
+				End
+				Object GroupFooter
+					Height=0
+					NewPage=After
+				End
+			End
+			Item
+				Name='页分组'
+				PageGroup=T
+				Object GroupHeader
+					Height=0
+				End
+				Object GroupFooter
+					Height=0
+				End
+			End
+		End
+	End
+	Items Parameter
+		Item
+			Name='APPROVEDBY'
+		End
+		Item
+			Name='LOGINNAME'
+		End
+		Item
+			Name='DESCRIPTION'
+		End
+	End
+	Items ReportHeader
+		Item
+			Name='ReportHeader1'
+			Height=6.79979
+			Items Control
+				Item
+					Type=StaticBox
+					Name='StaticBox1'
+					Center=Horizontal
+					Width=26.7
+					Height=1.01
+					Object Border
+						Styles=[DrawLeft|DrawTop|DrawRight]
+					End
+					Object Font
+						Name='宋体'
+						Size=142500,0
+						Weight=400
+						Charset=134
+					End
+					TextAlign=MiddleCenter
+					Text='中铁二局集团有限公司哈萨克斯坦阿斯塔纳轻轨一期项目'
+				End
+				Item
+					Type=StaticBox
+					Name='StaticBox13'
+					Center=Horizontal
+					Top=1.00542
+					Width=26.7
+					Height=1.01
+					Object Border
+						Styles=[DrawLeft|DrawTop|DrawRight]
+					End
+					Object Font
+						Name='宋体'
+						Size=217500,0
+						Bold=T
+						Charset=134
+					End
+					TextAlign=MiddleCenter
+					Text='（       ）工程材料月度需要量计划表（001）'
+				End
+				Item
+					Type=StaticBox
+					Name='StaticBox14'
+					Center=Horizontal
+					Top=2.01083
+					Width=26.7
+					Height=0.79
+					Object Border
+						Styles=[DrawLeft|DrawTop|DrawRight]
+					End
+					Object Font
+						Name='宋体'
+						Size=217500,0
+						Bold=T
+						Charset=134
+					End
+					TextAlign=MiddleCenter
+				End
+				Item
+					Type=FreeGrid
+					Name='FreeGrid1'
+					Top=2.8
+					Object Border
+						Styles=[DrawLeft|DrawTop|DrawRight|DrawBottom]
+					End
+					ColumnCount=13
+					RowCount=1
+					Items FreeGridColumn
+						Item[1]
+							Width=0.79375
+						End
+						Item[2]
+							Width=2.40771
+						End
+						Item[3]
+							Width=2.91042
+						End
+						Item[4]
+							Width=0.9525
+						End
+						Item[5]
+							Width=2.43417
+						End
+						Item[6]
+							Width=2.88396
+						End
+						Item[7]
+							Width=1.03188
+						End
+						Item[8]
+							Width=2.48708
+						End
+						Item[10]
+							Width=0.899583
+						End
+						Item[11]
+							Width=2.67229
+						End
+						Item[12]
+							Width=3.09563
+						End
+						Item[13]
+							Width=1.11125
+						End
+					End
+					Items FreeGridRow
+						Item[1]
+							Height=0.9525
+						End
+					End
+					Items FreeGridCell
+						Item[1,1]
+							Object Font
+								Name='宋体'
+								Size=142500,0
+								Weight=400
+								Charset=134
+							End
+							TextAlign=MiddleCenter
+							BorderCustom=T
+							Object Border
+								Styles=[]
+							End
+						End
+						Item[1,2]
+							Object Font
+								Name='宋体'
+								Size=142500,0
+								Weight=400
+								Charset=134
+							End
+							TextAlign=MiddleCenter
+							Text='编制：'
+							BorderCustom=T
+							Object Border
+								Styles=[]
+							End
+						End
+						Item[1,3]
+							Object Font
+								Name='宋体'
+								Size=142500,0
+								Weight=400
+								Charset=134
+							End
+							TextAlign=MiddleCenter
+							Text='[#LOGINNAME#]'
+							BorderCustom=T
+							Object Border
+								Styles=[]
+							End
+						End
+						Item[1,4]
+							Object Font
+								Name='宋体'
+								Size=142500,0
+								Weight=400
+								Charset=134
+							End
+							TextAlign=MiddleCenter
+							BorderCustom=T
+							Object Border
+								Styles=[]
+							End
+						End
+						Item[1,5]
+							Object Font
+								Name='宋体'
+								Size=142500,0
+								Weight=400
+								Charset=134
+							End
+							TextAlign=MiddleCenter
+							Text='复核：'
+							BorderCustom=T
+							Object Border
+								Styles=[]
+							End
+						End
+						Item[1,6]
+							Object Font
+								Name='宋体'
+								Size=142500,0
+								Weight=400
+								Charset=134
+							End
+							TextAlign=MiddleCenter
+							BorderCustom=T
+							Object Border
+								Styles=[]
+							End
+						End
+						Item[1,7]
+							Object Font
+								Name='宋体'
+								Size=142500,0
+								Weight=400
+								Charset=134
+							End
+							TextAlign=MiddleCenter
+							BorderCustom=T
+							Object Border
+								Styles=[]
+							End
+						End
+						Item[1,8]
+							Object Font
+								Name='宋体'
+								Size=142500,0
+								Weight=400
+								Charset=134
+							End
+							TextAlign=MiddleCenter
+							Text='审核：'
+							BorderCustom=T
+							Object Border
+								Styles=[]
+							End
+						End
+						Item[1,9]
+							Object Font
+								Name='宋体'
+								Size=142500,0
+								Weight=400
+								Charset=134
+							End
+							TextAlign=MiddleCenter
+							Text='[#APPROVEDBY#]'
+							BorderCustom=T
+							Object Border
+								Styles=[]
+							End
+						End
+						Item[1,10]
+							Object Font
+								Name='宋体'
+								Size=142500,0
+								Weight=400
+								Charset=134
+							End
+							TextAlign=MiddleCenter
+							BorderCustom=T
+							Object Border
+								Styles=[]
+							End
+						End
+						Item[1,11]
+							Object Font
+								Name='宋体'
+								Size=142500,0
+								Weight=400
+								Charset=134
+							End
+							TextAlign=MiddleCenter
+							Text='审批：'
+							BorderCustom=T
+							Object Border
+								Styles=[]
+							End
+						End
+						Item[1,12]
+							Object Font
+								Name='宋体'
+								Size=142500,0
+								Weight=400
+								Charset=134
+							End
+							TextAlign=MiddleCenter
+							BorderCustom=T
+							Object Border
+								Styles=[]
+							End
+						End
+						Item[1,13]
+							Object Font
+								Name='宋体'
+								Size=142500,0
+								Weight=400
+								Charset=134
+							End
+							TextAlign=MiddleCenter
+							BorderCustom=T
+							Object Border
+								Styles=[DrawRight]
+							End
+						End
+					End
+				End
+				Item
+					Type=StaticBox
+					Name='StaticBox15'
+					Center=Horizontal
+					Top=3.78
+					Width=26.7
+					Height=0.79
+					Object Border
+						Styles=[DrawLeft|DrawRight]
+					End
+					Object Font
+						Name='宋体'
+						Size=217500,0
+						Bold=T
+						Charset=134
+					End
+					TextAlign=MiddleCenter
+				End
+				Item
+					Type=StaticBox
+					Name='StaticBox16'
+					Center=Horizontal
+					Top=4.57729
+					Width=26.7
+					Height=0.79
+					Object Border
+						Styles=[DrawLeft|DrawTop|DrawRight]
+					End
+					Object Font
+						Name='宋体'
+						Size=142500,0
+						Weight=400
+						Charset=134
+					End
+					TextAlign=MiddleCenter
+					Text='中铁二局集团有限公司哈萨克斯坦阿斯塔纳轻轨一期项目经理部二分部 '
+				End
+				Item
+					Type=StaticBox
+					Name='StaticBox17'
+					Center=Horizontal
+					Top=5.37104
+					Width=26.7
+					Height=0.79
+					Object Border
+						Styles=[DrawLeft|DrawTop|DrawRight]
+					End
+					Object Font
+						Name='宋体'
+						Size=217500,0
+						Bold=T
+						Charset=134
+					End
+					TextAlign=MiddleCenter
+				End
+				Item
+					Type=StaticBox
+					Name='StaticBox19'
+					Center=Horizontal
+					Left=0.0529167
+					Top=6.985
+					Width=26.5906
+					Height=0.79375
+					Object Border
+						Styles=[DrawLeft|DrawTop|DrawRight]
+					End
+					Object Font
+						Name='宋体'
+						Size=217500,0
+						Bold=T
+						Charset=134
+					End
+					TextAlign=MiddleCenter
+				End
+				Item
+					Type=MemoBox
+					Name='MemoBox1'
+					Top=6.11
+					Width=26.7
+					Height=0.82
+					Object Border
+						Styles=[DrawLeft|DrawTop|DrawRight]
+					End
+					Object Font
+						Name='宋体'
+						Size=142500,0
+						Weight=400
+						Charset=134
+					End
+					TextAlign=MiddleCenter
+					GetDisplayTextScript='var hzNum = "零一二三四五六七八九十";\r\n//var hzNum = "零壹贰叁肆伍陆柒捌玖拾"; //要以金额大写显示，去掉本行注释，注释掉上一行\r\n\r\nvar text = Sender.DisplayText;\r\nvar year = text.substr(0, 4);\r\nvar month = text.substr(4, 2);\r\nvar day = text.substr(6, 2);\r\nvar hzDayText;\r\n\r\n//<<年份\r\nhzDayText = hzNum.charAt( year.charAt(0) );\r\n\r\n//如果0也要显示为汉字，去掉以下三行，只保留第4行\r\nif (year.charAt(1) == '0')\r\n  hzDayText += '○';\r\nelse\r\n  hzDayText += hzNum.charAt( year.charAt(1) );\r\n\r\n//如果0也要显示为汉字，去掉以下三行，只保留第4行\r\nif (year.charAt(2) == '0')\r\n  hzDayText += '○';\r\nelse\r\n  hzDayText += hzNum.charAt( year.charAt(2) );\r\n\r\nhzDayText += hzNum.charAt( year.charAt(3) );\r\n\r\nhzDayText += "年";\r\n//>>年份\r\n\r\n//<<月份\r\nif (month.charAt(0) == '0')\r\n{\r\n  //个位数\r\n  hzDayText += hzNum.charAt( month.charAt(1) );\r\n}\r\nelse if ((month.charAt(0) == '1') && (month.charAt(1) == '0'))\r\n{\r\n  //10\r\n  hzDayText += hzNum.charAt(10); //加汉字“十”\r\n}\r\nelse\r\n{\r\n  if (month.charAt(0) != '1') //“一十几”前面的“一”不显示\r\n    hzDayText += hzNum.charAt( month.charAt(0) );\r\n\r\n  hzDayText += hzNum.charAt(10); //加汉字“十”\r\n\r\n  if (month.charAt(1) != '0')  //个位为0不显示\r\n    hzDayText += hzNum.charAt( month.charAt(1) );\r\n}\r\n\r\nhzDayText += "月";\r\n//<<月份\r\n\r\n//<<日\r\nif (day.charAt(0) == '0')\r\n{\r\n  //个位数\r\n  hzDayText += hzNum.charAt( day.charAt(1) );\r\n}\r\nelse if ((day.charAt(0) == '1') && (day.charAt(1) == '0'))\r\n{\r\n  //10\r\n  hzDayText += hzNum.charAt(10); //加汉字“十”\r\n}\r\nelse\r\n{\r\n  if (day.charAt(0) != '1') //“一十几”前面的“一”不显示\r\n    hzDayText += hzNum.charAt( day.charAt(0) );\r\n\r\n  hzDayText += hzNum.charAt(10); //加汉字“十”\r\n\r\n  if (day.charAt(1) != '0')  //个位为0不显示\r\n    hzDayText += hzNum.charAt( day.charAt(1) );\r\n}\r\n\r\nhzDayText += "日";\r\n//>>日\r\n\r\nSender.DisplayText = hzDayText;'
+					Text='[#SystemVar(CurrentDateTime):yyyyMMdd#]'
+				End
+			End
+			RepeatOnPage=T
+		End
+	End
+End

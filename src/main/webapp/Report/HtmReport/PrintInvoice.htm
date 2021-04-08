@@ -1,0 +1,31 @@
+﻿<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>发货单打印</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+	<script src="../CreateControl.js" type="text/javascript"></script>
+	<script src="../GRInstall.js" type="text/javascript"></script>
+    <style type="text/css">
+        html,body {
+            margin:0;
+            height:100%;
+        }
+    </style>
+    <script type="text/javascript">
+        Install_InsertReport();
+    </script>
+</head>
+<body style="margin:0">
+    <script type="text/javascript"> 
+    var Installed = Install_Detect();
+    if (Installed) {
+	    var url = window.location.href;
+		var arr = new Array();
+		arr = url.split("?param=");
+		var param = arr[1];
+	    //用打印显示控件展现报表，从URL“../grf/1a.grf”获取报表膜板定义，从URL“../data/xmlCustomer.jsp”获取XML形式的报表数据，
+		CreatePrintViewerEx("100%", "100%", "../grf/Invoice.grf", "../data/xmlInvoice.jsp?param="+param, true, "");
+    }
+    </script>
+</body>
+</html>
+ 

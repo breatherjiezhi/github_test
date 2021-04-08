@@ -1,0 +1,239 @@
+﻿Object Report
+	Version='6.5.0.0'
+	Object Font
+		Name='宋体'
+		Size=105000,0
+		Weight=400
+		Charset=134
+	End
+	Object Printer
+		LeftMargin=1
+		TopMargin=1
+		RightMargin=1
+		BottomMargin=1.16417
+	End
+	Object DetailGrid
+		Object Recordset
+			ConnectionString='Provider=OraOLEDB.Oracle.1;Password=crrcdt@zhl;Persist Security Info=True;User ID=zhl;Data Source=118.178.20.31:1521/ORCL;Extended Properties=""'
+			QuerySQL='SELECT CH.INVENTORYCODE,\r\n       CH.CHECK_TIME,\r\n       CHDE.PACKAGE_CODE,\r\n       LOC.LOCATOR_CODE,\r\n       CHDE.CHECK_STATUS AS FZ\r\nFROM ZHL_CHECK_TASK_DE CHDE\r\nLEFT JOIN ZHL_CHECK_TASK CH ON (CH.DEL_FLAG = '0' AND CH.CHECK_ID = CHDE.PK_CHECK_TASK)\r\nLEFT JOIN ZHL_BASIS_LOCATOR LOC ON (LOC.ID = CHDE.PK_LOCATOR AND LOC.DEL_FLAG = '0')\r\nWHERE CHDE.DEL_FLAG = '0' AND CH.CHECK_ID ='0''
+			Items Field
+				Item
+					Name='INVENTORYCODE'
+				End
+				Item
+					Name='CHECK_TIME'
+					Type=DateTime
+				End
+				Item
+					Name='PACKAGE_CODE'
+				End
+				Item
+					Name='LOCATOR_CODE'
+				End
+				Item
+					Name='FZ'
+				End
+			End
+		End
+		Items Column
+			Item
+				Name='Column1'
+				Width=1.98438
+			End
+			Item
+				Name='ZDY17'
+				Width=7.22313
+			End
+			Item
+				Name='ZDY18'
+				Width=5.37104
+			End
+			Item
+				Name='ZDY19'
+				Width=4.39208
+			End
+		End
+		Object ColumnContent
+			Height=0.608542
+			Items ColumnContentCell
+				Item
+					Column='Column1'
+					FreeCell=T
+					Items Control
+						Item
+							Type=SystemVarBox
+							Name='SystemVarBox1'
+							Dock=Fill
+							TextAlign=MiddleCenter
+							SystemVar=RecordNo
+						End
+					End
+				End
+				Item
+					Column='ZDY17'
+					TextAlign=MiddleCenter
+					DataField='PACKAGE_CODE'
+				End
+				Item
+					Column='ZDY18'
+					TextAlign=MiddleCenter
+					DataField='LOCATOR_CODE'
+				End
+				Item
+					Column='ZDY19'
+					TextAlign=MiddleCenter
+					DataField='FZ'
+				End
+			End
+		End
+		Object ColumnTitle
+			Height=0.635
+			Items ColumnTitleCell
+				Item
+					GroupTitle=F
+					Column='Column1'
+					TextAlign=MiddleCenter
+					Text='序号'
+				End
+				Item
+					GroupTitle=F
+					Column='ZDY17'
+					TextAlign=MiddleCenter
+					Text='装箱单号'
+				End
+				Item
+					GroupTitle=F
+					Column='ZDY18'
+					TextAlign=MiddleCenter
+					Text='货位'
+				End
+				Item
+					GroupTitle=F
+					Column='ZDY19'
+					TextAlign=MiddleCenter
+					Text='盘点状态'
+				End
+			End
+		End
+		Items Group
+			Item
+				Name='扫描情况'
+				ByFields='FZ'
+				Object GroupHeader
+					Height=0.608542
+					BookmarkText='[#FZ#]'
+					Items Control
+						Item
+							Type=FieldBox
+							Name='FieldBox1'
+							Width=13.5996
+							Height=0.608542
+							TextAlign=MiddleRight
+							DataField='FZ'
+						End
+					End
+					GroupKeepTogether=All
+				End
+				Object GroupFooter
+					Visible=F
+					Height=0
+					PrintGridBorder=F
+				End
+			End
+			Item
+				Name='行号'
+				Object GroupHeader
+					Height=0
+				End
+				Object GroupFooter
+					Height=0
+				End
+			End
+		End
+	End
+	Object PageFooter
+		Height=1.00542
+		Items Control
+			Item
+				Type=SystemVarBox
+				Name='SystemVarBox2'
+				Center=Horizontal
+				Left=8.20208
+				Width=2.59292
+				Height=1.00542
+				TextAlign=MiddleCenter
+			End
+		End
+	End
+	Items ReportHeader
+		Item
+			Name='ReportHeader1'
+			Height=2.40771
+			Items Control
+				Item
+					Type=StaticBox
+					Name='StaticBox6'
+					Center=Horizontal
+					Left=7.09083
+					Top=0.396875
+					Width=4.78896
+					Height=1.00542
+					Object Font
+						Name='宋体'
+						Size=157500,0
+						Weight=400
+						Charset=134
+					End
+					TextAlign=MiddleCenter
+					Text='物料盘点清单'
+				End
+				Item
+					Type=Barcode
+					Name='Barcode1'
+					Left=12.991
+					Top=0.0264583
+					Width=5.82083
+					Height=2.40771
+					BarcodeType=QRCode
+					CheckSum=T
+					Text='[#INVENTORYCODE#]'
+				End
+			End
+		End
+	End
+	Items ReportFooter
+		Item
+			Name='ReportFooter1'
+			Height=1.32292
+			Items Control
+				Item
+					Type=StaticBox
+					Name='StaticBox7'
+					Left=1.5875
+					Top=0.396875
+					Width=2.2225
+					Height=0.608542
+					Text='库房确认：'
+				End
+				Item
+					Type=StaticBox
+					Name='StaticBox10'
+					Left=13.3879
+					Top=0.396875
+					Width=1.61396
+					Height=0.608542
+					Text='日  期：'
+				End
+				Item
+					Type=MemoBox
+					Name='MemoBox1'
+					Left=15.1871
+					Top=0.396875
+					Width=3.01625
+					Height=0.608542
+					Text='[#CHECK_TIME#]'
+				End
+			End
+		End
+	End
+End

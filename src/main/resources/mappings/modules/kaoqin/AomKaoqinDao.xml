@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dhc.rad.modules.kaoqin.dao.AomKaoqinDao">
+    
+	<sql id="aomKaoqinColumns">
+		a.id AS "id",
+		a.branch AS "branch",
+		a.kepperby AS "kepperby",
+		a.year AS "year",
+		a.month AS "month"
+	</sql>
+	
+	<sql id="aomKaoqinJoins">
+	</sql>
+    
+	<select id="get" resultType="AomKaoqin">
+		SELECT 
+			<include refid="aomKaoqinColumns"/>
+		FROM aom_kaoqin a
+		<include refid="aomKaoqinJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="AomKaoqin">
+		SELECT 
+			<include refid="aomKaoqinColumns"/>
+		FROM aom_kaoqin a
+		<include refid="aomKaoqinJoins"/>
+		<where>
+			
+			<if test="branch != null and branch != ''">
+				AND a.branch LIKE 
+					<if test="dbName == 'oracle'">'%'||#{branch}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{branch}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{branch},'%')</if>
+			</if>
+			<if test="kepperby != null and kepperby != ''">
+				AND a.kepperby LIKE 
+					<if test="dbName == 'oracle'">'%'||#{kepperby}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{kepperby}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{kepperby},'%')</if>
+			</if>
+			<if test="year != null and year != ''">
+				AND a.year LIKE 
+					<if test="dbName == 'oracle'">'%'||#{year}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{year}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{year},'%')</if>
+			</if>
+			<if test="month != null and month != ''">
+				AND a.month LIKE 
+					<if test="dbName == 'oracle'">'%'||#{month}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{month}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{month},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="AomKaoqin">
+		SELECT 
+			<include refid="aomKaoqinColumns"/>
+		FROM aom_kaoqin a
+		<include refid="aomKaoqinJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO aom_kaoqin(
+			id,
+			branch,
+			kepperby,
+			year,
+			month
+		) VALUES (
+			#{id},
+			#{branch},
+			#{kepperby},
+			#{year},
+			#{month}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE aom_kaoqin SET 	
+			branch = #{branch},
+			kepperby = #{kepperby},
+			year = #{year},
+			month = #{month}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM aom_kaoqin
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

@@ -1,0 +1,121 @@
+﻿Object Report
+	Version='6.5.0.0'
+	Object Font
+		Name='宋体'
+		Size=105000,0
+		Weight=400
+		Charset=134
+	End
+	Object Printer
+		Size=256
+		Width=8
+		Height=4.28
+		LeftMargin=0
+		TopMargin=0
+		RightMargin=0
+		BottomMargin=0
+	End
+	Object DetailGrid
+		Object Recordset
+			ConnectionString='Provider=OraOLEDB.Oracle.1;Password=crrcdt@zhl;Persist Security Info=True;User ID=zhl;Data Source=118.178.20.31:1521/ORCL;Extended Properties=""'
+			QuerySQL='SELECT PAC.PURCHASE_CODE,\r\nPAC.ENWARE_CODE,\r\nPAC.PACKAGE_CODE\r\nFROM ZHL_PACKAGE PAC\r\nWHERE PAC.PACKAGE_ID = '\r\n\r\n' \r\nAND PAC.DEL_FLAG='0''
+			Items Field
+				Item
+					Name='PACKAGE_CODE'
+				End
+				Item
+					Name='PURCHASE_CODE'
+				End
+				Item
+					Name='ENWARE_CODE'
+				End
+			End
+		End
+		Items Column
+			Item
+				Name='Column1'
+				Width=7.96396
+				FixedWidth=T
+			End
+		End
+		Object ColumnContent
+			Height=4.20688
+			Items ColumnContentCell
+				Item
+					Column='Column1'
+					FreeCell=T
+					Items Control
+						Item
+							Type=Barcode
+							Name='Barcode1'
+							Left=0.79375
+							Top=0.873125
+							Width=6.21771
+							Height=3.20146
+							BarcodeType=QRCode
+							CaptionPosition=None
+							Text='[#PACKAGE_CODE#],[#ENWARE_CODE#]'
+							Object Font
+								Name='宋体'
+								Size=157500,0
+								Bold=T
+								Charset=134
+							End
+						End
+						Item
+							Type=MemoBox
+							Name='MemoBox1'
+							Left=2.01083
+							Top=0.15875
+							Width=5.79438
+							Height=0.79375
+							Object Font
+								Name='宋体'
+								Size=157500,0
+								Bold=T
+								Charset=134
+							End
+							TextAlign=TopCenter
+							Text='[#PACKAGE_CODE#]'
+						End
+						Item
+							Type=MemoBox
+							Name='MemoBox2'
+							Top=0.079375
+							Width=2.40771
+							Height=0.79375
+							Object Font
+								Name='宋体'
+								Size=142500,0
+								Bold=T
+								Charset=134
+							End
+							Text='装箱单号：'
+						End
+					End
+					BorderCustom=T
+					Object Border
+						Object Pen
+							Width=0
+						End
+						Object InnerPen
+							Width=0
+						End
+					End
+				End
+			End
+		End
+		Object ColumnTitle
+			Height=0
+			RepeatStyle=OnPage
+			Items ColumnTitleCell
+				Item
+					GroupTitle=F
+					Column='Column1'
+					TextAlign=MiddleCenter
+					Text='Column1'
+				End
+			End
+		End
+	End
+End

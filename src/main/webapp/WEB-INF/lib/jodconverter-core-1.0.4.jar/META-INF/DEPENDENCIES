@@ -1,0 +1,37 @@
+// ------------------------------------------------------------------
+// Transitive dependencies of this project determined from the
+// maven pom organized by organization.
+// ------------------------------------------------------------------
+
+JODConverter - Core Library
+
+
+From: 'an unknown organization'
+  - Java Uno Helper (http://udk.openoffice.org) org.openoffice:juh:jar:3.2.1
+    License: GNU Lesser General Public License, Version 3  (http://www.openoffice.org/license.html)
+  - Java Uno RunTime (http://udk.openoffice.org) org.openoffice:jurt:jar:3.2.1
+    License: GNU Lesser General Public License, Version 3  (http://www.openoffice.org/license.html)
+  - Java Runtime Interface Definition Library (http://udk.openoffice.org) org.openoffice:ridl:jar:3.2.1
+    License: GNU Lesser General Public License, Version 3  (http://www.openoffice.org/license.html)
+  - UNO interface library (http://udk.openoffice.org) org.openoffice:unoil:jar:3.2.1
+    License: GNU Lesser General Public License, Version 3  (http://www.openoffice.org/license.html)
+
+From: 'Apache Software Foundation' (http://www.apache.org)
+  - CLI (http://jakarta.apache.org/commons/cli/) commons-cli:commons-cli:jar:1.1
+    License: The Apache Software License, Version 2.0  (/LICENSE.txt)
+
+From: 'Hyperic, Inc.' (http://www.hyperic.com/)
+  - SIGAR (http://sigar.hyperic.com/) org.hyperic:sigar:jar:1.6.5.132
+    License: Apache License Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+From: 'JSON' (http://json.org/)
+  - JSON (JavaScript Object Notation) (http://www.json.org/java/index.html) org.json:json:jar:20090211
+    License: provided without support or warranty  (http://www.json.org/license.html)
+
+From: 'The Apache Software Foundation' (http://www.apache.org/)
+  - Commons IO (http://commons.apache.org/io/) commons-io:commons-io:jar:1.4
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+
+
+

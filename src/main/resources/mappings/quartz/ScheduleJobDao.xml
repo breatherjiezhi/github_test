@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dhc.rad.common.quartz.dao.ScheduleJobDao">
+	
+	
+		<select id="selectByJobId" resultType="ScheduleJob">
+			SELECT
+			JOB_ID AS jobId,
+			JOB_NAME AS jobName,
+			JOB_GROUP AS jobGroup,
+			JOB_STATUS  AS jobStatus,
+			CURRENT_STATUS  AS currentStatus,
+			CRON_EXPRESSION AS cronExpression,
+			BEAN_CLASS AS beanClass,
+			METHOD_NAME AS methodName,
+			IS_CONCURRENT AS isConcurrent, 
+			SPRING_ID AS springId,
+			DESCRIPTION AS description,
+			CREATE_TIME AS createTime,
+			UPDATE_TIME AS updateTime
+			FROM TASK_SCHEDULE_JOB 
+			WHERE JOB_ID = #{jobId}
+			
+		</select>
+	
+		<select id="findList" resultType="ScheduleJob">
+			SELECT
+			JOB_ID AS jobId,
+			JOB_NAME AS jobName,
+			JOB_GROUP AS jobGroup,
+			JOB_STATUS  AS jobStatus,
+			CURRENT_STATUS  AS currentStatus,
+			CRON_EXPRESSION AS cronExpression,
+			BEAN_CLASS AS beanClass,
+			METHOD_NAME AS methodName,
+			IS_CONCURRENT AS isConcurrent, 
+			SPRING_ID AS springId,
+			DESCRIPTION AS description,
+			CREATE_TIME AS createTime,
+			UPDATE_TIME AS updateTime
+			FROM TASK_SCHEDULE_JOB 
+		</select>
+		<select id="getAll" resultType="ScheduleJob">
+			SELECT
+			JOB_ID AS jobId,
+			JOB_NAME AS jobName,
+			JOB_GROUP AS jobGroup,
+			JOB_STATUS  AS jobStatus,
+			CURRENT_STATUS  AS currentStatus,
+			CRON_EXPRESSION AS cronExpression,
+			BEAN_CLASS AS beanClass,
+			METHOD_NAME AS methodName,
+			IS_CONCURRENT AS isConcurrent, 
+			SPRING_ID AS springId,
+			DESCRIPTION AS description,
+			CREATE_TIME AS createTime,
+			UPDATE_TIME AS updateTime
+			FROM TASK_SCHEDULE_JOB 
+		</select>
+		
+		
+		<insert id="insert" parameterType="ScheduleJob">
+			INSERT INTO TASK_SCHEDULE_JOB 
+			(JOB_ID, CREATE_TIME, UPDATE_TIME,
+			JOB_NAME, JOB_GROUP, JOB_STATUS,
+			CRON_EXPRESSION, DESCRIPTION, BEAN_CLASS,
+			IS_CONCURRENT, SPRING_ID, METHOD_NAME
+			)
+			values (
+			#{jobId},
+			#{createTime},
+			#{updateTime},
+			#{jobName},
+			#{jobGroup}, 
+			#{jobStatus},
+			#{cronExpression}, 
+			#{description},
+			#{beanClass},
+			#{isConcurrent},
+			#{springId}, 
+			#{methodName}
+			)
+		</insert>
+		<insert id="insertSelective" parameterType="ScheduleJob">
+			insert into task_schedule_job
+			<trim prefix="(" suffix=")" suffixOverrides=",">
+				<if test="jobId != null">
+					job_id,
+				</if>
+				<if test="createTime != null">
+					create_time,
+				</if>
+				<if test="updateTime != null">
+					update_time,
+				</if>
+				<if test="jobName != null">
+					job_name,
+				</if>
+				<if test="jobGroup != null">
+					job_group,
+				</if>
+				<if test="jobStatus != null">
+					job_status,
+				</if>
+				<if test="cronExpression != null">
+					cron_expression,
+				</if>
+				<if test="description != null">
+					description,
+				</if>
+				<if test="beanClass != null">
+					bean_class,
+				</if>
+				<if test="isConcurrent != null">
+					is_concurrent,
+				</if>
+				<if test="springId != null">
+					spring_id,
+				</if>
+				<if test="methodName != null">
+					method_name,
+				</if>
+			</trim>
+			<trim prefix="values (" suffix=")" suffixOverrides=",">
+				<if test="jobId != null">
+					#{jobId},
+				</if>
+				<if test="createTime != null">
+					#{createTime},
+				</if>
+				<if test="updateTime != null">
+					#{updateTime},
+				</if>
+				<if test="jobName != null">
+					#{jobName},
+				</if>
+				<if test="jobGroup != null">
+					#{jobGroup},
+				</if>
+				<if test="jobStatus != null">
+					#{jobStatus},
+				</if>
+				<if test="cronExpression != null">
+					#{cronExpression},
+				</if>
+				<if test="description != null">
+					#{description},
+				</if>
+				<if test="beanClass != null">
+					#{beanClass},
+				</if>
+				<if test="isConcurrent != null">
+					#{isConcurrent},
+				</if>
+				<if test="springId != null">
+					#{springId},
+				</if>
+				<if test="methodName != null">
+					#{methodName},
+				</if>
+			</trim>
+		</insert>
+		<update id="updateByPrimaryKeySelective" parameterType="ScheduleJob">
+			update task_schedule_job
+			<set>
+				<if test="createTime != null">
+					create_time = #{createTime,jdbcType=TIMESTAMP},
+				</if>
+				<if test="updateTime != null">
+					update_time = #{updateTime,jdbcType=TIMESTAMP},
+				</if>
+				<if test="jobName != null">
+					job_name = #{jobName,jdbcType=VARCHAR},
+				</if>
+				<if test="jobGroup != null">
+					job_group = #{jobGroup,jdbcType=VARCHAR},
+				</if>
+				<if test="jobStatus != null">
+					job_status = #{taskStatus,jdbcType=VARCHAR},
+				</if>
+				<if test="cronExpression != null">
+					cron_expression = #{cronExpression,jdbcType=VARCHAR},
+				</if>
+				<if test="description != null">
+					description = #{description,jdbcType=VARCHAR},
+				</if>
+				<if test="beanClass != null">
+					bean_class = #{beanClass,jdbcType=VARCHAR},
+				</if>
+				<if test="isConcurrent != null">
+					is_concurrent = #{isConcurrent,jdbcType=VARCHAR},
+				</if>
+				<if test="springId != null">
+					spring_id = #{springId,jdbcType=VARCHAR},
+				</if>
+				<if test="methodName != null">
+					method_name = #{methodName,jdbcType=VARCHAR},
+				</if>
+			</set>
+			where job_id = #{jobId,jdbcType=BIGINT}
+		</update>
+		
+		<update id="update" parameterType="ScheduleJob">
+			update task_schedule_job
+			set 
+			update_time = #{updateTime},
+			job_name = #{jobName},
+			job_group = #{jobGroup},
+			job_status = #{jobStatus},
+			CURRENT_STATUS = #{currentStatus},
+			cron_expression = #{cronExpression},
+			description = #{description},
+			bean_class = #{beanClass},
+			is_concurrent = #{isConcurrent},
+			spring_id = #{springId},
+			method_name = #{methodName}
+			where job_id = #{jobId}
+		</update>
+		
+		<update id="updateJob" parameterType="ScheduleJob">
+			update task_schedule_job
+			set create_time = #{createTime},
+			update_time = #{updateTime},
+			job_name = #{jobName},
+			job_group = #{jobGroup},
+			job_status = #{jobStatus},
+			cron_expression = #{cronExpression},
+			description = #{description},
+			bean_class = #{beanClass},
+			is_concurrent = #{isConcurrent},
+			spring_id = #{springId},
+			method_name = #{methodName}
+			where job_id = #{jobId}
+		</update>	
+		
+		<delete id="deleteJob" parameterType="java.lang.Long">
+			delete from task_schedule_job
+			where job_id = #{jobId}
+		</delete>
+		
+	
+</mapper>

@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dhc.rad.modules.sys.dao.NotifyDao">
+
+	<sql id="notifyColumns">
+		a.ID AS "id",
+		a.TYPE AS "type",
+		a.USER_ID AS "receiver.id",
+		a.LOGIN_NAME AS "receiver.loginName",
+		r.name AS "receiver.name",
+		a.TITLE AS "title",
+		a.CONTENT AS "content",
+		a.READ_FLAG AS "readFlag",
+		a.READ_DATE AS "readDate",
+		a.URGENT_FLAG AS "urgentFlag",
+		a.SEND_BY AS "sender.id",
+		s.NAME AS "sender.name",
+		a.CREATE_BY AS "createBy.id",
+		a.CREATE_DATE AS "createDate",
+		a.UPDATE_BY AS "updateBy.id",
+		a.UPDATE_DATE AS "updateDate",
+		a.REMARKS AS "remarks",
+		a.DEL_FLAG AS "delFlag"
+	</sql>
+	
+	<sql id="notifyJoins">
+		LEFT JOIN SYS_USER s ON s.ID = a.SEND_BY
+		LEFT JOIN SYS_USER r ON r.ID = a.USER_ID
+	</sql>
+	
+	<select id="get" resultType="Notify">
+		SELECT 
+			<include refid="notifyColumns"/>
+		FROM SYS_NOTIFY a
+		<include refid="notifyJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	
+	<select id="findList" resultType="notify">
+		SELECT 
+			<include refid="notifyColumns"/>
+		FROM SYS_NOTIFY a
+		<include refid="notifyJoins"/>
+		WHERE a.del_flag = #{DEL_FLAG_NORMAL}
+		<if test="title != null and title != ''">
+			AND a.TITLE LIKE 
+					<if test="dbName == 'oracle'">'%'||#{title}||'%'</if>
+					<if test="dbName == 'mysql'">CONCAT('%', #{title}, '%')</if>
+		</if>
+		<if test="type != null and type != ''">
+			AND a.TYPE = #{type}
+		</if>
+		<if test="urgentFlag != null and urgentFlag != ''">
+			AND a.URGENT_FLAG = #{urgentFlag}
+		</if>
+		<if test="readFlag != null and readFlag != ''">
+			AND a.read_flag = #{readFlag}
+		</if>
+		AND a.user_id = #{receiver.id}
+		ORDER BY a.read_flag,a.urgent_flag DESC,a.create_date desc
+	</select>
+	<select id="showFindList" resultType="notify">
+		SELECT 
+			<include refid="notifyColumns"/>
+		FROM SYS_NOTIFY a
+		<include refid="notifyJoins"/>
+		WHERE a.del_flag = #{DEL_FLAG_NORMAL}
+		<if test="title != null and title != ''">
+			AND a.TITLE LIKE 
+					<if test="dbName == 'oracle'">'%'||#{title}||'%'</if>
+					<if test="dbName == 'mysql'">CONCAT('%', #{title}, '%')</if>
+		</if>
+		<if test="type != null and type != ''">
+			AND a.TYPE = #{type}
+		</if>
+		<if test="urgentFlag != null and urgentFlag != ''">
+			AND a.URGENT_FLAG = #{urgentFlag}
+		</if>
+		<if test="readFlag != null and readFlag != ''">
+			AND a.read_flag = #{readFlag}
+		</if>
+		ORDER BY a.read_flag,a.urgent_flag DESC,a.create_date desc
+	</select>	
+	<update id="readNotify">
+		UPDATE SYS_NOTIFY SET 	
+			READ_FLAG = #{readFlag},
+			READ_DATE = #{readDate},
+			UPDATE_BY = #{updateBy.id},
+			UPDATE_DATE = #{updateDate}
+		WHERE ID = #{id} 
+			AND	USER_ID = #{receiver.id}
+			AND READ_FLAG != #{READ_FLAG_YES}
+	</update>
+	
+	<insert id="insertAll" parameterType="List">
+		INSERT INTO SYS_NOTIFY(
+			ID,
+			TYPE,
+			USER_ID,
+			LOGIN_NAME,
+			TITLE,
+			CONTENT,
+			READ_FLAG,
+			URGENT_FLAG,
+			SEND_BY,
+			CREATE_BY,
+			CREATE_DATE,
+			UPDATE_BY,
+			UPDATE_DATE,
+			REMARKS,
+			DEL_FLAG
+		)
+		<foreach collection="list" item="e" separator=" UNION ALL ">
+			SELECT
+				#{e.id},
+				#{e.type},
+				#{e.receiver.id},
+				#{e.receiver.loginName},
+				#{e.title},
+				#{e.content},
+				#{e.readFlag},
+				#{e.urgentFlag},
+				#{e.senderId},
+				#{e.createBy.id},
+				#{e.createDate},
+				#{e.updateBy.id},
+				#{e.updateDate},
+				#{e.remarks},
+				#{e.delFlag}
+			FROM dual
+		</foreach>
+	</insert>
+	
+	<select id="findCount" resultType="Long">
+		SELECT 
+			count(1)
+		FROM SYS_NOTIFY a
+		WHERE a.DEL_FLAG = #{DEL_FLAG_NORMAL}
+			AND a.READ_FLAG =#{readFlag}
+			AND	a.USER_ID = #{receiver.id}
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO SYS_NOTIFY(
+		ID,
+		USER_ID,
+		LOGIN_NAME,
+		TITLE,
+		CONTENT,
+		READ_FLAG,
+		TYPE,
+		CREATE_DATE,
+		URGENT_FLAG,
+		SEND_BY
+		)VALUES(
+		SYS_GUID(),
+		#{receiver.id}, 
+		#{loginName},
+		#{title},
+		#{content},
+		#{readFlag},
+		#{type},
+		#{createDate},
+		#{urgentFlag},
+		#{senderId}
+		)
+	</insert>
+
+
+	<!-- 设置已读-->
+	<update id="doSetRead">
+		UPDATE SYS_NOTIFY
+		SET
+		READ_FLAG = '1'
+		WHERE  ID in
+		<foreach collection="list" item="id" index="index"
+				 open="(" close=")" separator=",">
+			#{id}
+		</foreach>
+	</update>
+
+	<!-- 全部设置已读-->
+	<update id="doSetAllRead">
+		UPDATE SYS_NOTIFY
+		SET
+		READ_FLAG = '1'
+		WHERE  del_flag = '0'
+	</update>
+
+</mapper>

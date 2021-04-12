@@ -95,7 +95,7 @@
 					<span><i class="fa fa-user" style="color:#4e73e0"></i> <span data-locale='UserIntegral'>剩余转换次数</span>：</span>
 				</div>
 				<div class="info_content">
-					<span>${user.userIntegral}</span>
+					<span><fmt:formatNumber type="number" value="${user.userIntegral }" pattern="#" /></span>
 				</div>
 			</div>
 			<%--<div class="infoList">

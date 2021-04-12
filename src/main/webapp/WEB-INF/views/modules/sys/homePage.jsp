@@ -71,7 +71,7 @@
 			</div>
 		</div>
 		<div id="personInfo">
-			<div class="personInfo_title">
+			<div class="personInfo_title" style="height: 0.6rem">
 				<span data-locale="PersonalInformation">个人信息</span>
 			</div>
 			<div class="infoList">
@@ -92,12 +92,20 @@
 			</div>
 			<div class="infoList">
 				<div class="info_label">
-					<span><i class="fa fa-phone" style="color:#4e73e0"></i> <span data-locale='mobile'>手机号码</span>：</span>
+					<span><i class="fa fa-user" style="color:#4e73e0"></i> <span data-locale='UserIntegral'>剩余转换次数</span>：</span>
 				</div>
 				<div class="info_content">
-					<span>${user.mobile}</span>
+					<span>${user.userIntegral}</span>
 				</div>
 			</div>
+			<%--<div class="infoList">
+				<div class="info_label">
+					<span><i class="fa fa-user" style="color:#e18e42"></i> <span data-locale='userIntegral'>用户积分</span>：</span>
+				</div>
+				<div class="info_content">
+					<span>${user.userIntegral}</span>
+				</div>
+			</div>--%>
 			<div class="infoList">
 				<div class="info_label">
 					<span><i class="fa fa-cogs" style="color:#19c865"></i> <span data-locale='Department'>所属部门</span>：</span>
@@ -125,13 +133,23 @@
 				<div class="info_content">
 					<span>${user.roleNames}</span>
 				</div>
+
 			</div>
+			<%--<div class="infoList">
+				<div class="info_label">
+					<span><i class="fa fa-user" style="color:#e18e42"></i> <span data-locale='userIntegral'>用户积分</span>：</span>
+				</div>
+				<div class="info_content">
+					<span>${user.userIntegral}</span>
+				</div>
+			</div>--%>
+
 		</div>
 		<div id="myTodoList">
 			<table id="todoTable">
 				<thead>
 				<tr style="background-color:#fafafa;">
-					<th style="width:0.4rem;"></th>
+					<th style="width:0.5rem;"></th>
 					<th style="width:14.98%" data-locale="Project">项目</th>
 					<th style="width:14.98%" data-locale="Number">编号</th>
 					<th style="width:24.96%" data-locale="ToDoContent">待办内容</th>

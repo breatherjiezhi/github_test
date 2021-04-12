@@ -3,9 +3,11 @@
  */
 package com.dhc.rad.modules.sys.entity;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
+import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Email;
@@ -58,7 +60,29 @@ public class User extends DataEntity<User> {
 
     private String projectOrgId;
 
-    public String getProjectOrgId() {
+    private BigDecimal userIntegral; //用户积分
+
+	private List<UserScore> userScoreList;
+
+	public List<UserScore> getUserScoreList() {
+		return userScoreList;
+	}
+
+	public void setUserScoreList(List<UserScore> userScoreList) {
+		this.userScoreList = userScoreList;
+	}
+
+	@ExcelField(title="用户积分", align=2, sort=90)
+	@Digits(integer = 10,fraction = 2,message = "用户积分，有效位数10位，小数2位")
+	public BigDecimal getUserIntegral() {
+		return userIntegral;
+	}
+
+	public void setUserIntegral(BigDecimal userIntegral) {
+		this.userIntegral = userIntegral;
+	}
+
+	public String getProjectOrgId() {
         return projectOrgId;
     }
 

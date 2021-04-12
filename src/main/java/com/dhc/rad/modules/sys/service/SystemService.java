@@ -729,4 +729,8 @@ public class SystemService extends BaseService implements InitializingBean {
 	public Role findrole(String userid){
 		return roleDao.findrole(userid);
 	}
+
+	public User findUserAndScore(String id) {
+		return userDao.findUserAndScoreById(id);
+	}
 }

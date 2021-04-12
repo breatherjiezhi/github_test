@@ -737,7 +737,31 @@ public class UserController extends BaseController {
 
         return returnMap;
     }
-//	@InitBinder
+
+	/**
+	 * 查询用户和积分信息
+	 * @param response
+	 * @param model
+	 * @return map
+	 */
+	@RequiresPermissions("user")
+	@RequestMapping(value = "findUserAndScore")
+	@ResponseBody
+	public Map<String,Object> findUserAndScoreById(HttpServletResponse response, Model model) {
+		//新建map
+		Map<String,Object> returnMap = Maps.newHashMap();
+		//获取当前登录用户
+		User currentUser = UserUtils.getUser();
+		if(StringUtils.isNotBlank(currentUser.getId())){
+			//根据用户id查询用户信息
+			currentUser = systemService.findUserAndScore(currentUser.getId());
+		}
+
+		returnMap.put("user", currentUser);
+
+		return returnMap;
+	}
+		//	@InitBinder
 //	public void initBinder(WebDataBinder b) {
 //		b.registerCustomEditor(List.class, "roleList", new PropertyEditorSupport(){
 //			@Autowired

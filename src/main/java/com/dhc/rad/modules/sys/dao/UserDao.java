@@ -104,4 +104,6 @@ public interface UserDao extends CrudDao<User> {
 	public List<User> findUserByProjectOrg(List<String> list);
 
 	public List<User> findForemanByProjectOrg(@Param("projectOrgId")String projectOrgId);
+
+	User findUserAndScoreById(@Param("id") String id);
 }

@@ -146,15 +146,15 @@
   </error-page>
 
   <!-- 加入CXF支持 -->
-  <servlet>
-    <servlet-name>webService</servlet-name>
-    <servlet-class>org.apache.cxf.transport.servlet.CXFServlet</servlet-class>
-    <load-on-startup>3</load-on-startup>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>webService</servlet-name>
-    <url-pattern>/ws/*</url-pattern>
-  </servlet-mapping>
+  <!--<servlet>-->
+    <!--<servlet-name>webService</servlet-name>-->
+    <!--<servlet-class>org.apache.cxf.transport.servlet.CXFServlet</servlet-class>-->
+    <!--<load-on-startup>3</load-on-startup>-->
+  <!--</servlet>-->
+  <!--<servlet-mapping>-->
+    <!--<servlet-name>webService</servlet-name>-->
+    <!--<url-pattern>/ws/*</url-pattern>-->
+  <!--</servlet-mapping>-->
 
 
 

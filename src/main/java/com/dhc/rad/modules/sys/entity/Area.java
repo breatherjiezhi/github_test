@@ -25,6 +25,10 @@ public class Area extends TreeEntity<Area> {
 //	private String name; 	// 区域名称
 //	private Integer sort;		// 排序
 	private String type; 	// 区域类型（1：国家；2：省份、直辖市；3：地市；4：区县）
+
+	private String areaLocation;
+
+
 	private List<Area> subArea; //子区域集合 
 	
 	public Area(){
@@ -93,6 +97,16 @@ public class Area extends TreeEntity<Area> {
 //	public String getParentId() {
 //		return parent != null && parent.getId() != null ? parent.getId() : "0";
 //	}
+
+
+	public String getAreaLocation() {
+		return areaLocation;
+	}
+
+	public void setAreaLocation(String areaLocation) {
+		this.areaLocation = areaLocation;
+	}
+
 	@JsonIgnore
 	public static String getRootId(){
 		return "0";

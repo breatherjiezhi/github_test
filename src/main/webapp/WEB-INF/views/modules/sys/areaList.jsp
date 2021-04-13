@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ include file="/WEB-INF/views/include/taglib.jsp"%>
-	<title>区域管理</title>
+	<title>投料点管理</title>
 	<link href="${ctxStatic}/treeTable/themes/vsStyle/treeTable.min.css" rel="stylesheet" type="text/css" />
 	<link href="${ctxStatic}/bootstrap-treeview/css/bootstrap-treeview.css" rel="stylesheet" type="text/css" />	
 	<div class="row">
@@ -8,9 +8,9 @@
 			<table id="treeTable" class="table table-striped table-bordered table-condensed">
 				<thead>
 				<tr>
-					<th data-locale="AreaName">区域名称</th>
-					<th data-locale="AreaCode">区域编码</th>
-					<th data-locale="AreaType">区域类型</th>
+					<th data-locale="AreaName">投料点名称</th>
+					<th data-locale="AreaCode">投料点编码</th>
+					<th data-locale="AreaLocation">投料点地址</th>
 					<shiro:hasPermission name="sys:area:edit"><th data-locale="Operations">操作</th></shiro:hasPermission>
 				</tr>
 				</thead>
@@ -18,7 +18,7 @@
 					<tr id="${area.id}" pId="${area.parent.id}">
 						<td nowrap><a href="javascript:void(0);" data-action="view">${area.name}</a></td>
 						<td title="${area.code}">${area.code}</td>
-						<td >${fns:getDictLabel(area.type, 'sys_area_type', area.type)}</td>
+						<td >${area.areaLocation}</td>
 						<shiro:hasPermission name="sys:area:edit"><td nowrap>
 							<div class="action-buttons">
 							<a data-action="edit" href="javascript:void(0);" class="tooltip-success green" data-rel="tooltip" title="编辑"  style="border-color:#69aa46 "><i class="ace-icon fa fa-pencil bigger-130"></i></a>

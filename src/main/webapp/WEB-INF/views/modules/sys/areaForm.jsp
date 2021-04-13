@@ -18,28 +18,36 @@
 			</div>			
 		</div>
 		<div class="form-group">			
-			<label class="control-label col-xs-12 col-sm-3 no-padding" for="name" data-locale="AreaName">区域名称</label>
+			<label class="control-label col-xs-12 col-sm-3 no-padding" for="name" data-locale="AreaName">名称</label>
 			<div class="col-xs-12 col-sm-9">
 				<div class="clearfix">				
-					<form:input path="name" htmlEscape="false" maxlength="50" class="form-control width-100" placeholder="请输入区域名称" />
+					<form:input path="name" htmlEscape="false" maxlength="50" class="form-control width-100" placeholder="请输入名称" />
 				</div>
 			</div>
 		</div>
 		<div class="form-group">			
-			<label class="control-label col-xs-12 col-sm-3 no-padding" for="code" data-locale="AreaCode">区域编码</label>
+			<label class="control-label col-xs-12 col-sm-3 no-padding" for="code" data-locale="AreaCode">编码</label>
 			<div class="col-xs-12 col-sm-9">
 				<div class="clearfix">				
-					<form:input path="code" htmlEscape="false" maxlength="50" class="form-control width-100" placeholder="请输入区域编码" />
+					<form:input path="code" htmlEscape="false" maxlength="50" class="form-control width-100" placeholder="请输入编码" />
 				</div>
 			</div>
 		</div>
+		<%--<div class="form-group">--%>
+			<%--<label class="control-label col-xs-12 col-sm-3 no-padding" for="type" data-locale="AreaType">区域类型</label>--%>
+			<%--<div class="col-xs-12 col-sm-9">--%>
+				<%--<div class="clearfix input-group width-100">--%>
+					<%--<form:select  path="type" class="chosen-select form-control width-100" data-placeholder="点击选择...">--%>
+						<%--<form:options items="${fns:getDictList('sys_area_type')}" itemLabel="label" itemValue="value" htmlEscape="false" />--%>
+					<%--</form:select>--%>
+				<%--</div>--%>
+			<%--</div>--%>
+		<%--</div>--%>
 		<div class="form-group">
-			<label class="control-label col-xs-12 col-sm-3 no-padding" for="type" data-locale="AreaType">区域类型</label>
+			<label class="control-label col-xs-12 col-sm-3 no-padding" for="areaLocation" data-locale="AreaLocation">投料点地址</label>
 			<div class="col-xs-12 col-sm-9">
-				<div class="clearfix input-group width-100">
-					<form:select  path="type" class="chosen-select form-control width-100" data-placeholder="点击选择...">
-						<form:options items="${fns:getDictList('sys_area_type')}" itemLabel="label" itemValue="value" htmlEscape="false" />
-					</form:select>
+				<div class="clearfix">
+					<form:textarea path="areaLocation" htmlEscape="false" rows="3" maxlength="200" class="form-control width-100" placeholder="请输入投料点地址信息" />
 				</div>
 			</div>
 		</div>

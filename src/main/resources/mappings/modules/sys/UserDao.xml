@@ -301,10 +301,9 @@
     <select id="findList" resultType="User">
         SELECT
         <include refid="userColumns"/>
-        , rs.rolename as "role.name"
+
         FROM sys_user a
         <include refid="userJoins"/>
-        LEFT JOIN MMIS_USER_ROLELIST rs ON rs.id = a.id
 
         <if test="role != null and role.id != null and role.id != ''">
             JOIN sys_user_role ur ON ur.user_id = a.id AND ur.role_id = #{role.id}
@@ -515,7 +514,7 @@
         FROM sys_user a
         <include refid="userJoins"/>
         WHERE a.del_flag = '0'
-        AND rs.rolename LIKE CONCAT('%', '班组长', '%')
+
         AND a.id IN
         <foreach collection="list" item="id" index="index"
                  open="(" close=")" separator=",">

@@ -85,10 +85,10 @@
             var grid_selector = "#grid-table";
             var pager_selector = "#grid-pager";
             var toolbarTop = grid_selector + '_toppager';
-            var isAdd=false;
-            var isAlldel=false;
-            var isShow = "none";
-            var isShow2 = "none";
+            var isAdd=true;
+            var isAlldel=true;
+            var isShow = "";
+            var isShow2 = "";
 
 
             <shiro:hasAnyPermissions name="pbd:yearplan:add">
@@ -357,7 +357,6 @@
                             url: '${ctx}/holiday/importData',
                             type: 'post',
                             success: function (result) {
-                                alert(result.message);
                                 if (result.messageStatus == "1") {
                                     $.msg_show.Init({
                                         'msg': result.message,

@@ -59,7 +59,7 @@
                 ORDER BY ${page.orderBy}
             </when>
             <otherwise>
-                ORDER BY create_date DESC
+                ORDER BY  HOLIDAY_TYPE DESC,HOLIDAY_DATE
             </otherwise>
         </choose>
 

@@ -113,14 +113,14 @@
 					<span>${user.userIntegral}</span>
 				</div>
 			</div>--%>
-			<div class="infoList">
+			<%--<div class="infoList">
 				<div class="info_label">
 					<span><i class="fa fa-cogs" style="color:#19c865"></i> <span data-locale='Department'>所属部门</span>：</span>
 				</div>
 				<div class="info_content">
 					<span>${user.office.name}</span>
 				</div>
-			</div>
+			</div>--%>
 			<div class="infoList">
 				<div class="info_label">
 					<span><i class="fa fa-suitcase" style="color:#e1d53a"></i> <span data-locale='SubordinateProject'>所属项目</span>：</span>

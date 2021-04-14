@@ -24,12 +24,18 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-xs-12 col-sm-4 no-padding">
+                            <%--<div class="col-xs-12 col-sm-4 no-padding">
                                 <div class="new-search clearfix">
                                     <label class=" col-xs-12 col-sm-4" for="holidayDate" data-locale="holidayDate">假期日期</label>
                                     <div class="col-xs-12 col-sm-8 no-padding">
                                         <input type="text" id="holidayDate" class="ace width-100 newsearchInput"/>
                                     </div>
+                                </div>
+                            </div>--%>
+                            <label class="control-label col-xs-12 col-sm-1 no-padding-right" for="holidayDate">假期日期</label>
+                            <div class="col-xs-12 col-sm-3">
+                                <div class="input-daterange input-group">
+                                    <input type="text" class="input-sm form-control" id="holidayDate" name="holidayDate" value="<fmt:formatDate value="${holidayDate}" type="date"/>"/>
                                 </div>
                             </div>
                         </div>
@@ -89,6 +95,8 @@
             var isAlldel=true;
             var isShow = "";
             var isShow2 = "";
+
+            $('.input-daterange').datepicker({autoclose:true,zIndexOffset:100,format: "yyyy-mm-dd",language:"zh-CN"});
 
 
             <shiro:hasAnyPermissions name="pbd:yearplan:add">
@@ -392,7 +400,7 @@
                         modal: true,
                         width: 600,
                         height: 500,
-                        title: "<div class='widget-header widget-header-small widget-header-flat'><h4 class='smaller' style='line-height:2'><i class='ace-icon fa fa-th-large'></i>&nbsp;<span data-locale='AnnualPlanInfo.'>节假日信息</span></h4></div>",
+                        title: "<div class='widget-header widget-header-small widget-header-flat'><h4 class='smaller' style='line-height:2'><i class='ace-icon fa fa-th-large'></i>&nbsp;<span data-locale='HolidayInfo.'>节假日信息</span></h4></div>",
                         title_html: true,
                         buttons: [
                             {

@@ -162,7 +162,7 @@ public class ImportExcel{
 	 * @return
 	 */
 	public int getDataRowNum(){
-		return headerNum+1;
+		return headerNum;
 	}
 	
 	/**

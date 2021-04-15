@@ -53,13 +53,14 @@ public class HolidayService extends CrudService<HolidayDao, Holiday> {
 
     @Transactional(readOnly = false)
     public Integer saveOrUpdateBydDate(Holiday holiday) {
-        if(ObjectUtils.isNotEmpty(holiday)){
-            if(ObjectUtils.isNotEmpty(holiday.getHolidayDate())){
+        if(holiday!=null){
+            if(ObjectUtils.isNotEmpty(holiday.getHolidayDate()) && StringUtils.isNotBlank(holiday.getHolidayType())){
 
                 SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
                 String hDate = df.format(holiday.getHolidayDate());
 
                 Holiday newHoliday = holidayDao.getByDate(hDate);
+
                 holiday.setHolidayType(holiday.getHolidayType().contains("节")?holiday.getHolidayType():holiday.getHolidayType()+"节");
                 if (ObjectUtils.isNotEmpty(newHoliday)) {
                     holiday.preUpdate();
@@ -74,10 +75,5 @@ public class HolidayService extends CrudService<HolidayDao, Holiday> {
         return 0;
     }
 
-    @Transactional(readOnly = false)
-    public Page<Holiday> findHoliday(Page<Holiday> holidayPage, Holiday holiday) {
-        List<Holiday> holidayList = holidayDao.findList(holiday);
-        holidayPage.setList(holidayList);
-        return holidayPage;
-    }
+
 }

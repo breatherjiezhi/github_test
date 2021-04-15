@@ -3,11 +3,13 @@ package com.dhc.rad.modules.holiday.web;
 import com.dhc.rad.common.persistence.Page;
 import com.dhc.rad.common.utils.ObjectUtils;
 import com.dhc.rad.common.utils.StringUtils;
+import com.dhc.rad.common.utils.excel.ExportExcel;
 import com.dhc.rad.common.utils.excel.ImportExcel;
 import com.dhc.rad.common.web.BaseController;
 import com.dhc.rad.modules.holiday.entity.Holiday;
 import com.dhc.rad.modules.holiday.service.HolidayService;
 import com.dhc.rad.modules.sys.entity.User;
+import com.google.common.collect.Lists;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -47,8 +49,6 @@ public class HolidayController extends BaseController {
 
     @RequestMapping(value = {"list"})
     public String list(Holiday holiday, HttpServletRequest request, HttpServletResponse response, Model model){
-        List<Holiday> holidayList = holidayService.findList(holiday);
-        model.addAttribute("holidayList", holidayList);
         return "modules/holiday/holidayList";
     }
 
@@ -56,14 +56,12 @@ public class HolidayController extends BaseController {
     @ResponseBody
     public Map<String,Object> searchPage(Holiday holiday,HttpServletRequest request,HttpServletResponse response){
 
-        Page<Holiday> page = holidayService.findHoliday(new Page<>(request, response), holiday);
-
+        Page<Holiday> page = holidayService.findPage(new Page<>(request, response), holiday);
         Map<String,Object> returnMap = new HashMap<>();
         returnMap.put("total", page.getTotalPage());
         returnMap.put("pageNo", page.getPageNo());
         returnMap.put("records", page.getCount());
         returnMap.put("rows", page.getList());
-
         return returnMap;
     }
 
@@ -109,27 +107,20 @@ public class HolidayController extends BaseController {
      * 下载excel模板
      */
     @RequestMapping("downloadexcel")
-    public void downloadPermMatrix(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        ServletOutputStream out = null;
+    public String downloadPermMatrix(HttpServletResponse response, RedirectAttributes redirectAttributes) throws Exception {
         try {
-            URL url = Thread.currentThread().getContextClassLoader().getResource("holiday/节假日模板.xlsx");
-            String path = url.getPath();
-            InputStream fis = new FileInputStream(path);
-//            InputStream fis = new FileInputStream(new File("D:\\","节假日模板.xlsx"));
-            XSSFWorkbook workbook = new XSSFWorkbook(fis);
-            response.setContentType("application/binary;charset=UTF-8");
-            String fileName = java.net.URLEncoder.encode("节假日模版", "UTF-8");
-            response.setHeader("Content-disposition", "attachment; filename=" + fileName + ".xlsx");
-            out = response.getOutputStream();
-            workbook.write(out);
-            out.flush();
-            out.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            //关闭文件输出流
+            String fileName = "节假日模版.xlsx";
+            List<Holiday> list = Lists.newArrayList();
+            list.add(new Holiday());
+            new ExportExcel("节假日模版", Holiday.class, 2).setDataList(list).write(response, fileName).dispose();
+            return null;
+        } catch (Exception e) {
+            addMessage(redirectAttributes, "导入模板下载失败！失败信息：" + e.getMessage());
         }
+        return "redirect:" + adminPath + "/holiday/list?repage";
     }
+
+
 
     /**
      * 导入数据
@@ -152,7 +143,7 @@ public class HolidayController extends BaseController {
                  }
             }
             if(holidayList.size()==successResult){
-                addMessageAjax(resultMap, "1", "全部导入成功");
+                addMessageAjax(resultMap, "1", "全部导入成功，" + "共" + successResult + "条数据");
             }else {
                 addMessageAjax(resultMap, "1", successResult + "条数据导入成功，" + "共" + failResult + "条数据导入失败");
             }

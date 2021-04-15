@@ -92,30 +92,12 @@
             var grid_selector = "#grid-table";
             var pager_selector = "#grid-pager";
             var toolbarTop = grid_selector + '_toppager';
-            var isAdd=true;
-            var isAlldel=true;
-            var isShow = "";
-            var isShow2 = "";
+
 
             $('.input-daterange').datepicker({autoclose:true,zIndexOffset:100,format: "yyyy-mm-dd",language:"zh-CN"});
 
 
-            <shiro:hasAnyPermissions name="pbd:yearplan:add">
-            isAdd=true
-            </shiro:hasAnyPermissions>
 
-            <shiro:hasAnyPermissions name="pbd:yearplan:alldel">
-            isAlldel=true
-            </shiro:hasAnyPermissions>
-
-
-            <shiro:hasAnyPermissions name="pbd:yearplan:import">
-            isShow="";
-            </shiro:hasAnyPermissions>
-
-            <shiro:hasAnyPermissions name="pbd:yearplan:down">
-            isShow2="";
-            </shiro:hasAnyPermissions>
             var reSizeHeight = function () {
                 var strs = $.getWindowSize().toString().split(",");
                 var jqgrid_height = strs[0] - 340;  //随着搜索部分的高度变化，设置这里的高度，保持page条在底部
@@ -156,8 +138,8 @@
                 ],
                 colModel: [
                     {name: 'id', index: 'id',hidden:true},
-                    {name: 'holidayType', index: 'holidayType'},
-                    {name: 'holidayDate', index: 'holidayDate'}
+                    {name: 'holidayType', index: 'HOLIDAY_TYPE'},
+                    {name: 'holidayDate', index: 'HOLIDAY_DATE'}
                 ],
                 viewrecords: true,
                 rowNum: 20,
@@ -216,12 +198,12 @@
                     editfunc: openDialogEdit,
                     edittext: "<span data-locale='edit'>编辑</span>",
                     edittitle: '',
-                    add: isAdd,
+                    add: true,
                     addicon: 'ace-icon fa fa-plus',
                     addfunc: openDialogAdd,
                     addtext: "<span data-locale='add'>新增</span>",
                     addtitle: '',
-                    del: isAlldel,
+                    del: true,
                     delicon: 'ace-icon fa fa-trash-o',
                     delfunc: doDelete,
                     deltext: "<span data-locale='BatchDelete'>批量删除</span>",
@@ -256,8 +238,8 @@
             })
 
 
-            $("#upload").css('display',isShow);
-            $("#download").css('display',isShow2);
+            $("#upload").css('display',"");
+            $("#download").css('display',"");
 
             function download() {
                 window.location.href="${ctx}/holiday/downloadexcel";

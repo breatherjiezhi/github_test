@@ -162,7 +162,7 @@ public class ImportExcel{
 	 * @return
 	 */
 	public int getDataRowNum(){
-		return headerNum;
+		return headerNum+1;
 	}
 	
 	/**
@@ -331,7 +331,7 @@ public class ImportExcel{
 			StringBuilder sb = new StringBuilder();
 			for (Object[] os : annotationList){
 				Object val = this.getCellValue(row, column++);
-				if (val != null){
+				if (val != null && StringUtils.isNotBlank(val.toString())){
 					ExcelField ef = (ExcelField)os[0];
 					// If is dict type, get dict value
 					if (StringUtils.isNotBlank(ef.dictType())){

@@ -30,7 +30,7 @@
             a.HOLIDAY_TYPE
         FROM pz_holiday a
 
-        WHERE a.HOLIDAY_DATE = #{holidayDate}
+        WHERE a.HOLIDAY_DATE = #{holidayDate} and del_flag ='0'
     </select>
 
     <select id="findList" resultMap="BaseResultMap">
@@ -67,7 +67,7 @@
 
     </select>
 
-    <select id="get" resultType="com.dhc.rad.modules.holiday.entity.Holiday">
+    <select id="get" resultMap="BaseResultMap">
         SELECT
             a.ID,
             a.HOLIDAY_DATE,

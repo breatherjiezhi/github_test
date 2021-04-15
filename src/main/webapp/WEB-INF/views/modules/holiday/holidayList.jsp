@@ -24,20 +24,21 @@
                                     </div>
                                 </div>
                             </div>
-                            <%--<div class="col-xs-12 col-sm-4 no-padding">
+
+                            <div class="col-xs-12 col-sm-4 no-padding">
                                 <div class="new-search clearfix">
-                                    <label class=" col-xs-12 col-sm-4" for="holidayDate" data-locale="holidayDate">假期日期</label>
-                                    <div class="col-xs-12 col-sm-8 no-padding">
-                                        <input type="text" id="holidayDate" class="ace width-100 newsearchInput"/>
-                                    </div>
-                                </div>
-                            </div>--%>
-                            <label class="control-label col-xs-12 col-sm-1 no-padding-right" for="holidayDate">假期日期</label>
-                            <div class="col-xs-12 col-sm-3">
-                                <div class="input-daterange input-group">
-                                    <input type="text" class="input-sm form-control" id="holidayDate" name="holidayDate" value="<fmt:formatDate value="${holidayDate}" type="date"/>"/>
+                                    <label class=" col-xs-12 col-sm-4" for="beginDate" data-locale="DateRange">日期范围</label>
+                                        <div class="input-daterange input-group ">
+                                            <input autocomplete="off" type="text" class="input-sm form-control newsearchInput  width-100" id="beginDate" name="beginDate" value="<fmt:formatDate value="${beginDate}" type="date"/>"/>
+                                            <span class="input-group-addon"><i class="fa fa-exchange"></i></span>
+                                            <input autocomplete="off" type="text" class="input-sm form-control newsearchInput  width-100" id="endDate" name="endDate"  value="<fmt:formatDate value="${endDate}" type="date"/>"/>
+                                        </div>
                                 </div>
                             </div>
+
+
+
+
                         </div>
                         <div class="form-group">
                             <div class="col-xs-12 col-sm-4">
@@ -172,7 +173,7 @@
                     $(pager_selector + "_left table").remove();
                 },
                 editurl: "/dummy.html",//nothing is saved
-                caption: "<span data-locale='AnnualPlanList'>节假日列表</span>",
+                caption: "<span data-locale='HolidayList'>节假日列表</span>",
                 gridComplete: function () {
                     var qCode = sessionStorage.getItem("qCode");
                     typeChange(qCode);
@@ -398,9 +399,9 @@
                     $("#editDivId").closest(".ui-dialog").remove();
                     $("#editDivId").html(object.responseText).dialog({
                         modal: true,
-                        width: 600,
-                        height: 500,
-                        title: "<div class='widget-header widget-header-small widget-header-flat'><h4 class='smaller' style='line-height:2'><i class='ace-icon fa fa-th-large'></i>&nbsp;<span data-locale='HolidayInfo.'>节假日信息</span></h4></div>",
+                        width: 400,
+                        height: 250,
+                        title: "<div class='widget-header widget-header-small widget-header-flat'><h4 class='smaller' style='line-height:2'><i class='ace-icon fa fa-th-large'></i>&nbsp;<span data-locale='HolidayInfo'>节假日信息</span></h4></div>",
                         title_html: true,
                         buttons: [
                             {
@@ -540,11 +541,12 @@
             //search list by condition
             $("#query").click(function () {
                 var holidayType = $("#holidayType").val();
-                var holidayDate = $("#holidayDate").val();
+                var beginDate = $("#beginDate").val();
+                var endDate = $("#endDate").val();
                 $(grid_selector).jqGrid('setGridParam', {
                     url: "${ctx}/holiday/searchPage",
                     mtype: "post",
-                    postData: {'holidayType':holidayType,'holidayDate':holidayDate}, //发送数据
+                    postData: {'holidayType':holidayType,'beginDate':beginDate,'endDate':endDate}, //发送数据
                     page: 1
                 }).trigger("reloadGrid"); //重新载入
             });

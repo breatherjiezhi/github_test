@@ -55,6 +55,7 @@ public class HolidayController extends BaseController {
     @RequestMapping(value = {"searchPage"})
     @ResponseBody
     public Map<String,Object> searchPage(Holiday holiday,HttpServletRequest request,HttpServletResponse response){
+
         Page<Holiday> page = holidayService.findHoliday(new Page<>(request, response), holiday);
 
         Map<String,Object> returnMap = new HashMap<>();

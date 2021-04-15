@@ -54,12 +54,14 @@
         <if test ="null != createDate and ''!= createDate"> AND CREATE_DATE = #{createDate}</if>
         <if test ="null != updateDate and ''!= updateDate"> AND UPDATE_DATE = #{updateDate}</if>
         <if test ="null != remarks and ''!= remarks"> AND remarks = #{remarks}</if>
+        <if test ="null != beginDate and ''!= beginDate"> AND HOLIDAY_DATE &gt;= #{beginDate}</if>
+        <if test ="null != endDate and ''!= endDate"> AND HOLIDAY_DATE &lt;= #{endDate}</if>
         <choose>
             <when test="page !=null and page.orderBy != null and page.orderBy != ''">
                 ORDER BY ${page.orderBy}
             </when>
             <otherwise>
-                ORDER BY  HOLIDAY_TYPE DESC,HOLIDAY_DATE
+                ORDER BY  HOLIDAY_DATE DESC
             </otherwise>
         </choose>
 

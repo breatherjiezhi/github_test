@@ -25,6 +25,13 @@ public class Holiday extends DataEntity<Holiday> {
     private Date holidayDate;
 
 
+    //用于查询字段
+    private String beginDate;
+    private String endDate;
+
+
+
+
     @ExcelField(title="假期类型", align=2, sort=2)
     public String getHolidayType() {
         return holidayType;
@@ -42,5 +49,22 @@ public class Holiday extends DataEntity<Holiday> {
 
     public void setHolidayDate(Date holidayDate) {
         this.holidayDate = holidayDate;
+    }
+
+
+    public String getBeginDate() {
+        return beginDate;
+    }
+
+    public void setBeginDate(String beginDate) {
+        this.beginDate = beginDate;
+    }
+
+    public String getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(String endDate) {
+        this.endDate = endDate;
     }
 }

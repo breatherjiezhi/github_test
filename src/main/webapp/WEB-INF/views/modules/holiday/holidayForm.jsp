@@ -15,10 +15,20 @@
             <div class="form-group">
                 <label class="control-label col-xs-12 col-sm-3 no-padding-right" for="holidayDate">假期日期:</label>
                 <div class="col-xs-12 col-sm-8">
-                    <form:input path="holidayDate" htmlEscape="false" maxlength="64" class="input-xlarge required"/>
+                    <fmt:formatDate value="${holiday.holidayDate }" pattern="yyyy-MM-dd" var="hDate"/>
+                    <form:input path="holidayDate" htmlEscape="false" maxlength="64" class="input-xlarge required" value="${hDate}"/>
 
                 </div>
             </div>
         </form:form>
     </div>
 </div>
+<script type="text/javascript">
+var scripts = [ null,'${ctxStatic}/assets/js/fuelux/fuelux.spinner.js','${ctxStatic}/assets/js/date-time/bootstrap-datepicker.js','${ctxStatic}/assets/js/date-time/bootstrap-datepicker.zh-CN.min.js', null ];
+$('.page-content-area').ace_ajax('loadScripts', scripts, function () {
+jQuery(function ($) {
+    $('#holidayDate').datepicker({autoclose:true,zIndexOffset:100,format: "yyyy-mm-dd",language:"zh-CN"});
+    });
+});
+</script>
+

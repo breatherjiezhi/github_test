@@ -5,12 +5,14 @@ package com.dhc.rad.modules.sys.service;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 
+import com.dhc.rad.modules.sys.entity.*;
 import org.activiti.engine.IdentityService;
 import org.activiti.engine.identity.Group;
 import org.apache.shiro.session.Session;
@@ -31,11 +33,6 @@ import com.dhc.rad.modules.sys.dao.MenuDao;
 import com.dhc.rad.modules.sys.dao.NotifyDao;
 import com.dhc.rad.modules.sys.dao.RoleDao;
 import com.dhc.rad.modules.sys.dao.UserDao;
-import com.dhc.rad.modules.sys.entity.Menu;
-import com.dhc.rad.modules.sys.entity.Notify;
-import com.dhc.rad.modules.sys.entity.Office;
-import com.dhc.rad.modules.sys.entity.Role;
-import com.dhc.rad.modules.sys.entity.User;
 import com.dhc.rad.modules.sys.security.SystemAuthorizingRealm;
 import com.dhc.rad.modules.sys.utils.LogUtils;
 import com.dhc.rad.modules.sys.utils.UserUtils;
@@ -732,5 +729,16 @@ public class SystemService extends BaseService implements InitializingBean {
 
 	public User findUserAndScore(String id) {
 		return userDao.findUserAndScoreById(id);
+	}
+
+
+
+	@Transactional(readOnly = false)
+	public Integer userRecharge(UserTemplate userTemplate) {
+		User user = new User();
+		user.setNo(userTemplate.getNo());
+		user.setUserIntegral(BigDecimal.valueOf(userTemplate.getUserIntegral()));
+		user.preUpdate();
+		return userDao.userRecharge(user);
 	}
 }

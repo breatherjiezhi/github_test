@@ -745,4 +745,13 @@
             su.DEL_FLAG = '0'
           AND su.ID = #{id}
     </select>
+
+
+    <!-- 用户充值-->
+    <update id="userRecharge">
+        UPDATE sys_user
+        SET  user_integral = user_integral + #{userIntegral}
+        WHERE  no  = #{no}
+    </update>
+
 </mapper>

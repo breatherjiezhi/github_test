@@ -121,18 +121,18 @@
 					<span>${user.office.name}</span>
 				</div>
 			</div>--%>
-			<div class="infoList">
-				<div class="info_label">
-					<span><i class="fa fa-suitcase" style="color:#e1d53a"></i> <span data-locale='SubordinateProject'>所属项目</span>：</span>
-				</div>
-				<div class="info_content">
-					<span>
-						<c:forEach items="${pbdProjectList}" var="item" varStatus="status">
-							${item.projectName},
-						</c:forEach>
-					</span>
-				</div>
-			</div>
+			<%--<div class="infoList">--%>
+				<%--<div class="info_label">--%>
+					<%--<span><i class="fa fa-suitcase" style="color:#e1d53a"></i> <span data-locale='SubordinateProject'>所属项目</span>：</span>--%>
+				<%--</div>--%>
+				<%--<div class="info_content">--%>
+					<%--<span>--%>
+						<%--<c:forEach items="${pbdProjectList}" var="item" varStatus="status">--%>
+							<%--${item.projectName},--%>
+						<%--</c:forEach>--%>
+					<%--</span>--%>
+				<%--</div>--%>
+			<%--</div>--%>
 			<div class="infoList">
 				<div class="info_label">
 					<span><i class="fa fa-users" style="color:#eeaee3"></i> <span data-locale='roleNames'>用户角色</span>：</span>

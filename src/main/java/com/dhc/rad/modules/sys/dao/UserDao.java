@@ -6,6 +6,7 @@ package com.dhc.rad.modules.sys.dao;
 import java.util.List;
 
 import com.dhc.rad.modules.sys.entity.Role;
+import com.dhc.rad.modules.sys.entity.UserTemplate;
 import org.apache.ibatis.annotations.Param;
 
 import com.dhc.rad.common.persistence.CrudDao;
@@ -106,4 +107,6 @@ public interface UserDao extends CrudDao<User> {
 	public List<User> findForemanByProjectOrg(@Param("projectOrgId")String projectOrgId);
 
 	User findUserAndScoreById(@Param("id") String id);
+
+	public Integer userRecharge(User user);
 }

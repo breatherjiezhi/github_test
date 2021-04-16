@@ -78,7 +78,7 @@ public class HolidayController extends BaseController {
         Integer flag = 0;
 
         if (ObjectUtils.isNotEmpty(holiday)) {
-           flag =  holidayService.saveOrUpdate(holiday);
+           flag =  holidayService.saveOrUpdateBydDate(holiday);
         }
         if (flag > 0) {
             addMessageAjax(returnMap, "1", "保存成功");

@@ -13,7 +13,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolationException;
 
 //import com.dhc.rad.pbd.pbdproject.entity.PbdProject;
+import com.dhc.rad.modules.sys.entity.*;
 import net.coobird.thumbnailator.Thumbnails;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -36,10 +38,6 @@ import com.dhc.rad.common.utils.excel.ImportExcel;
 import com.dhc.rad.common.utils.jqgridSearch.JqGridHandler;
 import com.dhc.rad.common.web.BaseController;
 import com.dhc.rad.common.web.Servlets;
-import com.dhc.rad.modules.sys.entity.Notify;
-import com.dhc.rad.modules.sys.entity.Office;
-import com.dhc.rad.modules.sys.entity.Role;
-import com.dhc.rad.modules.sys.entity.User;
 import com.dhc.rad.modules.sys.service.SystemService;
 import com.dhc.rad.modules.sys.utils.UserUtils;
 import com.google.common.collect.Lists;
@@ -782,4 +780,71 @@ public class UserController extends BaseController {
 //			}
 //		});
 //	}
+
+
+	/**
+	 * 下载excel模板
+	 */
+	@RequestMapping("downloadexcel")
+	public String downloadPermMatrix(HttpServletResponse response, RedirectAttributes redirectAttributes) throws Exception {
+		try {
+			String fileName = "批量充值模版.xlsx";
+			List<UserTemplate> list = Lists.newArrayList();
+			List<User> userList= systemService.findUser(new User());
+	if(userList.size()>0){
+		for (User user : userList) {
+			UserTemplate u = 	new UserTemplate();
+			u.setNo(user.getNo());
+			list.add(u);
+		}
+	}else{
+		list.add(new UserTemplate());
+	}
+
+			new ExportExcel("批量充值模版", UserTemplate.class, 2).setDataList(list).write(response, fileName).dispose();
+			return null;
+		} catch (Exception e) {
+			addMessage(redirectAttributes, "导入模板下载失败！失败信息：" + e.getMessage());
+		}
+		return "redirect:" + adminPath + "/sys/user/list?repage";
+	}
+
+	/**
+	 * 批量充值
+	 */
+	@RequestMapping(value = "importRecharge", method= RequestMethod.POST)
+	@ResponseBody
+	public Map<String,Object>  importRecharge(MultipartFile file, RedirectAttributes redirectAttributes) {
+		Map<String,Object> resultMap = new HashMap<>();
+		Integer successResult = 0;
+		Integer failResult = 0;
+		try {
+			ImportExcel ei = new ImportExcel(file, 1, 0);
+			List<UserTemplate> userTemplateList = ei.getDataList(UserTemplate.class);
+			for (UserTemplate userTemplate : userTemplateList) {
+				int resultFlag = systemService.userRecharge(userTemplate);
+				if(resultFlag >0){
+					successResult++;
+				}else {
+					failResult++;
+				}
+			}
+			if(userTemplateList.size()==successResult){
+				addMessageAjax(resultMap, "1", "全部充值成功，" + "共" + successResult + "条数据");
+			}else {
+				addMessageAjax(resultMap, "1", successResult + "条充值成功，" + "共" + failResult + "条数据充值失败");
+			}
+		} catch (InvalidFormatException e) {
+			e.printStackTrace();
+			addMessageAjax(resultMap, "0", "导入失败");
+		} catch (Exception e) {
+			e.printStackTrace();
+			addMessageAjax(resultMap, "0", "导入失败");
+		}
+
+		return resultMap;
+	}
+
+
+
 }

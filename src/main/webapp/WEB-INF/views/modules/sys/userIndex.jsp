@@ -68,6 +68,8 @@
 						</div>
 					</div>
 				</div>
+				<div id="fileDivId"></div>
+
 				<table id="grid-table"></table>
 				<div id="grid-pager"></div>
 				<div class="widget-box" style="display:none" id="editDivId"></div>
@@ -81,6 +83,7 @@
 		jQuery(function($) {
 			var grid_selector = "#grid-table";
 			var pager_selector = "#grid-pager";
+			var toolbarTop = grid_selector + '_toppager';
 			var officeId = '';
 			var officeName ='';
             var qCode='${qCode}'
@@ -168,6 +171,7 @@
 				    '<span data-locale="name">姓名</span>',
 					'<span data-locale="loginName">登录名</span>',
 					'<span data-locale="No">工号</span>',
+                    '<span data-locale="UserIntegral">剩余就餐次数</span>',
 					'<span data-locale="officeName">归属机构</span>',
 					'<span data-locale="mobile">手机号码</span>',
 					'<span data-locale="userType">用户类型</span>',
@@ -180,6 +184,7 @@
 					{name:'name',index:'name', editable: true,width:45},
 					{name:'loginName',index:'login_name', editable: true,width:45},
                     {name:'no',index:'no', editable: true,width:45},
+                    {name:'userIntegral',index:'USER_INTEGRAL', editable: true,width:60},
 					{name:'office.name',index:'office_id', editable: true,width:60},
 					{name:'mobile',index:'mobile', editable: true,width:60},
 					{name:'userType',index:'userType', editable: true,width:60,hidden:true},
@@ -287,7 +292,153 @@
 				{},  // delete instead that del:false we need this
 				{multipleSearch : true}, // enable the advanced searching
 				{closeOnEscape:true} /* allow the view dialog to be closed when user press ESC key*/
-			);
+			).jqGrid("navButtonAdd",toolbarTop,{
+                caption:"<span data-locale='RechargeTemplateDownload'>充值模板下载</span>",
+                buttonicon:"ace-icon fa fa-download",
+                title:"充值模板下载",
+                onClickButton: download,
+                position:"first" ,
+                id:"download"
+            }).jqGrid("navButtonAdd",toolbarTop,{
+                caption:"<span data-locale='BatchRechargeImport'>批量充值导入</span>",
+                buttonicon:"ace-icon fa fa-upload",
+                title:"批量充值导入",
+                onClickButton: upload,
+                position:"first" ,
+                id:"upload"
+            });
+
+
+
+            function download() {
+                window.location.href="${ctx}/sys/user/downloadexcel";
+            }
+
+            function upload() {
+                $.post("${ctx}/holiday/uploadFileForm", function (data, textStatus, object) {
+                    $(".ui-dialog").remove();
+                    $("#fileDivId").html(object.responseText).dialog({
+                        modal: true,
+                        width: 472,
+                        height: 350,
+                        title: "<div class='widget-header widget-header-small widget-header-flat'><h4 class='smaller' style='line-height:2'><i class='ace-icon fa fa-users' id='flags'>&nbsp;<span data-locale='BatchRechargeImport'>批量充值导入</span></h4></div>",
+                        title_html: true,
+                        buttons: [{
+                            text: "保存",
+                            "class": "btn btn-primary btn-minier",
+                            "data-locale":"doSave",
+                            click: function () {
+                                $("#serFileForm1").bootstrapValidator('validate');
+                            }
+                        },
+                            {
+                                text: "取消",
+                                "class": "btn btn-minier",
+                                "data-locale":"cancel",
+                                click: function () {
+                                    $(this).dialog("close");
+                                }
+                            }
+                        ],
+                        open: function (event, ui) {
+                            var qCode = sessionStorage.getItem("qCode");
+                            typeChange(qCode);
+
+                            $(".ui-dialog-title .widget-header").on('mouseenter',function(){
+                                $(".ui-dialog-content input").blur();
+                            })
+
+                            //上传模态初始化
+                            var $form = $('#serFileForm1');
+                            //you can have multiple files, or a file input with "multiple" attribute
+                            var file_input = $form.find('input[type=file]');
+                            var upload_in_progress = false;
+
+                            file_input.ace_file_input({
+                                style : 'well',
+                                btn_choose : '点击此处或将文件拖入框内',
+                                btn_change: null,
+                                droppable: true,
+                                thumbnail: 'large',
+
+                                maxSize: 51200000,//bytes
+                                allowExt: ["xlsx","xls"],
+                                allowMime: ["application/vnd.openxmlformats-officedocument.spreadsheetml.sheet","application/vnd.ms-excel"],
+
+                                before_remove: function() {
+                                    if(upload_in_progress)
+                                        return false;//if we are in the middle of uploading a file, don't allow resetting file input
+                                    return true;
+                                },
+
+                                preview_error: function(filename , code) {
+                                    //code = 1 means file load error
+                                    //code = 2 image load error (possibly file is not an image)
+                                    //code = 3 preview failed
+                                }
+                            })
+                            file_input.on('file.error.ace', function(ev, info) {
+                                if(info.error_count['ext'] || info.error_count['mime']){
+                                    $.msg_show.Init({
+                                        'msg':'无效的文件类型，请选择一个Excel文件!',
+                                        'type':'error'
+                                    });
+                                }
+                                if(info.error_count['size']){
+                                    $.msg_show.Init({
+                                        'msg':'文件大小最大为500KB!',
+                                        'type':'error'
+                                    });
+                                }
+
+                            });
+                        }
+                    });
+
+                    //字典页面维护表单验证
+                    $("#serFileForm1").bootstrapValidator({
+                        message: "请录入一个有效值",
+                        excluded: ':disabled',
+                        feedbackIcons: {
+                            valid: "glyphicon glyphicon-ok",
+                            invalid: "glyphicon glyphicon-remove",
+                            validating: "glyphicon glyphicon-refresh"
+                        }
+                    }).on("success.form.bv", function (e) {
+                        // Prevent form submission
+                        e.preventDefault();
+
+                        // Get the form instance
+                        var $form = $(e.target);
+                        // Get the BootstrapValidator instance
+                        var bv = $form.data("bootstrapValidator");
+                        //上传文件
+                        // Use Ajax to submit form data
+                        $("#serFileForm1").ajaxSubmit({
+                            url: '${ctx}/sys/user/importRecharge',
+                            type: 'post',
+                            success: function (result) {
+                                if (result.messageStatus == "1") {
+                                    $.msg_show.Init({
+                                        'msg': result.message,
+                                        'type': 'success'
+                                    });
+                                    $("#fileDivId").dialog("close");
+                                    $(grid_selector).trigger("reloadGrid");
+                                }
+                                if (result.messageStatus == "0") {
+                                    $.msg_show.Init({
+                                        'msg':result.message,
+                                        'type': 'error'
+                                    });
+                                    $("#fileDivId").dialog("close");
+                                    $(grid_selector).trigger("reloadGrid");
+                                }
+                            }
+                        })
+                    });
+                })
+            }
 			
 			//override dialog's title function to allow for HTML titles
 			$.widget("ui.dialog", $.extend({}, $.ui.dialog.prototype, {

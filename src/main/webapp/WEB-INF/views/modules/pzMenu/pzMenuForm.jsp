@@ -67,10 +67,5 @@
             </div>
             </div>
         </form:form>
-        <div class="btnBom" style="float: right;margin-right: 0.5rem;">
-            <button type="button" id="sc-upload">上传</button>
-            <button type="button" id="end-upload" style="background: #cdcdcd;
-    color: #333;">取消</button>
-        </div>
     </div>
 </div>

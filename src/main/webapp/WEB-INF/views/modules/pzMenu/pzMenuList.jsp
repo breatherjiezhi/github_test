@@ -25,37 +25,62 @@
                                     </div>
                                 </div>
                             </div>
-                            <label class="control-label col-xs-12 col-sm-1 no-padding-right" for="menuStatus">套餐状态:</label>
-                            <div class="col-xs-12 col-sm-5">
-                                <form:select path="menuStatus" class="chosen-select form-control width-100"
-                                             data-placeholder="点击选择...">
-                                    <option value="">---请选择---</option>
-                                    <form:options items="${fns:getDictList('pz_menu_status')}" itemLabel="label" itemValue="value"
-                                                  htmlEscape="false"/>
-                                </form:select>
+
+
+                            <div class="col-xs-12 col-sm-4 no-padding">
+                                <div class="new-search clearfix">
+                                    <label class=" col-xs-12 col-sm-4" for="menuName"
+                                           data-locale="menuStatus">套餐状态</label>
+                                    <div class="col-xs-12 col-sm-8 no-padding">
+                                        <form:select path="menuStatus" class="chosen-select form-control width-100"
+                                                     data-placeholder="点击选择...">
+                                            <option value="">---请选择---</option>
+                                            <form:options items="${fns:getDictList('pz_menu_status')}" itemLabel="label"
+                                                          itemValue="value"
+                                                          htmlEscape="false"/>
+                                        </form:select>
+                                    </div>
+                                </div>
                             </div>
 
-                            <label class="control-label col-xs-12 col-sm-1 no-padding-right" for="menuType">套餐规格:</label>
-                            <div class="col-xs-12 col-sm-5">
-                                <form:select path="menuType" class="chosen-select form-control width-100"
-                                             data-placeholder="点击选择...">
-                                    <option value="">---请选择---</option>
-                                    <form:options items="${fns:getDictList('pz_menu_type')}" itemLabel="label" itemValue="value"
-                                                  htmlEscape="false"/>
-                                </form:select>
+                            <div class="col-xs-12 col-sm-4 no-padding">
+                                <div class="new-search clearfix">
+                                    <label class=" col-xs-12 col-sm-4" for="menuName"
+                                           data-locale="menuType">套餐规格</label>
+                                    <div class="col-xs-12 col-sm-8 no-padding">
+                                        <form:select path="menuStatus" class="chosen-select form-control width-100"
+                                                     data-placeholder="点击选择...">
+                                            <option value="">---请选择---</option>
+                                            <form:options items="${fns:getDictList('pz_menu_type')}" itemLabel="label"
+                                                          itemValue="value"
+                                                          htmlEscape="false"/>
+                                        </form:select>
+                                    </div>
+                                </div>
                             </div>
-
-                            <label class="control-label col-xs-12 col-sm-1 no-padding-right" for="menuUp">套餐规格:</label>
-                            <div class="col-xs-12 col-sm-5">
-                                <form:select path="menuUp" class="chosen-select form-control width-100"
-                                             data-placeholder="点击选择...">
-                                    <option value="">---请选择---</option>
-                                    <form:options items="${fns:getDictList('pz_menu_up')}" itemLabel="label" itemValue="value"
-                                                  htmlEscape="false"/>
-                                </form:select>
-                            </div>
-
                         </div>
+
+                        <div class="form-group">
+
+
+                            <div class="col-xs-12 col-sm-4 no-padding">
+                                <div class="new-search clearfix">
+                                    <label class=" col-xs-12 col-sm-4" for="menuName"
+                                           data-locale="menuUp">是否上架</label>
+                                    <div class="col-xs-12 col-sm-8 no-padding">
+                                        <form:select path="menuStatus" class="chosen-select form-control width-100"
+                                                     data-placeholder="点击选择...">
+                                            <option value="">---请选择---</option>
+                                            <form:options items="${fns:getDictList('pz_menu_up')}" itemLabel="label"
+                                                          itemValue="value"
+                                                          htmlEscape="false"/>
+                                        </form:select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
                         <div class="form-group">
                             <div class="col-xs-12 col-sm-4">
                                 <div style="float:right;">
@@ -92,14 +117,14 @@
     function findMenuStatus(obj) {
         $.ajax({
             url: "${ctx}/sys/dict/treeData",
-            type:"post",
-            data:{'type':'pz_menu_status'}, //发送数据   v dd   jhgf
+            type: "post",
+            data: {'type': 'pz_menu_status'}, //发送数据   v dd   jhgf
             success: function (data) {
-                console.log("11111111"+data);
-                var list=data.relayCarTypeList;
-                var htmlT="<option value=''>请选择......</option>";
-                for(var i=0 ; i<list.length ; i++){
-                    htmlT += "<option value="+list[i].carType+">"+list[i].carType+"</option>";
+                console.log("11111111" + data);
+                var list = data.relayCarTypeList;
+                var htmlT = "<option value=''>请选择......</option>";
+                for (var i = 0; i < list.length; i++) {
+                    htmlT += "<option value=" + list[i].carType + ">" + list[i].carType + "</option>";
                 }
                 $(".menuStatus").html(htmlT);
                 $(".menuStatus").trigger("chosen:updated");
@@ -109,19 +134,19 @@
 
     function findRelayEnglish(obj) {
 
-        var proStyle=$(".proStyle").val();
+        var proStyle = $(".proStyle").val();
         debugger
         //设置维修方案下拉框
         //alert("processId"+processId)
         $.ajax({
             url: "${ctx}/relay/report/findRelayEnglish",
-            type:"post",
-            data:{'proStyle':proStyle}, //发送数据   v dd   jhgf
+            type: "post",
+            data: {'proStyle': proStyle}, //发送数据   v dd   jhgf
             success: function (data) {
-                var list=data.relayEnglishList;
-                var htmlT="<option value=''>请选择......</option>";
-                for(var i=0 ; i<list.length ; i++){
-                    htmlT += "<option value="+list[i]+">"+list[i]+"</option>";
+                var list = data.relayEnglishList;
+                var htmlT = "<option value=''>请选择......</option>";
+                for (var i = 0; i < list.length; i++) {
+                    htmlT += "<option value=" + list[i] + ">" + list[i] + "</option>";
                 }
                 $(".relayEnglish").html(htmlT);
                 $(".relayEnglish").trigger("chosen:updated");
@@ -132,8 +157,7 @@
     var scripts = [null, '${ctxStatic}/assets/js/fuelux/fuelux.spinner.js', '${ctxStatic}/assets/js/date-time/bootstrap-datepicker.js', '${ctxStatic}/assets/js/date-time/bootstrap-datepicker.zh-CN.min.js', null];
     $('.page-content-area').ace_ajax('loadScripts', scripts, function () {
         jQuery(function ($) {
-            var qCode = sessionStorage.getItem("qCode");
-            typeChange(qCode);
+
 
             var select2 = $('.select2');
             var select2width = select2.parent().width();
@@ -163,7 +187,6 @@
                 format: "yyyy-mm-dd",
                 language: "zh-CN"
             });
-
 
 
             var reSizeHeight = function () {
@@ -240,37 +263,24 @@
                 editurl: "/dummy.html",//nothing is saved
                 caption: "<span data-locale='PzMenuList'>菜单列表</span>",
                 gridComplete: function () {
-                    var qCode = sessionStorage.getItem("qCode");
-                    typeChange(qCode);
-                    $(grid_selector).closest(".ui-jqgrid-bdiv").css({'overflow-x': 'hidden'});
-                    var rowData = jQuery(grid_selector).jqGrid('getRowData');
                     var ids = $(grid_selector).jqGrid('getDataIDs');
+                    for (var i = 0; i < ids.length; i++) {
+                        var id = ids[i];
 
-                    $(grid_selector).find('a[data-action=searchPlus]').on('click', function (event) {
-                        var id = $(this).attr('data-id');
-                        searchPlus(id);
-                    });
-                    $(grid_selector).find('a[data-action=scrap]').on('click', function (event) {
-                        var id = $(this).attr('data-id');
-                        _edita(id);
-                    });
-                    $(grid_selector).find('a[data-action=editt]').on('click', function (event) {
-                        var id = $(this).attr('data-id');
-                        <%--window.location.href="${ctx}#page/yearplan/pbdYearPlan/list?yearPlanMainId="+id;--%>
-                        // _edita1(id);
-                    });
-                    $(grid_selector).find('a[data-action=submit]').on('click', function (event) {
-                        var id = $(this).attr('data-id');
-                        var taskId = $(this).attr('data-taskId');
-                        var status = $(this).attr('data-status');
-                        submit(taskId, status, id);
+                        var rowData = $("#grid-table").getRowData(id);
+                        var menuLimited = getDictLabel(${fns:toJson(fns:getDictList("pz_menu_limited"))}, rowData.menuLimited);
+                        var menuType = getDictLabel(${fns:toJson(fns:getDictList("pz_menu_type"))}, rowData.menuType);
+                        var menuStatus = getDictLabel(${fns:toJson(fns:getDictList("pz_menu_status"))}, rowData.menuStatus);
+                        var menuUp = getDictLabel(${fns:toJson(fns:getDictList("pz_menu_up"))}, rowData.menuUp);
 
-                        // submitScrapDG(id);
-                    });
-                    $(grid_selector).find('a[data-action=del]').on('click', function (event) {
-                        var id = $(this).attr('data-id');
-                        doDelete1(id);
-                    });
+                        $(grid_selector).jqGrid('setRowData', ids[i], {
+                            menuLimited: menuLimited,
+                            menuType: menuType,
+                            menuStatus: menuStatus,
+                            menuUp: menuUp
+                        });
+                    }
+
                 }
             });
 
@@ -341,8 +351,6 @@
                             }
                         ],
                         open: function (event, ui) {
-                            var qCode = sessionStorage.getItem("qCode");
-                            typeChange(qCode);
 
                             $(".ui-dialog-title .widget-header").on('mouseenter', function () {
                                 $(".ui-dialog-content input").blur();
@@ -529,7 +537,7 @@
                 $(grid_selector).jqGrid('setGridParam', {
                     url: "${ctx}/pzMenu/searchPage",
                     mtype: "post",
-                        postData: {'menuName': '', 'menuType': '', 'menuStatus': '', 'menuUp': ''},
+                    postData: {'menuName': '', 'menuType': '', 'menuStatus': '', 'menuUp': ''},
                     page: 1
                 }).trigger("reloadGrid"); //重新载入
             });

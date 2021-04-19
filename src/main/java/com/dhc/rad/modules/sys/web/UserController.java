@@ -803,6 +803,7 @@ public class UserController extends BaseController {
      */
     @RequestMapping("downloadexcel")
     public String downloadPermMatrix(HttpServletResponse response, RedirectAttributes redirectAttributes) throws Exception {
+
         try {
             String fileName = "批量充值模版.xlsx";
             List<UserTemplate> list = Lists.newArrayList();
@@ -810,9 +811,9 @@ public class UserController extends BaseController {
             if (userList.size() > 0) {
                 for (User user : userList) {
                     UserTemplate u = new UserTemplate();
-                    u.setNo(user.getNo());
+                    u.setLoginName(user.getLoginName());
                     u.setUserIntegral(0);
-                    list.add(u); 
+                    list.add(u);
                 }
             } else {
                 list.add(new UserTemplate());

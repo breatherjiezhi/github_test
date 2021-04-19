@@ -146,6 +146,7 @@ public class SystemService extends BaseService implements InitializingBean {
 		return list;
 	}
 
+
 	/**
 	 * 通过部门ID获取用户列表，仅返回用户id和name（树查询用户时用）
 	 * @param
@@ -736,7 +737,7 @@ public class SystemService extends BaseService implements InitializingBean {
 	@Transactional(readOnly = false)
 	public Integer userRecharge(UserTemplate userTemplate) {
 		User user = new User();
-		user.setNo(userTemplate.getNo());
+		user.setLoginName(userTemplate.getLoginName());
 		user.setUserIntegral(BigDecimal.valueOf(userTemplate.getUserIntegral()));
 		user.preUpdate();
 		return userDao.userRecharge(user);

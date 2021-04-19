@@ -1,12 +1,12 @@
 package com.dhc.rad.modules.pzMenu.service;
 
+import com.dhc.rad.common.config.Global;
 import com.dhc.rad.common.persistence.Page;
 import com.dhc.rad.common.service.CrudService;
 import com.dhc.rad.common.utils.ObjectUtils;
 import com.dhc.rad.common.utils.StringUtils;
 import com.dhc.rad.modules.pzMenu.dao.PzMenuDao;
 import com.dhc.rad.modules.pzMenu.entity.PzMenu;
-import com.dhc.rad.modules.pzMenu.enums.MenuStatusEnum;
 import com.dhc.rad.modules.pzMenuFile.dao.PzMenuFileDao;
 import com.dhc.rad.modules.pzMenuFile.entity.PzMenuFile;
 import com.dhc.rad.modules.pzMenuFile.service.PzMenuFileService;
@@ -47,7 +47,7 @@ public class PzMenuService extends CrudService<PzMenuDao,PzMenu> {
 
                 pzMenu.preUpdate();
                 //设置菜单状态为保存并修改
-                pzMenu.setMenuStatus(MenuStatusEnum.MENU_STATUS_SAVEANDUPDATE.getCategory());
+                pzMenu.setMenuStatus(Global.MENU_STATUS_SAVEANDUPDATE);
 
                 return pzMenuDao.update(pzMenu);
             }else{

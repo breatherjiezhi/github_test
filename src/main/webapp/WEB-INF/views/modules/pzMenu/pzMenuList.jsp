@@ -225,7 +225,6 @@
                     'id',
                     '<span data-locale="menuName">菜单名称</span>',
                     '<span data-locale="menuDescription">菜单描述</span>',
-                    '<span data-locale="menuImgUrl">菜单图片</span>',
                     '<span data-locale="menuLimited">套餐是否限量</span>',
                     '<span data-locale="menuCount">套餐余量</span>',
                     '<span data-locale="menuType">套餐规格</span>',
@@ -237,7 +236,6 @@
                     {name: 'id', index: 'id', hidden: true},
                     {name: 'menuName', index: 'menu_name'},
                     {name: 'menuDescription', index: 'menu_description'},
-                    {name: 'menuImgUrl', index: 'menu_img_url'},
                     {name: 'menuLimited', index: 'menu_limited'},
                     {name: 'menuCount', index: 'menu_count'},
                     {name: 'menuType', index: 'menu_type'},
@@ -380,24 +378,10 @@
                                     }
                                 }
                             },
-                            menuImgUrl: {
-                                validators: {
-                                    notEmpty: {
-                                        message: "菜单图片不能为空"
-                                    }
-                                }
-                            },
                             menuLimited: {
                                 validators: {
                                     notEmpty: {
                                         message: "套餐是否限量不能为空"
-                                    }
-                                }
-                            },
-                            menuCount: {
-                                validators: {
-                                    notEmpty: {
-                                        message: "套餐余量不能为空"
                                     }
                                 }
                             },
@@ -407,28 +391,7 @@
                                         message: "套餐规格不能为空"
                                     }
                                 }
-                            },
-                            menuStatus: {
-                                validators: {
-                                    notEmpty: {
-                                        message: "套餐状态不能为空"
-                                    }
-                                }
-                            },
-                            menuUp: {
-                                validators: {
-                                    notEmpty: {
-                                        message: "套餐是否上架不能为空"
-                                    }
-                                }
-                            },
-                            examineInfo: {
-                                validators: {
-                                    notEmpty: {
-                                        message: "审核原因不能为空"
-                                    }
-                                }
-                            },
+                            }
                         }
                     }).on("success.form.bv", function (e) {
                         // Prevent form submission

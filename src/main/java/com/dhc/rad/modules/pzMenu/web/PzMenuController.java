@@ -1,12 +1,12 @@
 package com.dhc.rad.modules.pzMenu.web;
 
+import com.dhc.rad.common.config.Global;
 import com.dhc.rad.common.persistence.Page;
 import com.dhc.rad.common.utils.ObjectUtils;
 import com.dhc.rad.common.utils.StringUtils;
 import com.dhc.rad.common.web.BaseController;
 import com.dhc.rad.modules.holiday.entity.Holiday;
 import com.dhc.rad.modules.pzMenu.entity.PzMenu;
-import com.dhc.rad.modules.pzMenu.enums.MenuStatusEnum;
 import com.dhc.rad.modules.pzMenu.service.PzMenuService;
 import com.dhc.rad.modules.sys.entity.Role;
 import com.dhc.rad.modules.sys.service.SystemService;
@@ -93,7 +93,7 @@ public class PzMenuController extends BaseController {
                 return returnMap;
             }
         }
-            flag =  pzMenuService.saveOrUpdate(pzMenu,request);
+            flag =  pzMenuService.saveOrUpdate(pzMenu);
 
 
         if (flag > 0) {
@@ -165,12 +165,12 @@ public class PzMenuController extends BaseController {
             menuStatusAgo = menu.getMenuStatus();
         }
         //管理员审批菜单： 只有当菜单状态为待审核时，管理员才能操作
-        if( menuStatusAgo==null || !"admin".equals(enName) || menuStatusAgo!= MenuStatusEnum.MENU_STATUS_SUBMIT.getCategory() ){
+        if( menuStatusAgo==null || !"admin".equals(enName) || menuStatusAgo!= Global.MENU_STATUS_SUBMIT ){
             addMessageAjax(returnMap,"0","越权操作，只有管理员才能修改此数据！");
             return returnMap;
         }
         //供应商操作菜单：只有当菜单状态为非待审核（保存并修改  审核不通过）时，才能修改状态
-        if(menuStatusAgo==null || !"gcs".equals(enName) || menuStatusAgo!=MenuStatusEnum.MENU_STATUS_SAVEANDUPDATE.getCategory() || menuStatusAgo!=MenuStatusEnum.MENU_STATUS_NOPASS.getCategory()){
+        if(menuStatusAgo==null || !"gcs".equals(enName) || menuStatusAgo!=Global.MENU_STATUS_SAVEANDUPDATE || menuStatusAgo!=Global.MENU_STATUS_NOPASS){
             addMessageAjax(returnMap,"0","越权操作，只有供应商才能修改此数据！");
             return returnMap;
         }

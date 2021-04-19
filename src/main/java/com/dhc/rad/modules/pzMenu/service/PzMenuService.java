@@ -29,9 +29,6 @@ public class PzMenuService extends CrudService<PzMenuDao,PzMenu> {
     private PzMenuDao pzMenuDao;
 
     @Autowired
-    private PzMenuFileService pzMenuFileService;
-
-    @Autowired
     private PzMenuFileDao pzMenuFileDao;
 
     public  Page<PzMenu> searchPage(Page<PzMenu> pzMenuPage, PzMenu pzMenu) {
@@ -43,44 +40,22 @@ public class PzMenuService extends CrudService<PzMenuDao,PzMenu> {
     }
 
     @Transactional(readOnly = false)
-    public Integer saveOrUpdate(PzMenu pzMenu, HttpServletRequest request) {
+    public Integer saveOrUpdate(PzMenu pzMenu) {
         if(ObjectUtils.isNotEmpty(pzMenu)){
             String id = pzMenu.getId();
             if(StringUtils.isNotBlank(id)){
 
-                //获取菜单图片实体pzMenuFile
-                PzMenuFile pzMenuFile = pzMenuFileService.pzMenuFileUpload(request);
-                //menuId赋值
-                pzMenuFile.setMenuId(pzMenu.getId());
-                //更新updateBy createBy updateTime
                 pzMenu.preUpdate();
                 //设置菜单状态为保存并修改
                 pzMenu.setMenuStatus(MenuStatusEnum.MENU_STATUS_SAVEANDUPDATE.getCategory());
-                //更新菜单操作
-                pzMenu.setMenuImgUrl(pzMenuFile.getFilePath());
-                int pzMenuUpdate = pzMenuDao.update(pzMenu);
-                //更新菜单实体updateBy createBy updateTime
-                pzMenuFile.preUpdate();
-                //更新菜单图片实体操作
-                int pzMenuFileUpdate = pzMenuFileDao.update(pzMenuFile);
-                //返回
-                return (pzMenuUpdate>0 && pzMenuFileUpdate>0) ? 1 : 0;
+
+                return pzMenuDao.update(pzMenu);
             }else{
-                //获取菜单图片实体pzMenuFile
-                PzMenuFile pzMenuFile = pzMenuFileService.pzMenuFileUpload(request);
-                //menuId赋值
-                pzMenuFile.setMenuId(pzMenu.getId());
+
                 //新增createBy updateBy createTime updateTime
                 pzMenu.preInsert();
-                //新增菜单操作
-                pzMenu.setMenuImgUrl(pzMenuFile.getFilePath());
-                Integer pzMenuInsertFlag = pzMenuDao.insert(pzMenu);
                 //新增createBy updateBy createTime updateTime
-                pzMenuFile.preInsert();
-                //新增菜单图片实体操作
-                Integer pzMenuFileInsertFlag = pzMenuFileDao.insert(pzMenuFile);
-                //返回
-                return (pzMenuInsertFlag>0 && pzMenuFileInsertFlag>0) ? 1 : 0;
+                return  pzMenuDao.insert(pzMenu);
             }
         }
         return 0;
@@ -89,12 +64,9 @@ public class PzMenuService extends CrudService<PzMenuDao,PzMenu> {
 
     @Transactional(readOnly = false)
     public Integer deleteByIds(List<String> ids) {
-        //删除菜单
-        Integer pzMenuDel = pzMenuDao.deleteByIds(ids);
-        //删除菜单图片
-        Integer pzMenuFileDel = pzMenuFileService.deleteByIds(ids);
+
         //返回
-        return (pzMenuDel>0 && pzMenuFileDel>0) ? 1 : 0;
+        return  pzMenuDao.deleteByIds(ids);
     }
 
     public Integer updateMenuStatus(PzMenu pzMenu) {

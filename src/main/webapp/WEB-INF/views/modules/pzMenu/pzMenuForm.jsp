@@ -22,13 +22,13 @@
 
             <div class="form-group">
                 <label class="control-label col-xs-12 col-sm-3 no-padding-right" name="menuImgUrl">菜单图片:</label>
-                <div class="control-label col-xs-12 col-sm-3 no-padding-right">
-                    <button type="button" class="layui-btn" style="background: #7392c2;margin-left: 1%" id="upload" ><i class="layui-icon"></i>上传</button>
+                <div class="control-label col-xs-12 col-sm-6 no-padding-right">
+                    <button type="button" class="layui-btn" style="background: #7392c2;" id="upload" ><i class="layui-icon"></i>上传</button>
                 </div>
             </div>
             <div class="form-group">
-            <label class="control-label col-xs-12 col-sm-1 no-padding-right" for="menuType">套餐规格:</label>
-            <div class="col-xs-12 col-sm-5">
+            <label class="control-label col-xs-12 col-sm-3 no-padding-right" for="menuType">套餐规格:</label>
+            <div class="col-xs-12 col-sm-6">
                 <form:select path="menuType" class="chosen-select form-control width-100"
                              data-placeholder="点击选择...">
                     <option value="">---请选择---</option>
@@ -38,8 +38,8 @@
             </div>
             </div>
             <div class="form-group">
-            <label class="control-label col-xs-12 col-sm-1 no-padding-right" for="menuLimited">套餐是否限量</label>
-            <div class="col-xs-12 col-sm-5">
+            <label class="control-label col-xs-12 col-sm-3 no-padding-right" for="menuLimited">套餐是否限量</label>
+            <div class="col-xs-12 col-sm-6">
                 <form:select path="menuLimited" class="chosen-select form-control width-100"
                              data-placeholder="点击选择...">
                     <option value="">---请选择---</option>
@@ -55,17 +55,7 @@
 
                 </div>
             </div>
-            <div class="form-group">
-            <label class="control-label col-xs-12 col-sm-1 no-padding-right" for="menuStatus">套餐状态</label>
-            <div class="col-xs-12 col-sm-5">
-                <form:select path="menuStatus" class="chosen-select form-control width-100"
-                             data-placeholder="点击选择...">
-                    <option value="">---请选择---</option>
-                    <form:options items="${fns:getDictList('pz_menu_status')}" itemLabel="label" itemValue="value"
-                                  htmlEscape="false"/>
-                </form:select>
-            </div>
-            </div>
+
         </form:form>
     </div>
 </div>

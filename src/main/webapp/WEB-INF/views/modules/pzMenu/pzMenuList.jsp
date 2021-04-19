@@ -120,7 +120,6 @@
             type: "post",
             data: {'type': 'pz_menu_status'}, //发送数据   v dd   jhgf
             success: function (data) {
-                console.log("11111111" + data);
                 var list = data.relayCarTypeList;
                 var htmlT = "<option value=''>请选择......</option>";
                 for (var i = 0; i < list.length; i++) {
@@ -329,7 +328,7 @@
                     $("#editDivId").html(object.responseText).dialog({
                         modal: true,
                         width: 600,
-                        height: 500,
+                        height: 700,
                         title: "<div class='widget-header widget-header-small widget-header-flat'><h4 class='smaller' style='line-height:2'><i class='ace-icon fa fa-th-large'></i>&nbsp;<span data-locale='PzMenuInfo.'>菜单信息</span></h4></div>",
                         title_html: true,
                         buttons: [

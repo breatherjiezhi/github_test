@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dhc.rad.modules.pzMenuFile.dao.PzMenuFileDao">
+    <resultMap id="BaseResultMap" type="com.dhc.rad.modules.pzMenuFile.entity.PzMenuFile" >
+        <result column="menu_id" property="menuId" />
+        <result column="file_name" property="fileName" />
+        <result column="file_path" property="filePath" />
+        <result column="version" property="version" />
+        <result column="create_by" property="createBy.id" />
+        <result column="update_by" property="updateBy.id" />
+        <result column="create_date" property="createDate" />
+        <result column="update_date" property="updateDate" />
+        <result column="remarks" property="remarks" />
+        <result column="del_flag" property="delFlag" />
+    </resultMap>
+
+    <update id="deleteByIds">
+        UPDATE pz_menu_file
+        SET
+        del_flag = '1'
+        WHERE id in
+        <foreach collection="list" item="id" index="index"
+                 open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </update>
+
+
+    <select id="findList" resultMap="BaseResultMap">
+        SELECT
+        id,
+        menu_id,
+        file_name,
+        file_path,
+        version,
+        create_by,
+        update_by,
+        create_date,
+        update_date,
+        remarks,
+        del_flag
+        FROM
+        pz_menu_file
+        WHERE del_flag ='0' 
+        <if test ="null != menuId and ''!= menuId"> AND menu_id = #{menuName}</if>
+        <if test ="null != fileName and ''!= fileName"> AND file_name like concat('%',#{fileName},'%')</if>
+        <if test ="null != filePath and ''!= filePath"> AND file_path like concat('%',#{filePath},'%')</if>
+        <if test ="null != version and ''!= version"> AND version = #{version}</if>
+        <if test ="null != createBy and ''!= createBy"> AND CREATE_BY = #{createBy.id}</if>
+        <if test ="null != updateBy and ''!= updateBy"> AND UPDATE_BY = #{updateBy.id}</if>
+        <if test ="null != createDate and ''!= createDate"> AND CREATE_DATE = #{createDate}</if>
+        <if test ="null != updateDate and ''!= updateDate"> AND UPDATE_DATE = #{updateDate}</if>
+        <if test ="null != remarks and ''!= remarks"> AND remarks = #{remarks}</if>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY  create_date DESC
+            </otherwise>
+        </choose>
+
+    </select>
+
+    <select id="get" resultMap="BaseResultMap">
+        SELECT
+            a.ID,
+            a.menu_id,
+            a.file_path,
+            a.file_name,
+            a.version,
+            a.create_by,
+            a.update_by,
+            a.create_date,
+            a.update_date,
+            a.remarks,
+            a.del_flag
+        FROM pz_menu_file a
+        WHERE a.ID = #{id} and a.del_flag ='0'
+    </select>
+    <select id="checkFileName" resultMap="BaseResultMap">
+        SELECT
+            a.ID,
+            a.menu_id,
+            a.file_path,
+            a.file_name,
+            a.version,
+            a.create_by,
+            a.update_by,
+            a.create_date,
+            a.update_date,
+            a.remarks,
+            a.del_flag
+        FROM pz_menu_file a
+        WHERE  a.file_name =#{fileName} and a.del_flag ='0'
+    </select>
+
+    <insert id="insert" parameterType="com.dhc.rad.modules.pzMenuFile.entity.PzMenuFile">
+        INSERT INTO pz_menu_file
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test ="null != id and ''!= id">
+                id,
+            </if>
+            <if test ="null != menuId and ''!= menuId">
+                menu_id,
+            </if>
+            <if test ="null != fileName and ''!= fileName">
+                file_name,
+            </if>
+            <if test ="null != filePath and ''!= filePath">
+                file_path,
+            </if>
+            <if test ="null != version and ''!= version">
+                version,
+            </if>
+            <if test ="null != createBy and ''!= createBy">
+                create_by,
+            </if>
+            <if test ="null != updateBy and ''!= updateBy">
+                update_by,
+            </if>
+            <if test ="null != createDate and ''!= createDate">
+                create_date,
+            </if>
+            <if test ="null != updateDate and ''!= updateDate">
+                update_date,
+            </if>
+            <if test ="null != remarks and ''!= remarks">
+                remarks,
+            </if>
+            <if test ="null != delFlag and ''!= delFlag">
+                del_flag
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test ="null != id and ''!= id">
+                #{id},
+            </if>
+            <if test ="null != menuId and ''!= menuId">
+                #{menuId},
+            </if>
+            <if test ="null != fileName and ''!= fileName">
+                #{fileName},
+            </if>
+            <if test ="null != filePath and ''!= filePath">
+                #{filePath},
+            </if>
+            <if test ="null != version and ''!= version">
+                #{version},
+            </if>
+            <if test ="null != createBy and ''!= createBy">
+                #{createBy.id},
+            </if>
+            <if test ="null != updateBy and ''!= updateBy">
+                #{updateBy.id},
+            </if>
+            <if test ="null != createDate and ''!= createDate">
+                #{createDate},
+            </if>
+            <if test ="null != updateDate and ''!= updateDate">
+                #{updateDate},
+            </if>
+            <if test ="null != remarks and ''!= remarks">
+                #{remarks},
+            </if>
+            <if test ="null != delFlag and ''!= delFlag">
+                #{delFlag}
+            </if>
+        </trim>
+    </insert>
+
+    <update id="update" parameterType="com.dhc.rad.modules.pzMenuFile.entity.PzMenuFile">
+        UPDATE pz_menu_file
+        <set>
+            <if test ="null != menuId and ''!= menuId">  menu_id = #{menuId},</if>
+            <if test ="null != fileName and ''!= fileName">  file_name = #{fileName},</if>
+            <if test ="null != filePath and ''!= filePath">  file_path = #{filePath},</if>
+            <if test ="null != version and ''!= version">  version = #{version},</if>
+            <if test ="null != createBy and ''!= createBy">  CREATE_BY = #{createBy.id},</if>
+            <if test ="null != updateBy and ''!= updateBy">  UPDATE_BY = #{updateBy.id},</if>
+            <if test ="null != createDate and ''!= createDate">  CREATE_DATE = #{createDate},</if>
+            <if test ="null != updateDate and ''!= updateDate">  UPDATE_DATE = #{updateDate},</if>
+            <if test ="null != remarks and ''!= remarks">  remarks = #{remarks}</if>
+        </set>
+        WHERE  id = #{id} and del_flag ='0'
+    </update>
+
+</mapper>

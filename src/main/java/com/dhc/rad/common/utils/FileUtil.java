@@ -12,10 +12,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 
 //import com.dhc.rad.common.web.AppException;
 
@@ -27,6 +24,76 @@ import java.util.Properties;
  */
 @Service
 public class FileUtil {
+
+    //pzMenuFileUpload
+    public static Result pzMenuFileUpload(MultipartFile file, String ctxPath) {
+        Result ret = new Result();
+        Map<String, String> resultMap = new HashMap<>();
+        Date date= new Date();
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+
+        String nyr =dateFormat.format(date);
+
+        resultMap.put("error", "no");
+        if (file.getSize() > 0) {
+            String fileName = file.getOriginalFilename();
+            System.out.println("======================fileName:" + fileName);
+            String path = "";
+            Properties props = System.getProperties(); // 获得系统属性集
+            String osName = props.getProperty("os.name"); // 操作系统名称
+            // 获取文件后缀名
+            // 本地路径
+            int dot=fileName.lastIndexOf(".");
+            String[] a=new String[2];
+            a[0]=fileName.substring(0,dot);
+            a[1]=fileName.substring(dot,fileName.length());
+
+            String reallyName= UUID.randomUUID().toString()+a[1];//加时间戳的文件名
+            fileName=a[0]+a[1];
+            fileName= fileName.replace(" ","");
+            System.out.println("======================ctxPath:" + ctxPath);
+
+            ctxPath = ctxPath.substring(0, ctxPath.length() - 5) + File.separator + "pzMenuFile" + File.separator + nyr + File.separator + reallyName;
+
+            resultMap.put("url", ctxPath);
+            resultMap.put("fileName", fileName);
+            resultMap.put("reallyName", reallyName);
+            System.out.println("======================ctxPath:" + ctxPath);
+
+            System.out.println("======================reallyName:" + reallyName);
+            // 通过MultipartFile的方法直接写文件（注意这个时候）
+            File newFile = new File(ctxPath);
+            if (!newFile.exists()) {
+                System.out.println("======================开始了==================");
+                newFile.mkdirs();
+            }
+            try {
+                file.transferTo(newFile);
+            } catch (Exception e) {
+                e.printStackTrace();
+                resultMap.put("error", "yes");
+            }
+        }
+        ret.setMessageMap(resultMap);
+        if(resultMap.get("error").equals("no")){
+            if(resultMap.get("fileName").indexOf(".doc") != -1 || resultMap.get("fileName").indexOf(".docx") != -1
+                    || resultMap.get("fileName").indexOf(".xls") != -1 || resultMap.get("fileName").indexOf(".xlsx") != -1
+                    || resultMap.get("fileName").indexOf(".ppt") != -1 || resultMap.get("fileName").indexOf(".pptx") != -1 ){
+                new Thread(){
+                    String str = "suo";
+                    @Override
+                    public void run() {
+                        synchronized (str){
+                            //convertTest(resultMap.get("fileName"));
+                        }
+                    }
+                }.start();
+            }
+        }
+        return ret;
+    }
+
 
     /**
      * 图片上传到tomcat虚拟路径
@@ -282,7 +349,7 @@ public class FileUtil {
     }
 
     //文档在线预览
-    public void convertTest(String fileName) {
+    public static void convertTest(String fileName) {
         String path= PathUtil.getWebRootDir()+"../file/"+fileName;
         File word = new File(path);
         if(word.exists()){

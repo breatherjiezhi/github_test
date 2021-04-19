@@ -833,4 +833,30 @@ public class JedisUtils {
 		return ObjectUtils.unserialize(bytes);
 	}
 
+
+	/**
+
+	 * 添加一条记录，仅当给定的key不存在时才插入
+
+	 * @param key String
+
+	 * @param value String
+
+	 * @return long 状态码，1插入成功且key不存在，0未插入，key存在
+
+	 * */
+
+	public long setnx(String key, String value) {
+		Jedis jedis = jedisPool.getResource();
+
+		long str = jedis.setnx(key, value);
+
+		returnResource(jedis);
+
+		return str;
+
+	}
+
+
+
 }

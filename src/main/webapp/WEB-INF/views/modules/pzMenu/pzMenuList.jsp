@@ -48,7 +48,7 @@
                                     <label class=" col-xs-12 col-sm-4" for="menuName"
                                            data-locale="menuType">套餐规格</label>
                                     <div class="col-xs-12 col-sm-8 no-padding">
-                                        <form:select path="menuStatus" class="chosen-select form-control width-100"
+                                        <form:select path="menuType" class="chosen-select form-control width-100"
                                                      data-placeholder="点击选择...">
                                             <option value="">---请选择---</option>
                                             <form:options items="${fns:getDictList('pz_menu_type')}" itemLabel="label"
@@ -68,7 +68,7 @@
                                     <label class=" col-xs-12 col-sm-4" for="menuName"
                                            data-locale="menuUp">是否上架</label>
                                     <div class="col-xs-12 col-sm-8 no-padding">
-                                        <form:select path="menuStatus" class="chosen-select form-control width-100"
+                                        <form:select path="menuUp" class="chosen-select form-control width-100"
                                                      data-placeholder="点击选择...">
                                             <option value="">---请选择---</option>
                                             <form:options items="${fns:getDictList('pz_menu_up')}" itemLabel="label"

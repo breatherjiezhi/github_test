@@ -15,9 +15,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -70,8 +73,13 @@ public class PzMenuController extends BaseController {
     }
 
     @RequestMapping(value = "form")
-    public String form(PzMenu pzMenu,Model model){
+    public String form(PzMenu pzMenu, Model model){
 
+        ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        HttpServletRequest request = requestAttributes.getRequest();
+        String localAddr = request.getLocalAddr();
+        int serverPort = request.getServerPort();
+        model.addAttribute("httpUrl", "http://"+localAddr +":"+ serverPort+File.separator);
         model.addAttribute("pzMenu", pzMenu);
         return "modules/pzMenu/pzMenuForm";
     }

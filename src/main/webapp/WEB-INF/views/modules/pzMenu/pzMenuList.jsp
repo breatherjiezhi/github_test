@@ -157,7 +157,6 @@
     $('.page-content-area').ace_ajax('loadScripts', scripts, function () {
         jQuery(function ($) {
 
-
             var select2 = $('.select2');
             var select2width = select2.parent().width();
             $('.select2').css('width', select2width).select2({allowClear: true});
@@ -389,6 +388,13 @@
                                 validators: {
                                     notEmpty: {
                                         message: "套餐规格不能为空"
+                                    }
+                                }
+                            },
+                            menuImgUrl : {
+                                validators: {
+                                    notEmpty: {
+                                        message: "请上传套餐图片"
                                     }
                                 }
                             }

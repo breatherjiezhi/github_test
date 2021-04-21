@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.util.WebUtils;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -55,19 +56,9 @@ public class PzMenuFileService extends CrudService<PzMenuFileDao, PzMenuFile> {
         return pzMenuFileList;
     }
 
+
     @Transactional(readOnly = false)
-    public PzMenuFile pzMenuFileUpload(HttpServletRequest request){
-        String ctxPath = request.getSession().getServletContext().getRealPath("");
-
-        MultipartHttpServletRequest multipartRequest =
-                WebUtils.getNativeRequest(request, MultipartHttpServletRequest.class);
-        MultipartFile file1 = multipartRequest.getFile("impExcelData");
-        PzMenuFile pzMenuFile =  pzMenFileUpload1(file1,ctxPath);
-        return pzMenuFile;
-    }
-
-    private PzMenuFile pzMenFileUpload1(MultipartFile file, String ctxPath) {
-
+    public  PzMenuFile pzMenFileUpload(MultipartFile file, String ctxPath) {
         Result fileResult = FileUtil.pzMenuFileUpload(file,ctxPath);
         Map<String, String> fileResultMap = fileResult.getMessageMap();
         PzMenuFile fileEntity = new PzMenuFile();

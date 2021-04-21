@@ -31,7 +31,7 @@ public class FileUtil {
         Map<String, String> resultMap = new HashMap<>();
         Date date= new Date();
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
 
         String nyr =dateFormat.format(date);
 
@@ -53,10 +53,11 @@ public class FileUtil {
             fileName=a[0]+a[1];
             fileName= fileName.replace(" ","");
             System.out.println("======================ctxPath:" + ctxPath);
+            String uploadUrl = "pzMenuFile" + File.separator + nyr + File.separator + reallyName;
 
-            ctxPath = ctxPath.substring(0, ctxPath.length() - 5) + File.separator + "pzMenuFile" + File.separator + nyr + File.separator + reallyName;
+            ctxPath = ctxPath.substring(0, ctxPath.length() - 5) + uploadUrl;
 
-            resultMap.put("url", ctxPath);
+            resultMap.put("url", uploadUrl);
             resultMap.put("fileName", fileName);
             resultMap.put("reallyName", reallyName);
             System.out.println("======================ctxPath:" + ctxPath);
@@ -76,21 +77,6 @@ public class FileUtil {
             }
         }
         ret.setMessageMap(resultMap);
-        if(resultMap.get("error").equals("no")){
-            if(resultMap.get("fileName").indexOf(".doc") != -1 || resultMap.get("fileName").indexOf(".docx") != -1
-                    || resultMap.get("fileName").indexOf(".xls") != -1 || resultMap.get("fileName").indexOf(".xlsx") != -1
-                    || resultMap.get("fileName").indexOf(".ppt") != -1 || resultMap.get("fileName").indexOf(".pptx") != -1 ){
-                new Thread(){
-                    String str = "suo";
-                    @Override
-                    public void run() {
-                        synchronized (str){
-                            //convertTest(resultMap.get("fileName"));
-                        }
-                    }
-                }.start();
-            }
-        }
         return ret;
     }
 

@@ -6,11 +6,7 @@ package com.dhc.rad.modules.sys.service;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
-import java.util.Collection;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 
 import com.dhc.rad.modules.sys.entity.*;
 import org.activiti.engine.IdentityService;
@@ -728,8 +724,8 @@ public class SystemService extends BaseService implements InitializingBean {
 		return roleDao.findrole(userid);
 	}
 
-	public User findUserAndScore(String id) {
-		return userDao.findUserAndScoreById(id);
+	public List<Map<String,String>> findPzMenuScoreById(String userId) {
+		return userDao.findPzMenuScoreById(userId);
 	}
 
 

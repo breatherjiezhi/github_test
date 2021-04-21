@@ -726,22 +726,26 @@
             AND office_id =#{officeId}
         </if>
     </select>
-    <resultMap id="userAndScoreMap" type="User" autoMapping="true">
-        <id column="ID" property="id"/>
-        <collection property="userScoreList" javaType="list" ofType="UserScore" autoMapping="true">
-            <id column="ID" property="id"/>
-        </collection>
-    </resultMap>
-    <select id="findUserAndScoreById" resultMap="userAndScoreMap">
+
+    <select id="findPzMenuScoreById" resultType="java.util.Map">
         SELECT
-            *
+            d.`NAME` as name,
+            IFNULL(us.CANTEEN_INTEGRAL ,'0') as canteenIntegral
         FROM
-            sys_user su
-                LEFT JOIN pz_user_score pus ON su.ID = pus.USER_ID
-                LEFT JOIN pz_user_score pus2 ON su.ID = pus2.RESTAURANT_ID
-        WHERE
-            su.DEL_FLAG = '0'
-          AND su.ID = #{id}
+            (
+
+                SELECT
+                    u.`NAME`,
+                    u.ID
+                FROM
+                    sys_user u
+                        LEFT JOIN sys_user_role ur ON u.id = ur.USER_ID
+                        LEFT JOIN sys_role r ON ur.ROLE_ID = r.ID
+                WHERE
+                    r.ENNAME = 'gcs'
+            ) d
+                LEFT JOIN pz_user_score us ON us.RESTAURANT_ID = d.ID
+                AND us.USER_ID =#{userId} AND us.DEL_FLAG='0'
     </select>
 
     <!-- 用户充值-->

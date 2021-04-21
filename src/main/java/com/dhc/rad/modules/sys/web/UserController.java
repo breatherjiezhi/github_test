@@ -3,10 +3,7 @@ package com.dhc.rad.modules.sys.web;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -539,6 +536,11 @@ public class UserController extends BaseController {
 //		List<PbdProject> pbdProjectList=UserUtils.getUserProject();
 //
 //        model.addAttribute("pbdProjectList", pbdProjectList);
+
+        //根据用户id查询用户信息
+        List<Map<String, String>> mapList = systemService.findPzMenuScoreById(currentUser.getId());
+
+        model.addAttribute("mapList", mapList);
         model.addAttribute("unReadNotifys", unReadNotifys);
         model.addAttribute("user", currentUser);
         model.addAttribute("Global", new Global());
@@ -751,30 +753,7 @@ public class UserController extends BaseController {
         return returnMap;
     }
 
-    /**
-     * 查询用户和积分信息
-     *
-     * @param response
-     * @param model
-     * @return map
-     */
-    @RequiresPermissions("user")
-    @RequestMapping(value = "findUserAndScore")
-    @ResponseBody
-    public Map<String, Object> findUserAndScoreById(HttpServletResponse response, Model model) {
-        //新建map
-        Map<String, Object> returnMap = Maps.newHashMap();
-        //获取当前登录用户
-        User currentUser = UserUtils.getUser();
-        if (StringUtils.isNotBlank(currentUser.getId())) {
-            //根据用户id查询用户信息
-            currentUser = systemService.findUserAndScore(currentUser.getId());
-        }
 
-        returnMap.put("user", currentUser);
-
-        return returnMap;
-    }
     //	@InitBinder
 //	public void initBinder(WebDataBinder b) {
 //		b.registerCustomEditor(List.class, "roleList", new PropertyEditorSupport(){

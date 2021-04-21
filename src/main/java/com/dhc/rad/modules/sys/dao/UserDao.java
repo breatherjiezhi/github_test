@@ -4,6 +4,7 @@
 package com.dhc.rad.modules.sys.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import com.dhc.rad.modules.sys.entity.Role;
 import com.dhc.rad.modules.sys.entity.UserTemplate;
@@ -106,7 +107,14 @@ public interface UserDao extends CrudDao<User> {
 
 	public List<User> findForemanByProjectOrg(@Param("projectOrgId")String projectOrgId);
 
-	User findUserAndScoreById(@Param("id") String id);
+	/**
+	* @Description: 根据用户id查询个人所属餐厅积分
+	* @Param:  userId
+	* @return:  List<Map<String,String>>
+	* @Author: zhengXiang
+	* @Date: 2021/4/20
+	*/
+	List<Map<String,String>> findPzMenuScoreById(@Param("userId") String userId);
 
 	public Integer userRecharge(User user);
 }

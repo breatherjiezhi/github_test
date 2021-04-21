@@ -219,9 +219,9 @@ public class PzMenuController extends BaseController {
      * @param response
      * @return  Map<String,Object>
      */
-    @RequestMapping(value = {"findMenuListBySubmit"})
+    @RequestMapping(value = {"findMenuListByNoExamine"})
     @ResponseBody
-    public Map<String,Object> findMenuListBySubmit(PzMenu pzMenu, HttpServletRequest request, HttpServletResponse response){
+    public Map<String,Object> findListByNoExamine(PzMenu pzMenu, HttpServletRequest request, HttpServletResponse response){
 
         Map<String,Object> returnMap = new HashMap<>();
         //只有管理员才有权限操作
@@ -234,7 +234,7 @@ public class PzMenuController extends BaseController {
             return returnMap;
         }
         //查询未审核的菜单数据信息
-        Page<PzMenu> page =  pzMenuService.findMenuListBySubmit(new Page<>(request, response), pzMenu);
+        Page<PzMenu> page =  pzMenuService.findListByNoExamine(new Page<>(request, response), pzMenu);
 
         returnMap.put("total", page.getTotalPage());
         returnMap.put("pageNo", page.getPageNo());
@@ -255,10 +255,10 @@ public class PzMenuController extends BaseController {
      */
     @RequestMapping(value = {"submitList"})
     public String submitList(PzMenu pzMenu, HttpServletRequest request, HttpServletResponse response, Model model){
-        Page<PzMenu> page = pzMenuService.findMenuListBySubmit(new Page<>(request, response), pzMenu);
+        Page<PzMenu> page = pzMenuService.findListByNoExamine(new Page<>(request, response), pzMenu);
         List<PzMenu> submitList = page.getList();
         model.addAttribute("submitList", submitList);
-        return "modules/pzMenu/pzMenuSubmitList";
+        return "modules/pzMenu/pzMenuExamineList";
     }
 
     /**
@@ -267,15 +267,15 @@ public class PzMenuController extends BaseController {
      * @param model
      * @return String
      */
-    @RequestMapping(value = "pzMenuSubmitForm")
-    public String pzMenuSubmitForm(PzMenu pzMenu,Model model){
+    @RequestMapping(value = "noExamineForm")
+    public String noExamineForm(PzMenu pzMenu,Model model){
         ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         HttpServletRequest request = requestAttributes.getRequest();
         String localAddr = request.getLocalAddr();
         int serverPort = request.getServerPort();
         model.addAttribute("httpUrl", "http://"+localAddr +":"+ serverPort+File.separator);
         model.addAttribute("pzMenuSubmit", pzMenu);
-        return "modules/pzMenu/pzMenuSubmitForm1";
+        return "modules/pzMenu/pzMenuNoExamineForm";
     }
 
     /**

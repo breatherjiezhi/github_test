@@ -91,7 +91,7 @@ public class PzMenuService extends CrudService<PzMenuDao,PzMenu> {
     }
 
     @Transactional(readOnly = false)
-    public Page<PzMenu> findMenuListBySubmit(Page<PzMenu> pzMenuPage, PzMenu pzMenu) {
+    public Page<PzMenu> findListByNoExamine(Page<PzMenu> pzMenuPage, PzMenu pzMenu) {
 
         pzMenu.setPage(pzMenuPage);
         //查询审核状态为待审核的数据信息

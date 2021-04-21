@@ -57,7 +57,7 @@
             };
             jQuery(grid_selector).jqGrid({
                 datatype: "json", //将这里改为使用JSON数据
-                url: '${ctx}/pzMenu/findMenuListBySubmit', //这是数据的请求地址
+                url: '${ctx}/pzMenu/findMenuListByNoExamine', //这是数据的请求地址
                 height: 'auto',
                 autowidth: true,
                 jsonReader: {
@@ -208,7 +208,7 @@
             function _view(id) {
                 var id = id;
                 var params = {"id": id};
-                $.get("${ctx}/pzMenu/pzMenuSubmitForm", params, function (data, textStatus, object) {
+                $.get("${ctx}/pzMenu/noExamineForm", params, function (data, textStatus, object) {
                     $("#editDivId").closest(".ui-dialog").remove();
                     $("#editDivId").html(object.responseText).dialog({
                         modal: true,
@@ -257,7 +257,7 @@
             $("#query").click(function () {
                 var menuStatus = $("#menuStatus").val();
                 $(grid_selector).jqGrid('setGridParam', {
-                    url: "${ctx}/pzMenu/findMenuListBySubmit",
+                    url: "${ctx}/pzMenu/findMenuListByNoExamine",
                     mtype: "post",
                     postData: { 'menuStatus': menuStatus}, //发送数据
                     page: 1
@@ -267,7 +267,7 @@
             $("#reset").click(function () {
                 $('.chosen-select').val('').trigger('chosen:updated');
                 $(grid_selector).jqGrid('setGridParam', {
-                    url: "${ctx}/pzMenu/findMenuListBySubmit",
+                    url: "${ctx}/pzMenu/findMenuListByNoExamine",
                     mtype: "post",
                     postData: {'menuStatus': ''},
                     page: 1

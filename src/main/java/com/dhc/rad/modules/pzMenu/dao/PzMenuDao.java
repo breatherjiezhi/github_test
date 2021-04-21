@@ -14,6 +14,7 @@ import java.util.List;
 public interface PzMenuDao extends CrudDao<PzMenu> {
     /**
      * 批量删除(逻辑删除)
+     *
      * @param ids
      * @return Integer
      */
@@ -21,12 +22,31 @@ public interface PzMenuDao extends CrudDao<PzMenu> {
 
     /**
      * 修改菜单状态
+     *
      * @param pzMenu
      * @return Integer
      */
-    Integer updateMenuStatus(PzMenu pzMenu);
+    //Integer updateMenuStatus(PzMenu pzMenu);
 
     List<PzMenu> findMenuList(@Param("pzMenu") PzMenu pzMenu, @Param("userId") String userId);
 
-    Integer submitPzMenu(PzMenu pzMenu);
+    /**
+     * @Description: 菜单上架操作
+     * @Param: idList
+     * @return: Integer
+     * @Author: zhengXiang
+     * @Date: 2021/4/20
+     */
+    Integer upPzMenu(List<String> ids);
+
+    /**
+     * @Description: 菜单下架
+     * @Param: ids
+     * @return: Integer
+     * @Author: zhengXiang
+     * @Date: 2021/4/20
+     */
+    Integer downPzMenu(List<String> ids);
+
+    //Integer submitPzMenu(PzMenu pzMenu);
 }

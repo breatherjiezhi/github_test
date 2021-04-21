@@ -173,18 +173,18 @@ public class PzMenuController extends BaseController {
             menuStatusAgo = menu.getMenuStatus();
         }
         //管理员审批菜单： 只有当菜单状态为待审核时，管理员才能操作
-        if( menuStatusAgo==null || !"admin".equals(enName) || menuStatusAgo!= Global.MENU_STATUS_SUBMIT ){
-            addMessageAjax(returnMap,"0","越权操作，只有管理员才能修改此数据！");
+        if( menuStatusAgo!=null && "admins".equals(enName) && menuStatusAgo!= Global.MENU_STATUS_SUBMIT ){
+            addMessageAjax(returnMap,"0","管理员无权修改此数据！");
             return returnMap;
         }
         //供应商操作菜单：只有当菜单状态为非待审核（保存并修改  审核不通过）时，才能修改状态
-        if(menuStatusAgo==null || !"gcs".equals(enName) || menuStatusAgo!=Global.MENU_STATUS_SAVEANDUPDATE || menuStatusAgo!=Global.MENU_STATUS_NOPASS){
-            addMessageAjax(returnMap,"0","越权操作，只有供应商才能修改此数据！");
+        if(menuStatusAgo!=null && "gcs".equals(enName) && (menuStatusAgo!=Global.MENU_STATUS_SAVEANDUPDATE || menuStatusAgo!=Global.MENU_STATUS_NOPASS)){
+            addMessageAjax(returnMap,"0","供应商无权修改此数据！");
             return returnMap;
         }
         //普通用户无权操作菜单
-        if ("staff".equals(enName)) {
-            addMessageAjax(returnMap,"0","越权操作，普通用户无权操作菜单！");
+        if ("staff".equals(enName) || "admin".equals(enName)) {
+            addMessageAjax(returnMap,"0","越权操作，普通用户或者系统管理员无权操作菜单！");
             return returnMap;
         }
 
@@ -203,6 +203,159 @@ public class PzMenuController extends BaseController {
     @RequestMapping(value="import",method = RequestMethod.GET)
     public String impTroubleExcels(HttpServletRequest request, HttpServletResponse response, Model model){
         return "modules/pzMenu/pzMenuFileInfo";
+    }
+
+    /**
+     * 查询菜单状态为未审核的菜单信息
+     * @param pzMenu
+     * @param request
+     * @param response
+     * @return  Map<String,Object>
+     */
+    @RequestMapping(value = {"findMenuListBySubmit"})
+    @ResponseBody
+    public Map<String,Object> findMenuListBySubmit(PzMenu pzMenu, HttpServletRequest request, HttpServletResponse response){
+
+        Map<String,Object> returnMap = new HashMap<>();
+        //只有管理员才有权限操作
+        //获取当前登录用户
+        String userId = UserUtils.getUser().getId();
+        //查询用户的角色英文名称
+        Role findRole = systemService.findrole(userId);
+        if(findRole==null || !"admins".equals(findRole.getEnname())){
+            addMessageAjax(returnMap,"0","越权操作，只有管理员才能查询此数据！");
+            return returnMap;
+        }
+        //查询未审核的菜单数据信息
+        Page<PzMenu> page =  pzMenuService.findMenuListBySubmit(new Page<>(request, response), pzMenu);
+
+        returnMap.put("total", page.getTotalPage());
+        returnMap.put("pageNo", page.getPageNo());
+        returnMap.put("records", page.getCount());
+        returnMap.put("rows", page.getList());
+
+
+        return returnMap;
+    }
+
+    /**
+     * 查询菜单状态为未审核的菜单信息，然后跳转到submitList.jsp
+     * @param pzMenu
+     * @param request
+     * @param response
+     * @param model
+     * @return String
+     */
+    @RequestMapping(value = {"submitList"})
+    public String submitList(PzMenu pzMenu, HttpServletRequest request, HttpServletResponse response, Model model){
+        Page<PzMenu> page = pzMenuService.findMenuListBySubmit(new Page<>(request, response), pzMenu);
+        List<PzMenu> submitList = page.getList();
+        model.addAttribute("submitList", submitList);
+        return "modules/pzMenu/pzMenuSubmitList";
+    }
+
+    /**
+     * 审核菜单状态为未审核信息的表单
+     * @param pzMenu
+     * @param model
+     * @return String
+     */
+    @RequestMapping(value = "pzMenuSubmitForm")
+    public String pzMenuSubmitForm(PzMenu pzMenu,Model model){
+        ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        HttpServletRequest request = requestAttributes.getRequest();
+        String localAddr = request.getLocalAddr();
+        int serverPort = request.getServerPort();
+        model.addAttribute("httpUrl", "http://"+localAddr +":"+ serverPort+File.separator);
+        model.addAttribute("pzMenuSubmit", pzMenu);
+        return "modules/pzMenu/pzMenuSubmitForm1";
+    }
+
+    /**
+     * @Description: 菜单上架
+     * @Param:  pzMenu  request response
+     * @return:  Map<String,Object>
+     * @Author: zhengXiang
+     * @Date: 2021/4/20
+     */
+    @RequestMapping(value = "upPzMenu", method= RequestMethod.POST)
+    @ResponseBody
+    public Map<String,Object> upPzMenu(String ids, HttpServletRequest request, HttpServletResponse response){
+        Map<String,Object> returnMap = new HashMap<>();
+        //判断所选的ids的菜单是否都是未上架
+        List<String> idList = Arrays.asList(ids.split(","));
+        for (String id : idList) {
+            PzMenu pzMenu = pzMenuService.get(id);
+            if(pzMenu!=null){
+                Integer menuUp = pzMenu.getMenuUp();
+                if(menuUp==Global.MENU_UP_ON_SALE){
+                    addMessageAjax(returnMap,"0","选中的有已上架数据，请重新选择");
+                    return returnMap;
+                }
+            }
+        }
+        //获取当前登录用户id
+        String userId = UserUtils.getUser().getId();
+        //查询用户的角色英文名称
+        Role findRole = systemService.findrole(userId);
+        //判断当前登录用户是否为供应商 TODO:提交代码时，将admins改为 gcs
+        if(findRole!=null && !"gcs".equals(findRole.getEnname())){
+            addMessageAjax(returnMap,"0","越权操作，只有供应商具有操作的权限");
+            return returnMap;
+        }
+        //菜单上架
+        Integer flag =  pzMenuService.upPzMenu(idList);
+
+        if (flag > 0) {
+            addMessageAjax(returnMap, "1", "上架成功");
+        } else {
+            addMessageAjax(returnMap, "0", "上架失败");
+        }
+
+        return returnMap;
+    }
+
+    /**
+     * @Description: 菜单下架
+     * @Param:  pzMenu  request response
+     * @return:  Map<String,Object>
+     * @Author: zhengXiang
+     * @Date: 2021/4/20
+     */
+    @RequestMapping(value = "downPzMenu", method= RequestMethod.POST)
+    @ResponseBody
+    public Map<String,Object> downPzMenu(String ids, HttpServletRequest request, HttpServletResponse response){
+        Map<String,Object> returnMap = new HashMap<>();
+        //判断所选的ids的菜单是否都是上架
+        List<String> idList = Arrays.asList(ids.split(","));
+        for (String id : idList) {
+            PzMenu pzMenu = pzMenuService.get(id);
+            if(pzMenu!=null){
+                Integer menuUp = pzMenu.getMenuUp();
+                if(menuUp==Global.MENU_UP_NO_ON_SALE){
+                    addMessageAjax(returnMap,"0","选中的有未上架数据，请重新选择");
+                    return returnMap;
+                }
+            }
+        }
+        //获取当前登录用户id
+        String userId = UserUtils.getUser().getId();
+        //查询用户的角色英文名称
+        Role findRole = systemService.findrole(userId);
+        //判断当前登录用户是否为供应商 TODO:提交代码时，将admins改为 gcs
+        if(findRole!=null && !"gcs".equals(findRole.getEnname())){
+            addMessageAjax(returnMap,"0","越权操作，只有供应商具有操作的权限");
+            return returnMap;
+        }
+        //菜单下架
+        Integer flag = pzMenuService.downPzMenu(idList);
+
+        if (flag > 0) {
+            addMessageAjax(returnMap, "1", "下架成功");
+        } else {
+            addMessageAjax(returnMap, "0", "下架失败");
+        }
+        return returnMap;
     }
 
 

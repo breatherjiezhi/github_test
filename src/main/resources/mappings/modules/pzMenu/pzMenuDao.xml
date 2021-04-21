@@ -223,7 +223,27 @@
         </set>
         WHERE  id = #{id} and del_flag ='0'
     </update>
-    <update id="updateMenuStatus" parameterType="com.dhc.rad.modules.pzMenu.entity.PzMenu">
+    <update id="upPzMenu">
+        UPDATE pz_menu
+        SET
+        menu_up = '1'
+        WHERE id in
+        <foreach collection="list" item="id" index="index"
+                 open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </update>
+    <update id="downPzMenu">
+        UPDATE pz_menu
+        SET
+        menu_up = '0'
+        WHERE id in
+        <foreach collection="list" item="id" index="index"
+                 open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </update>
+    <!--<update id="updateMenuStatus" parameterType="com.dhc.rad.modules.pzMenu.entity.PzMenu">
         UPDATE pz_menu
         set MENU_STATUS =#{menuStatus}
         WHERE  id = #{id} and del_flag ='0'
@@ -232,6 +252,52 @@
         UPDATE pz_menu
         set MENU_STATUS ='1'
         WHERE  id = #{id} and del_flag ='0'
-    </update>
+    </update>-->
+
+    <select id="findList" resultMap="BaseResultMap">
+        SELECT
+        ID,
+        menu_name,
+        menu_description,
+        menu_img_url,
+        menu_limited,
+        menu_count,
+        menu_type,
+        menu_status,
+        menu_up,
+        examine_info,
+        create_by,
+        update_by,
+        create_date,
+        update_date,
+        remarks,
+        del_flag
+        FROM
+        pz_menu
+        WHERE del_flag ='0'
+        <if test ="null != menuName and ''!= menuName"> AND menu_name like concat('%',#{menuName},'%')</if>
+        <if test ="null != menuDescription and ''!= menuDescription"> AND menu_description like concat('%',#{menuDescription},'%')</if>
+        <if test ="null != menuImgUrl and ''!= menuImgUrl"> AND menu_img_url like concat('%',#{menuImgUrl},'%')</if>
+        <if test ="null != menuLimited and ''!= menuLimited"> AND menu_limited = #{menuLimited}</if>
+        <if test ="null != menuCount and ''!= menuCount"> AND menu_count = #{menuCount}</if>
+        <if test ="null != menuType and ''!= menuType"> AND menu_type = #{menuType}</if>
+        <if test ="null != menuStatus and ''!= menuStatus"> AND menu_status = #{menuStatus}</if>
+        <if test ="null != menuUp and ''!= menuUp"> AND menu_up = #{menuUp}</if>
+        <if test ="null != examineInfo and ''!= examineInfo"> AND examine_info like concat('%',#{examineInfo},'%')</if>
+        <if test ="null != createBy and ''!= createBy"> AND CREATE_BY = #{createBy.id}</if>
+        <if test ="null != updateBy and ''!= updateBy"> AND UPDATE_BY = #{updateBy.id}</if>
+        <if test ="null != createDate and ''!= createDate"> AND CREATE_DATE = #{createDate}</if>
+        <if test ="null != updateDate and ''!= updateDate"> AND UPDATE_DATE = #{updateDate}</if>
+        <if test ="null != remarks and ''!= remarks"> AND remarks = #{remarks}</if>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY  create_date DESC
+            </otherwise>
+        </choose>
+
+    </select>
 
 </mapper>

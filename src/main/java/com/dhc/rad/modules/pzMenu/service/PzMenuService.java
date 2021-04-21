@@ -24,7 +24,7 @@ import java.util.List;
 @Service
 @Transactional(readOnly = true)
 public class PzMenuService extends CrudService<PzMenuDao,PzMenu> {
-    
+
     @Autowired
     private PzMenuDao pzMenuDao;
 
@@ -69,9 +69,11 @@ public class PzMenuService extends CrudService<PzMenuDao,PzMenu> {
         return  pzMenuDao.deleteByIds(ids);
     }
 
+    @Transactional(readOnly = false)
     public Integer updateMenuStatus(PzMenu pzMenu) {
-
-        return pzMenuDao.updateMenuStatus(pzMenu);
+        //更新菜单实体updateBy createBy updateTime
+        pzMenu.preUpdate();
+        return pzMenuDao.update(pzMenu);
     }
 
     public List<PzMenu> findMenuList(PzMenu pzMenu) {
@@ -80,7 +82,33 @@ public class PzMenuService extends CrudService<PzMenuDao,PzMenu> {
         return menuList;
     }
 
+    @Transactional(readOnly = false)
     public Integer submitPzMenu(PzMenu pzMenu) {
-        return pzMenuDao.submitPzMenu(pzMenu);
+        pzMenu.preUpdate();
+        //提交：将菜单状态置为未审核状态
+        pzMenu.setMenuStatus(Global.MENU_STATUS_SUBMIT);
+        return pzMenuDao.update(pzMenu);
+    }
+
+    @Transactional(readOnly = false)
+    public Page<PzMenu> findMenuListBySubmit(Page<PzMenu> pzMenuPage, PzMenu pzMenu) {
+
+        pzMenu.setPage(pzMenuPage);
+        //查询审核状态为待审核的数据信息
+        pzMenu.setMenuStatus(Global.MENU_STATUS_SUBMIT);
+        List<PzMenu> list = pzMenuDao.findList(pzMenu);
+
+        return pzMenuPage.setList(list);
+    }
+
+    @Transactional(readOnly = false)
+    public Integer upPzMenu(List<String> idList) {
+
+        return pzMenuDao.upPzMenu(idList);
+    }
+
+    @Transactional(readOnly = false)
+    public Integer downPzMenu(List<String> ids) {
+        return pzMenuDao.downPzMenu(ids);
     }
 }

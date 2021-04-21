@@ -152,6 +152,13 @@ public class PzMenuController extends BaseController {
         return returnMap;
     }
 
+    /**
+    * @Description:  审核菜单是否合格
+    * @Param:  pzMenu
+    * @return:  Map<String,Object>
+    * @Author: zhengXiang
+    * @Date: 2021/4/21
+    */
     @RequestMapping(value = "updateStatus", method= RequestMethod.POST)
     @ResponseBody
     public Map<String,Object> updateMenuStatus(PzMenu pzMenu,HttpServletRequest request,HttpServletResponse response){

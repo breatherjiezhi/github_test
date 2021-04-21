@@ -178,7 +178,7 @@
                     view: isView,
                     viewicon : 'ace-icon fa fa-search-plus grey',
                     viewfunc : openDialogView,
-                    viewtext:"<span data-locale='see'>查看</span>",
+                    viewtext:"<span data-locale='examine'>审核</span>",
                     viewtitle:'',
                     cloneToTop: true
                 },

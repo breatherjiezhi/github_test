@@ -128,6 +128,25 @@
                     var rowData = jQuery(grid_selector).jqGrid('getRowData');
                     var ids = $(grid_selector).jqGrid('getDataIDs');
 
+                    for (var i = 0; i < ids.length; i++) {
+                        var id = ids[i];
+
+                        var rowData = $("#grid-table").getRowData(id);
+                        var menuLimited = getDictLabel(${fns:toJson(fns:getDictList("pz_menu_limited"))}, rowData.menuLimited);
+                        var menuType = getDictLabel(${fns:toJson(fns:getDictList("pz_menu_type"))}, rowData.menuType);
+                        var menuStatus = getDictLabel(${fns:toJson(fns:getDictList("pz_menu_status"))}, rowData.menuStatus);
+                        var menuUp = getDictLabel(${fns:toJson(fns:getDictList("pz_menu_up"))}, rowData.menuUp);
+
+                        $(grid_selector).jqGrid('setRowData', ids[i], {
+                            menuLimited: menuLimited,
+                            menuType: menuType,
+                            menuStatus: menuStatus,
+                            menuUp: menuUp
+                        });
+                    }
+
+
+
                     $(grid_selector).find('a[data-action=searchPlus]').on('click', function (event) {
                         var id = $(this).attr('data-id');
                         searchPlus(id);

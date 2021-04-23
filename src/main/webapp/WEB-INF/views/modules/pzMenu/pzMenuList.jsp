@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ include file="/WEB-INF/views/include/taglib.jsp" %>
 <title>套餐管理</title>
+<link href="${ctxStatic}/bootstrap-treeview/css/bootstrap-treeview.css" rel="stylesheet" type="text/css" />
 <div class="row">
     <div class="col-xs-12 col-sm-12">
         <div class="widget-box widget-compact">
@@ -157,6 +158,9 @@
     $('.page-content-area').ace_ajax('loadScripts', scripts, function () {
         jQuery(function ($) {
 
+
+
+
             var select2 = $('.select2');
             var select2width = select2.parent().width();
             $('.select2').css('width', select2width).select2({allowClear: true});
@@ -230,6 +234,7 @@
                     '<span data-locale="menuStatus">菜单状态</span>',
                     '<span data-locale="menuUp">是否上架</span>',
                     '<span data-locale="examineInfo">审核原因</span>',
+                    '<span data-locale="view">操作</span>'
                 ],
                 colModel: [
                     {name: 'id', index: 'id', hidden: true},
@@ -240,8 +245,8 @@
                     {name: 'menuType', index: 'menu_type'},
                     {name: 'menuStatus', index: 'menu_status'},
                     {name: 'menuUp', index: 'menu_up'},
-                    {name: 'examineInfo', index: 'examine_info'}
-
+                    {name: 'examineInfo', index: 'examine_info'},
+                    {name: 'view', index: 'view' ,sortable: false}
                 ],
                 viewrecords: true,
                 rowNum: 20,
@@ -269,13 +274,36 @@
                         var menuStatus = getDictLabel(${fns:toJson(fns:getDictList("pz_menu_status"))}, rowData.menuStatus);
                         var menuUp = getDictLabel(${fns:toJson(fns:getDictList("pz_menu_up"))}, rowData.menuUp);
 
+
+                        var viewBtn = '<div class="action-buttons" style="white-space:normal">\
+			         		<a data-action="edit" data-id="'+rowData.id+'" href="javascript:void(0);" class="tooltip-success green" data-rel="tooltip" title="编辑"  style="border-color:#69aa46 "><i class="ace-icon fa fa-pencil bigger-130"></i></a>\
+                            <a data-action="delete" data-id="'+rowData.id+'" href="javascript:void(0);" class="tooltip-error red" data-rel="tooltip" title="删除" style="border-color:#dd5a43"><i class="ace-icon fa fa-trash-o bigger-130"></i></a>\
+			         		</div>';
+
                         $(grid_selector).jqGrid('setRowData', ids[i], {
                             menuLimited: menuLimited,
                             menuType: menuType,
                             menuStatus: menuStatus,
-                            menuUp: menuUp
+                            menuUp: menuUp,
+                            view: viewBtn
                         });
                     }
+
+
+                    //删除按钮
+                    $(grid_selector).find('a[data-action=delete]').on('click', function(event) {
+                        $(grid_selector).jqGrid('resetSelection');
+                        var id = $(this).attr('data-id');
+                        doDelete(id);
+                    });
+
+                    //删除按钮
+                    $(grid_selector).find('a[data-action=edit]').on('click', function(event) {
+                        $(grid_selector).jqGrid('resetSelection');
+                        var id = $(this).attr('data-id');
+                        _edita(id);
+                    });
+
 
                 }
             });
@@ -391,7 +419,7 @@
                                     }
                                 }
                             },
-                            menuImgUrl : {
+                            menuImgUrl: {
                                 validators: {
                                     notEmpty: {
                                         message: "请上传套餐图片"
@@ -429,6 +457,9 @@
                 });
             }
 
+
+
+
             function openDialogEdit() {
                 var selectedIds = $(grid_selector).jqGrid("getGridParam", "selarrrow");
                 if (selectedIds.length > 1) {
@@ -442,45 +473,36 @@
                 }
             }
 
-            function doDelete() {
+            function doDelete(id) {
                 //信息确认插件
                 $.msg_confirm.Init({
                     'msg': '要删除当前所选的记录吗？',//这个参数可选，默认值：'这是信息提示！'
                     'confirm_fn': function () {
-                        var selectedIds = $(grid_selector).jqGrid("getGridParam", "selarrrow");
-                        var arrayObj = "";
-                        for (var i = 0; i < selectedIds.length; i++) {
-                            var rowData = $("#grid-table").getRowData(selectedIds[i]);
-                            var id = rowData.id;
-                            if (arrayObj != "") {
-                                arrayObj = arrayObj + "," + id;
-                            } else {
-                                arrayObj = id;
-                            }
-                        }
-                        var params = {"ids": arrayObj};
+                        var ids = id+"";
+                        var params = {"ids":ids};
                         $.post("${ctx}/pzMenu/deleteByIds", params, function (result) {
                             if (result.messageStatus == "1") {
                                 $.msg_show.Init({
                                     'msg': result.message,
                                     'type': 'success'
                                 });
-                                $(grid_selector).trigger("reloadGrid");
                             } else if (result.messageStatus == "0") {
                                 $.msg_show.Init({
                                     'msg': result.message,
                                     'type': 'error'
                                 });
                             }
+                            $(grid_selector).trigger("reloadGrid");
                         });
                     },//这个参数可选，默认值：function(){} 空的方法体
                     'cancel_fn': function () {
-                        //点击取消后要执行的操作
+                        $(grid_selector).jqGrid('resetSelection');
                     }//这个参数可选，默认值：function(){} 空的方法体
                 });
-
-
             }
+
+
+
 
             //search list by condition
             $("#query").click(function () {

@@ -797,7 +797,7 @@ public class JedisUtils {
 	 * @param isBroken
 	 */
 	public static void returnResource(Jedis jedis) {
-		if (jedis != null) {
+		if (jedis != null && null != jedisPool) {
 			jedisPool.returnResource(jedis);
 		}
 	}
@@ -857,6 +857,7 @@ public class JedisUtils {
 
 	}
 
+	
 
 
 }

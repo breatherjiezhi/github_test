@@ -519,7 +519,20 @@ public class UserUtils {
 //		}
 //		return new HashMap<String, Object>();
 //	}
-
+	/**
+	 * 判断用户是否具有权限
+	 * @param roleName
+	 * @return
+	 */
+	public static Boolean getRoleFlag(String roleName){
+		List<Role> roleList = getRoleList();
+		for (Role role : roleList) {
+			if(roleName.equals(role.getEnname())){
+				return true;
+			}
+		}
+		return false;
+	}
 
 	
 }

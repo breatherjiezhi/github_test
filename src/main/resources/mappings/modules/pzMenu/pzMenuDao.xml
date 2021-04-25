@@ -209,12 +209,12 @@
             <if test ="null != menuName and ''!= menuName"> menu_name= #{menuName},</if>
             <if test ="null != menuDescription and ''!= menuDescription">  menu_description= #{menuDescription},</if>
             <if test ="null != menuImgUrl and ''!= menuImgUrl">  menu_img_url= #{menuImgUrl},</if>
-            <if test ="null != menuLimited and ''!= menuLimited">  menu_limited = #{menuLimited},</if>
-            <if test ="null != menuCount and ''!= menuCount">  menu_count = #{menuCount},</if>
-            <if test ="null != menuType and ''!= menuType">  menu_type = #{menuType},</if>
-            <if test ="null != menuStatus and ''!= menuStatus">  menu_status = #{menuStatus},</if>
-            <if test ="null != menuUp and ''!= menuUp">  menu_up = #{menuUp},</if>
-            <if test ="null != examineInfo and ''!= examineInfo">  examine_info = #{examineInfo},</if>
+            <if test ="null != menuLimited ">  menu_limited = #{menuLimited},</if>
+            <if test ="null != menuCount ">  menu_count = #{menuCount},</if>
+            <if test ="null != menuType  ">  menu_type = #{menuType},</if>
+            <if test ="null != menuStatus  ">  menu_status = #{menuStatus},</if>
+            <if test ="null != menuUp ">  menu_up = #{menuUp},</if>
+            <if test ="null != examineInfo">  examine_info = #{examineInfo},</if>
             <if test ="null != createBy and ''!= createBy">  CREATE_BY = #{createBy.id},</if>
             <if test ="null != updateBy and ''!= updateBy">  UPDATE_BY = #{updateBy.id},</if>
             <if test ="null != createDate and ''!= createDate">  CREATE_DATE = #{createDate},</if>

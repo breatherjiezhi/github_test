@@ -9,6 +9,7 @@ import com.dhc.rad.modules.holiday.entity.Holiday;
 import com.dhc.rad.modules.pzMenu.entity.PzMenu;
 import com.dhc.rad.modules.pzMenu.service.PzMenuService;
 import com.dhc.rad.modules.sys.entity.Role;
+import com.dhc.rad.modules.sys.entity.User;
 import com.dhc.rad.modules.sys.service.SystemService;
 import com.dhc.rad.modules.sys.utils.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,7 +80,7 @@ public class PzMenuController extends BaseController {
         HttpServletRequest request = requestAttributes.getRequest();
         String localAddr = request.getLocalAddr();
         int serverPort = request.getServerPort();
-        model.addAttribute("httpUrl", "http://"+localAddr +":"+ serverPort+File.separator);
+        model.addAttribute("httpUrl", "https://"+localAddr +":"+ serverPort+File.separator);
         model.addAttribute("pzMenu", pzMenu);
         return "modules/pzMenu/pzMenuForm";
     }
@@ -101,6 +102,7 @@ public class PzMenuController extends BaseController {
                 return returnMap;
             }
         }
+
             flag =  pzMenuService.saveOrUpdate(pzMenu);
 
 
@@ -164,36 +166,35 @@ public class PzMenuController extends BaseController {
     public Map<String,Object> updateMenuStatus(PzMenu pzMenu,HttpServletRequest request,HttpServletResponse response){
         Map<String,Object> returnMap = new HashMap<>();
         //获取当前登录用户的id
-        String userId = UserUtils.getUser().getId();
-       //查询用户的角色英文名称
-        Role findRole = systemService.findrole(userId);
-        String enName = null;
-        if (ObjectUtils.isNotEmpty(findRole)) {
-            enName =  findRole.getEnname();
-        }
-
-        Integer menuStatusAgo = 0;
-
+        Integer menuStatusAgo = null;
+        PzMenu menu = null;
         //获取之前菜单状态
         if(StringUtils.isNotBlank(pzMenu.getId())){
-            PzMenu menu = pzMenuService.get(pzMenu.getId());
+            menu = pzMenuService.get(pzMenu.getId());
             menuStatusAgo = menu.getMenuStatus();
-        }
-        //管理员审批菜单： 只有当菜单状态为待审核时，管理员才能操作
-        if( menuStatusAgo!=null && "admins".equals(enName) && menuStatusAgo!= Global.MENU_STATUS_SUBMIT ){
-            addMessageAjax(returnMap,"0","管理员无权修改此数据！");
+        }else{
+            addMessageAjax(returnMap,"0","参数错误！");
             return returnMap;
         }
-        //供应商操作菜单：只有当菜单状态为非待审核（保存并修改  审核不通过）时，才能修改状态
-        if(menuStatusAgo!=null && "gcs".equals(enName) && (menuStatusAgo!=Global.MENU_STATUS_SAVEANDUPDATE || menuStatusAgo!=Global.MENU_STATUS_NOPASS)){
-            addMessageAjax(returnMap,"0","供应商无权修改此数据！");
-            return returnMap;
+        User user = UserUtils.getUser();
+        if (!user.getId().equals(pzMenu.getCreateBy().getId())){
+            //管理员审批菜单： 只有当菜单状态为待审核时，管理员才能操作
+            if( menuStatusAgo!=null && UserUtils.getRoleFlag("admins") && menuStatusAgo!= Global.MENU_STATUS_SUBMIT ){
+                addMessageAjax(returnMap,"0","管理员无权修改此数据！");
+                return returnMap;
+            }
+            //供应商操作菜单：只有当菜单状态为非待审核（保存并修改  审核不通过）时，才能修改状态
+            if(menuStatusAgo!=null && UserUtils.getRoleFlag("gcs") && (menuStatusAgo!=Global.MENU_STATUS_SAVEANDUPDATE || menuStatusAgo!=Global.MENU_STATUS_NOPASS) ){
+                addMessageAjax(returnMap,"0","供应商无权修改此数据！");
+                return returnMap;
+            }
+            //普通用户无权操作菜单
+            if ((UserUtils.getRoleFlag("staff") || UserUtils.getRoleFlag("admin"))) {
+                addMessageAjax(returnMap,"0","越权操作，普通用户或者系统管理员无权操作菜单！");
+                return returnMap;
+            }
         }
-        //普通用户无权操作菜单
-        if ("staff".equals(enName) || "admin".equals(enName)) {
-            addMessageAjax(returnMap,"0","越权操作，普通用户或者系统管理员无权操作菜单！");
-            return returnMap;
-        }
+
 
         //修改菜单状态
         Integer flag =  pzMenuService.updateMenuStatus(pzMenu);
@@ -364,6 +365,9 @@ public class PzMenuController extends BaseController {
         }
         return returnMap;
     }
+
+
+
 
 
 }

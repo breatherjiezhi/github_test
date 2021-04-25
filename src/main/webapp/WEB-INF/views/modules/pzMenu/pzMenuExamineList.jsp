@@ -39,7 +39,6 @@
             var grid_selector = "#grid-table";
             var pager_selector = "#grid-pager";
             var toolbarTop = grid_selector + '_toppager';
-            var isView = true;
 
             $('.input-daterange').datepicker({
                 autoclose: true,
@@ -93,6 +92,7 @@
                     '<span data-locale="menuStatus">菜单状态</span>',
                     '<span data-locale="menuUp">是否上架</span>',
                     '<span data-locale="examineInfo">审核原因</span>',
+                    '<span data-locale="view">操作</span>'
                 ],
                 colModel: [
                     {name: 'id', index: 'id', hidden: true},
@@ -103,7 +103,8 @@
                     {name: 'menuType', index: 'menu_type'},
                     {name: 'menuStatus', index: 'menu_status'},
                     {name: 'menuUp', index: 'menu_up'},
-                    {name: 'examineInfo', index: 'examine_info'}
+                    {name: 'examineInfo', index: 'examine_info'},
+                    {name: 'view', index: 'view' ,sortable: false}
 
                 ],
                 viewrecords: true,
@@ -137,41 +138,27 @@
                         var menuStatus = getDictLabel(${fns:toJson(fns:getDictList("pz_menu_status"))}, rowData.menuStatus);
                         var menuUp = getDictLabel(${fns:toJson(fns:getDictList("pz_menu_up"))}, rowData.menuUp);
 
+
+                        var  viewBtn = '<div class="action-buttons" style="white-space:normal">'+
+                            '<a data-action="examine" data-id="'+rowData.id+'" href="javascript:void(0);" class="tooltip-success green" data-rel="tooltip" title="审核"  style="border-color:#69aa46 "><i class="ace-icon fa fa-check bigger-130"></i></a>'+
+                            '</div>';
+
                         $(grid_selector).jqGrid('setRowData', ids[i], {
                             menuLimited: menuLimited,
                             menuType: menuType,
                             menuStatus: menuStatus,
-                            menuUp: menuUp
+                            menuUp: menuUp,
+                            view: viewBtn
+                        });
+
+                        //删除按钮
+                        $(grid_selector).find('a[data-action=examine]').on('click', function(event) {
+                            $(grid_selector).jqGrid('resetSelection');
+                            var id = $(this).attr('data-id');
+                            _view(id);
                         });
                     }
 
-
-
-                    $(grid_selector).find('a[data-action=searchPlus]').on('click', function (event) {
-                        var id = $(this).attr('data-id');
-                        searchPlus(id);
-                    });
-                    $(grid_selector).find('a[data-action=scrap]').on('click', function (event) {
-                        var id = $(this).attr('data-id');
-                        _edita(id);
-                    });
-                    $(grid_selector).find('a[data-action=editt]').on('click', function (event) {
-                        var id = $(this).attr('data-id');
-                        <%--window.location.href="${ctx}#page/yearplan/pbdYearPlan/list?yearPlanMainId="+id;--%>
-                        // _edita1(id);
-                    });
-                    $(grid_selector).find('a[data-action=submit]').on('click', function (event) {
-                        var id = $(this).attr('data-id');
-                        var taskId = $(this).attr('data-taskId');
-                        var status = $(this).attr('data-status');
-                        submit(taskId, status, id);
-
-                        // submitScrapDG(id);
-                    });
-                    $(grid_selector).find('a[data-action=del]').on('click', function (event) {
-                        var id = $(this).attr('data-id');
-                        doDelete1(id);
-                    });
                 }
             });
 
@@ -194,7 +181,7 @@
                     refreshicon: 'ace-icon fa fa-refresh',
                     refreshtext: "<span data-locale='refresh'>刷新</span>",
                     refreshtitle: '',
-                    view: isView,
+                    view: false,
                     viewicon : 'ace-icon fa fa-search-plus grey',
                     viewfunc : openDialogView,
                     viewtext:"<span data-locale='examine'>审核</span>",
@@ -214,7 +201,7 @@
                 if(selectedIds.length>1){
                     //失败
                     $.msg_show.Init({
-                        'msg':'请您选择一条记录查看',
+                        'msg':'请您选择一条记录',
                         'type':'error'
                     });
 
@@ -241,7 +228,22 @@
                                 "class": "btn btn-primary btn-minier",
                                 "data-locale": "pass",
                                 click: function () {
-                                    $("#inputForm").bootstrapValidator('validate');
+                                   var params = {"id": id,"menuStatus":"3","examineInfo":"审核通过"};
+                                    $.post("${ctx}/pzMenu/updateStatus", params, function (result) {
+                                        if (result.messageStatus == "1") {
+                                            $.msg_show.Init({
+                                                'msg': result.message,
+                                                'type': 'success'
+                                            });
+                                            $("#editDivId").dialog("close");
+                                            $(grid_selector).trigger("reloadGrid");
+                                        } else if (result.messageStatus == "0") {
+                                            $.msg_show.Init({
+                                                'msg': result.message,
+                                                'type': 'error'
+                                            });
+                                        }
+                                    });
                                 }
                             },
                             {
@@ -249,7 +251,27 @@
                                 "class": "btn btn-primary btn-minier",
                                 "data-locale": "noPass",
                                 click: function () {
-                                    $("#inputForm").bootstrapValidator('validate');
+                                    var examineInfo=prompt("请输入审核不通过原因","");
+                                    if(examineInfo!=''){
+                                        var params = {"id": id,"menuStatus":"2","examineInfo":examineInfo};
+                                        $.post("${ctx}/pzMenu/updateStatus", params, function (result) {
+                                            if (result.messageStatus == "1") {
+                                                $.msg_show.Init({
+                                                    'msg': result.message,
+                                                    'type': 'success'
+                                                });
+                                                $("#editDivId").dialog("close");
+                                                $(grid_selector).trigger("reloadGrid");
+                                            } else if (result.messageStatus == "0") {
+                                                $.msg_show.Init({
+                                                    'msg': result.message,
+                                                    'type': 'error'
+                                                });
+                                            }
+                                        });
+                                    }else{
+                                        alert("请输入审核不通过原因!");
+                                    }
                                 }
                             },
                             {

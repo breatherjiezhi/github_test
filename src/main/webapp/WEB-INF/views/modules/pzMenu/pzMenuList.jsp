@@ -179,7 +179,7 @@
             var pager_selector = "#grid-pager";
             var toolbarTop = grid_selector + '_toppager';
             var isAdd = true;
-            var isAlldel = true;
+            var isAlldel = false;
             var isShow = "";
             var isShow2 = "";
 
@@ -275,10 +275,31 @@
                         var menuUp = getDictLabel(${fns:toJson(fns:getDictList("pz_menu_up"))}, rowData.menuUp);
 
 
-                        var viewBtn = '<div class="action-buttons" style="white-space:normal">\
-			         		<a data-action="edit" data-id="'+rowData.id+'" href="javascript:void(0);" class="tooltip-success green" data-rel="tooltip" title="编辑"  style="border-color:#69aa46 "><i class="ace-icon fa fa-pencil bigger-130"></i></a>\
-                            <a data-action="delete" data-id="'+rowData.id+'" href="javascript:void(0);" class="tooltip-error red" data-rel="tooltip" title="删除" style="border-color:#dd5a43"><i class="ace-icon fa fa-trash-o bigger-130"></i></a>\
-			         		</div>';
+                        var viewBtn = '';
+
+                        if( rowData.menuStatus=='0'){
+                            viewBtn = '<div class="action-buttons" style="white-space:normal">'+
+                            '<a data-action="edit" data-id="'+rowData.id+'" href="javascript:void(0);" class="tooltip-success green" data-rel="tooltip" title="编辑"  style="border-color:#69aa46 "><i class="ace-icon fa fa-pencil bigger-130"></i></a>'+
+                            '<a data-action="submit" data-id="'+rowData.id+'" href="javascript:void(0);" class="tooltip-success green" data-rel="tooltip" title="提交" style="border-color:#69aa46"><i class="ace-icon fa fa-check bigger-130"></i></a>'+
+                            '</div>';
+                        }else if( rowData.menuStatus=='2'){
+                            viewBtn = '<div class="action-buttons" style="white-space:normal">'+
+                                '<a data-action="edit" data-id="'+rowData.id+'" href="javascript:void(0);" class="tooltip-success green" data-rel="tooltip" title="编辑"  style="border-color:#69aa46 "><i class="ace-icon fa fa-pencil bigger-130"></i></a>'+
+                                '</div>';
+                        }else if( rowData.menuStatus=='3'){
+                            if(rowData.menuUp=='0'){
+                                viewBtn = '<div class="action-buttons" style="white-space:normal">'+
+                                    '<a data-action="edit" data-id="'+rowData.id+'" href="javascript:void(0);" class="tooltip-success green" data-rel="tooltip" title="编辑"  style="border-color:#69aa46 "><i class="ace-icon fa fa-pencil bigger-130"></i></a>'+
+                                    '<a data-action="upShelf" data-id="'+rowData.id+'" href="javascript:void(0);" class="tooltip-success green" data-rel="tooltip" title="上架"  style="border-color:#69aa46 "><i class="ace-icon fa fa-level-up bigger-130"></i></a>'+
+                                    '</div>';
+                            }else{
+                                viewBtn = '<div class="action-buttons" style="white-space:normal">'+
+                                    '<a data-action="downShelf" data-id="'+rowData.id+'" href="javascript:void(0);" class="tooltip-success green" data-rel="tooltip" title="下架"  style="border-color:#69aa46 "><i class="ace-icon fa fa-level-down bigger-130"></i></a>'+
+                                    '</div>';
+                            }
+                        }
+
+
 
                         $(grid_selector).jqGrid('setRowData', ids[i], {
                             menuLimited: menuLimited,
@@ -297,20 +318,40 @@
                         doDelete(id);
                     });
 
-                    //删除按钮
+                    //编辑
                     $(grid_selector).find('a[data-action=edit]').on('click', function(event) {
                         $(grid_selector).jqGrid('resetSelection');
                         var id = $(this).attr('data-id');
                         _edita(id);
                     });
 
+                    //提交审核
+                    $(grid_selector).find('a[data-action=submit]').on('click', function(event) {
+                        $(grid_selector).jqGrid('resetSelection');
+                        var id = $(this).attr('data-id');
+                        submitMenu(id);
+                    });
 
+
+                    //上架
+                    $(grid_selector).find('a[data-action=upShelf]').on('click', function(event) {
+                        $(grid_selector).jqGrid('resetSelection');
+                        var id = $(this).attr('data-id');
+                        upShelf(id);
+                    });
+
+                    //下架
+                    $(grid_selector).find('a[data-action=downShelf]').on('click', function(event) {
+                        $(grid_selector).jqGrid('resetSelection');
+                        var id = $(this).attr('data-id');
+                        downShelf(id);
+                    });
                 }
             });
 
             jQuery(grid_selector).jqGrid('navGrid', pager_selector,
                 {//navbar options
-                    edit: true,
+                    edit: false,
                     editicon: 'ace-icon fa fa-pencil',
                     editfunc: openDialogEdit,
                     edittext: "<span data-locale='edit'>编辑</span>",
@@ -472,6 +513,90 @@
                     _edita(selectedIds[0]);
                 }
             }
+           function upShelf(id){
+               //信息确认插件
+               $.msg_confirm.Init({
+                   'msg': '要上架当前所选的套餐吗？',//这个参数可选，默认值：'这是信息提示！'
+                   'confirm_fn': function () {
+                       var ids = id+"";
+                       var params = {"id":id,"menuUp":"1"};
+                       $.post("${ctx}/pzMenu/updateStatus", params, function (result) {
+                           if (result.messageStatus == "1") {
+                               $.msg_show.Init({
+                                   'msg': result.message,
+                                   'type': 'success'
+                               });
+                           } else if (result.messageStatus == "0") {
+                               $.msg_show.Init({
+                                   'msg': result.message,
+                                   'type': 'error'
+                               });
+                           }
+                           $(grid_selector).trigger("reloadGrid");
+                       });
+                   },//这个参数可选，默认值：function(){} 空的方法体
+                   'cancel_fn': function () {
+                       $(grid_selector).jqGrid('resetSelection');
+                   }//这个参数可选，默认值：function(){} 空的方法体
+               });
+           }
+
+            function downShelf(id){
+                //信息确认插件
+                $.msg_confirm.Init({
+                    'msg': '要下架当前所选的套餐吗？',//这个参数可选，默认值：'这是信息提示！'
+                    'confirm_fn': function () {
+                        var ids = id+"";
+                        var params = {"id":id,"menuUp":"0"};
+                        $.post("${ctx}/pzMenu/updateStatus", params, function (result) {
+                            if (result.messageStatus == "1") {
+                                $.msg_show.Init({
+                                    'msg': result.message,
+                                    'type': 'success'
+                                });
+                            } else if (result.messageStatus == "0") {
+                                $.msg_show.Init({
+                                    'msg': result.message,
+                                    'type': 'error'
+                                });
+                            }
+                            $(grid_selector).trigger("reloadGrid");
+                        });
+                    },//这个参数可选，默认值：function(){} 空的方法体
+                    'cancel_fn': function () {
+                        $(grid_selector).jqGrid('resetSelection');
+                    }//这个参数可选，默认值：function(){} 空的方法体
+                });
+            }
+            function submitMenu(id) {
+                //信息确认插件
+                $.msg_confirm.Init({
+                    'msg': '要提交审核当前所选的记录吗？',//这个参数可选，默认值：'这是信息提示！'
+                    'confirm_fn': function () {
+                        var ids = id+"";
+                        var params = {"id":id,"menuStatus":"1"};
+                        $.post("${ctx}/pzMenu/updateStatus", params, function (result) {
+                            if (result.messageStatus == "1") {
+                                $.msg_show.Init({
+                                    'msg': result.message,
+                                    'type': 'success'
+                                });
+                            } else if (result.messageStatus == "0") {
+                                $.msg_show.Init({
+                                    'msg': result.message,
+                                    'type': 'error'
+                                });
+                            }
+                            $(grid_selector).trigger("reloadGrid");
+                        });
+                    },//这个参数可选，默认值：function(){} 空的方法体
+                    'cancel_fn': function () {
+                        $(grid_selector).jqGrid('resetSelection');
+                    }//这个参数可选，默认值：function(){} 空的方法体
+                });
+            }
+
+
 
             function doDelete(id) {
                 //信息确认插件

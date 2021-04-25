@@ -47,6 +47,9 @@ public class PzMenuService extends CrudService<PzMenuDao,PzMenu> {
 
                 pzMenu.preUpdate();
                 //设置菜单状态为保存并修改
+
+                pzMenu.setExamineInfo("");
+                pzMenu.setMenuUp(Global.MENU_UP_NO_ON_SALE);
                 pzMenu.setMenuStatus(Global.MENU_STATUS_SAVEANDUPDATE);
 
                 return pzMenuDao.update(pzMenu);

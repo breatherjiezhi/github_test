@@ -846,7 +846,7 @@ public class JedisUtils {
 
 	 * */
 
-	public long setnx(String key, String value) {
+	public static long setnx(String key, String value) {
 		Jedis jedis = jedisPool.getResource();
 
 		long str = jedis.setnx(key, value);
@@ -857,7 +857,7 @@ public class JedisUtils {
 
 	}
 
-	
+
 
 
 }

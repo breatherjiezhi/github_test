@@ -229,8 +229,7 @@ public class PzMenuController extends BaseController {
         //获取当前登录用户
         String userId = UserUtils.getUser().getId();
         //查询用户的角色英文名称
-        Role findRole = systemService.findrole(userId);
-        if(findRole==null || !"admins".equals(findRole.getEnname())){
+        if(!UserUtils.getRoleFlag("admins")){
             addMessageAjax(returnMap,"0","越权操作，只有管理员才能查询此数据！");
             return returnMap;
         }
@@ -305,9 +304,8 @@ public class PzMenuController extends BaseController {
         //获取当前登录用户id
         String userId = UserUtils.getUser().getId();
         //查询用户的角色英文名称
-        Role findRole = systemService.findrole(userId);
         //判断当前登录用户是否为供应商 TODO:提交代码时，将admins改为 gcs
-        if(findRole!=null && !"gcs".equals(findRole.getEnname())){
+        if(UserUtils.getRoleFlag("gcs")){
             addMessageAjax(returnMap,"0","越权操作，只有供应商具有操作的权限");
             return returnMap;
         }
@@ -349,9 +347,8 @@ public class PzMenuController extends BaseController {
         //获取当前登录用户id
         String userId = UserUtils.getUser().getId();
         //查询用户的角色英文名称
-        Role findRole = systemService.findrole(userId);
         //判断当前登录用户是否为供应商 TODO:提交代码时，将admins改为 gcs
-        if(findRole!=null && !"gcs".equals(findRole.getEnname())){
+        if(UserUtils.getRoleFlag("gcs")){
             addMessageAjax(returnMap,"0","越权操作，只有供应商具有操作的权限");
             return returnMap;
         }

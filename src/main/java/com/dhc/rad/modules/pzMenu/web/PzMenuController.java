@@ -305,7 +305,7 @@ public class PzMenuController extends BaseController {
         String userId = UserUtils.getUser().getId();
         //查询用户的角色英文名称
         //判断当前登录用户是否为供应商 TODO:提交代码时，将admins改为 gcs
-        if(UserUtils.getRoleFlag("gcs")){
+        if(!UserUtils.getRoleFlag("gcs")){
             addMessageAjax(returnMap,"0","越权操作，只有供应商具有操作的权限");
             return returnMap;
         }
@@ -348,7 +348,7 @@ public class PzMenuController extends BaseController {
         String userId = UserUtils.getUser().getId();
         //查询用户的角色英文名称
         //判断当前登录用户是否为供应商 TODO:提交代码时，将admins改为 gcs
-        if(UserUtils.getRoleFlag("gcs")){
+        if(!UserUtils.getRoleFlag("gcs")){
             addMessageAjax(returnMap,"0","越权操作，只有供应商具有操作的权限");
             return returnMap;
         }

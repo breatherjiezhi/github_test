@@ -84,6 +84,7 @@
                 },
                 colNames: [
                     'id',
+                    '<span data-locale="gcsName">供餐商名称</span>',
                     '<span data-locale="menuName">菜单名称</span>',
                     '<span data-locale="menuDescription">菜单描述</span>',
                     '<span data-locale="menuLimited">套餐是否限量</span>',
@@ -96,6 +97,7 @@
                 ],
                 colModel: [
                     {name: 'id', index: 'id', hidden: true},
+                    {name: 'gcsName', index: 'gcs_name'},
                     {name: 'menuName', index: 'menu_name'},
                     {name: 'menuDescription', index: 'menu_description'},
                     {name: 'menuLimited', index: 'menu_limited'},

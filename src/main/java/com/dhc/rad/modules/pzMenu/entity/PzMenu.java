@@ -11,42 +11,46 @@ public class PzMenu extends DataEntity<PzMenu> {
 
 
     /**
-     *菜单名称
+     * 菜单名称
      */
     private String menuName;
     /**
-     *菜单描述
+     * 菜单描述
      */
     private String menuDescription;
     /**
-     *菜单图片地址
+     * 菜单图片地址
      */
     private String menuImgUrl;
     /**
-     *套餐限量是否 0不限,1限制 默认0
+     * 套餐限量是否 0不限,1限制 默认0
      */
     private String menuLimited;
     /**
-     *
      * 套餐余量
      */
     private Integer menuCount;
     /**
-     *套餐规格 0小份 1默认 2大份
+     * 套餐规格 0小份 1默认 2大份
      */
     private String menuType;
     /**
-     *菜单状态 0保存可修改,1提交,2审核不通过,3审核通过
+     * 菜单状态 0保存可修改,1提交,2审核不通过,3审核通过
      */
     private Integer menuStatus;
     /**
-     *菜单是否上架 0未上架 1上架 默认0
+     * 菜单是否上架 0未上架 1上架 默认0
      */
     private Integer menuUp;
     /**
-     *审核原因
+     * 审核原因
      */
     private String examineInfo;
+
+
+    //菜单所属供餐上名称
+    private String gcsName;
+
 
     public String getMenuName() {
         return menuName;
@@ -118,5 +122,13 @@ public class PzMenu extends DataEntity<PzMenu> {
 
     public void setExamineInfo(String examineInfo) {
         this.examineInfo = examineInfo;
+    }
+
+    public String getGcsName() {
+        return gcsName;
+    }
+
+    public void setGcsName(String gcsName) {
+        this.gcsName = gcsName;
     }
 }

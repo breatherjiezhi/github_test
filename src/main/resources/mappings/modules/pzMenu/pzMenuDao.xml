@@ -17,6 +17,7 @@
         <result column="update_date" property="updateDate" />
         <result column="remarks" property="remarks" />
         <result column="del_flag" property="delFlag" />
+        <result column="gcs_name" property="gcsName" />
     </resultMap>
 
     <update id="deleteByIds">
@@ -256,45 +257,48 @@
 
     <select id="findList" resultMap="BaseResultMap">
         SELECT
-        ID,
-        menu_name,
-        menu_description,
-        menu_img_url,
-        menu_limited,
-        menu_count,
-        menu_type,
-        menu_status,
-        menu_up,
-        examine_info,
-        create_by,
-        update_by,
-        create_date,
-        update_date,
-        remarks,
-        del_flag
+        m.ID,
+        m.menu_name,
+        m.menu_description,
+        m.menu_img_url,
+        m.menu_limited,
+        m.menu_count,
+        m.menu_type,
+        m.menu_status,
+        m.menu_up,
+        m.examine_info,
+        m.create_by,
+        m.update_by,
+        m.create_date,
+        m.update_date,
+        m.remarks,
+        m.del_flag,
+        o.name as gcs_name
         FROM
-        pz_menu
-        WHERE del_flag ='0'
-        <if test ="null != menuName and ''!= menuName"> AND menu_name like concat('%',#{menuName},'%')</if>
-        <if test ="null != menuDescription and ''!= menuDescription"> AND menu_description like concat('%',#{menuDescription},'%')</if>
-        <if test ="null != menuImgUrl and ''!= menuImgUrl"> AND menu_img_url like concat('%',#{menuImgUrl},'%')</if>
-        <if test ="null != menuLimited and ''!= menuLimited"> AND menu_limited = #{menuLimited}</if>
-        <if test ="null != menuCount and ''!= menuCount"> AND menu_count = #{menuCount}</if>
-        <if test ="null != menuType and ''!= menuType"> AND menu_type = #{menuType}</if>
-        <if test ="null != menuStatus and ''!= menuStatus"> AND menu_status = #{menuStatus}</if>
-        <if test ="null != menuUp and ''!= menuUp"> AND menu_up = #{menuUp}</if>
-        <if test ="null != examineInfo and ''!= examineInfo"> AND examine_info like concat('%',#{examineInfo},'%')</if>
-        <if test ="null != createBy and ''!= createBy"> AND CREATE_BY = #{createBy.id}</if>
-        <if test ="null != updateBy and ''!= updateBy"> AND UPDATE_BY = #{updateBy.id}</if>
-        <if test ="null != createDate and ''!= createDate"> AND CREATE_DATE = #{createDate}</if>
-        <if test ="null != updateDate and ''!= updateDate"> AND UPDATE_DATE = #{updateDate}</if>
-        <if test ="null != remarks and ''!= remarks"> AND remarks = #{remarks}</if>
+        pz_menu m
+        LEFT JOIN sys_user u on m.CREATE_BY=u.ID
+        LEFT JOIN sys_office o on  u.OFFICE_ID=o.ID
+        WHERE m.del_flag ='0'
+        <if test ="null != menuName and ''!= menuName"> AND m.menu_name like concat('%',#{menuName},'%')</if>
+        <if test ="null != menuDescription and ''!= menuDescription"> AND m.menu_description like concat('%',#{menuDescription},'%')</if>
+        <if test ="null != menuImgUrl and ''!= menuImgUrl"> AND m.menu_img_url like concat('%',#{menuImgUrl},'%')</if>
+        <if test ="null != menuLimited and ''!= menuLimited"> AND m.menu_limited = #{menuLimited}</if>
+        <if test ="null != menuCount and ''!= menuCount"> AND m.menu_count = #{menuCount}</if>
+        <if test ="null != menuType and ''!= menuType"> AND m.menu_type = #{menuType}</if>
+        <if test ="null != menuStatus and ''!= menuStatus"> AND m.menu_status = #{menuStatus}</if>
+        <if test ="null != menuUp and ''!= menuUp"> AND m.menu_up = #{menuUp}</if>
+        <if test ="null != examineInfo and ''!= examineInfo"> AND m.examine_info like concat('%',#{examineInfo},'%')</if>
+        <if test ="null != createBy and ''!= createBy"> AND m.CREATE_BY = #{createBy.id}</if>
+        <if test ="null != updateBy and ''!= updateBy"> AND m.UPDATE_BY = #{updateBy.id}</if>
+        <if test ="null != createDate and ''!= createDate"> AND m.CREATE_DATE = #{createDate}</if>
+        <if test ="null != updateDate and ''!= updateDate"> AND m.UPDATE_DATE = #{updateDate}</if>
+        <if test ="null != remarks and ''!= remarks"> AND m.remarks = #{remarks}</if>
         <choose>
             <when test="page !=null and page.orderBy != null and page.orderBy != ''">
-                ORDER BY ${page.orderBy}
+                ORDER BY m.${page.orderBy}
             </when>
             <otherwise>
-                ORDER BY  create_date DESC
+                ORDER BY  m.create_date DESC
             </otherwise>
         </choose>
 

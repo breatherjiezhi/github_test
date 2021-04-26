@@ -3,6 +3,7 @@
 <mapper namespace="com.dhc.rad.modules.pzMenu.dao.PzMenuDao">
     <resultMap id="BaseResultMap" type="com.dhc.rad.modules.pzMenu.entity.PzMenu" >
         <result column="menu_name" property="menuName" />
+        <result column="restaurant_id" property="restaurantID" />
         <result column="menu_description" property="menuDescription" />
         <result column="menu_img_url" property="menuImgUrl" />
         <result column="menu_limited" property="menuLimited" />
@@ -35,6 +36,7 @@
     <select id="findMenuList" resultMap="BaseResultMap">
         SELECT
         ID,
+        restaurant_id,
         menu_name,
         menu_description,
         menu_img_url,
@@ -53,6 +55,7 @@
         FROM
         pz_menu
         WHERE del_flag ='0' and CREATE_BY = #{userId}
+        <if test ="null != pzMenu.restaurantId and ''!= pzMenu.restaurantId"> AND restaurant_id = #{pzMenu.restaurantId}</if>
         <if test ="null != pzMenu.menuName and ''!= pzMenu.menuName"> AND menu_name like concat('%',#{pzMenu.menuName},'%')</if>
         <if test ="null != pzMenu.menuDescription and ''!= pzMenu.menuDescription"> AND menu_description like concat('%',#{pzMenu.menuDescription},'%')</if>
         <if test ="null != pzMenu.menuImgUrl and ''!= pzMenu.menuImgUrl"> AND menu_img_url like concat('%',#{pzMenu.menuImgUrl},'%')</if>
@@ -81,6 +84,7 @@
     <select id="get" resultMap="BaseResultMap">
         SELECT
             a.ID,
+            restaurant_id,
             a.menu_name,
             a.menu_description,
             a.menu_img_url,
@@ -105,6 +109,9 @@
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test ="null != id and ''!= id">
                 id,
+            </if>
+            <if test ="null != restaurantId and ''!= restaurantId">
+                restaurant_id,
             </if>
             <if test ="null != menuName and ''!= menuName">
                 menu_name,
@@ -155,6 +162,9 @@
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test ="null != id and ''!= id">
                 #{id},
+            </if>
+            <if test ="null != restaurantId and ''!= restaurantId">
+                #{restaurantId},
             </if>
             <if test ="null != menuName and ''!= menuName">
                 #{menuName},
@@ -207,6 +217,7 @@
     <update id="update" parameterType="com.dhc.rad.modules.pzMenu.entity.PzMenu">
         UPDATE pz_menu
         <set>
+            <if test ="null != restaurantId and ''!= restaurantId"> restaurant_id= #{restaurantId},</if>
             <if test ="null != menuName and ''!= menuName"> menu_name= #{menuName},</if>
             <if test ="null != menuDescription and ''!= menuDescription">  menu_description= #{menuDescription},</if>
             <if test ="null != menuImgUrl and ''!= menuImgUrl">  menu_img_url= #{menuImgUrl},</if>
@@ -259,6 +270,7 @@
         SELECT
         m.ID,
         m.menu_name,
+        m.restaurant_id,
         m.menu_description,
         m.menu_img_url,
         m.menu_limited,
@@ -276,9 +288,9 @@
         o.name as gcs_name
         FROM
         pz_menu m
-        LEFT JOIN sys_user u on m.CREATE_BY=u.ID
-        LEFT JOIN sys_office o on  u.OFFICE_ID=o.ID
+        LEFT JOIN sys_office o on  m.RESTAURANT_ID=o.ID
         WHERE m.del_flag ='0'
+        <if test ="null != restaurantId and ''!= restaurantId"> AND m.restaurant_id = #{restaurantId}</if>
         <if test ="null != menuName and ''!= menuName"> AND m.menu_name like concat('%',#{menuName},'%')</if>
         <if test ="null != menuDescription and ''!= menuDescription"> AND m.menu_description like concat('%',#{menuDescription},'%')</if>
         <if test ="null != menuImgUrl and ''!= menuImgUrl"> AND m.menu_img_url like concat('%',#{menuImgUrl},'%')</if>

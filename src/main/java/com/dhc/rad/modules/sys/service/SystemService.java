@@ -110,7 +110,11 @@ public class SystemService extends BaseService implements InitializingBean {
 		// 设置分页参数
 		user.setPage(page);
 		List<User> userList =userDao.findList(user);
+
 		for (User user1:userList){
+			Role role= new Role();
+			role.setUser(user1);
+			user1.setRoleList(roleDao.getNameList(role));
 			user1.setRoleNames(user1.getRoleNameList());
 		}
 		// 执行分页查询
@@ -141,6 +145,18 @@ public class SystemService extends BaseService implements InitializingBean {
 		List<User> list = userDao.findList(user);
 		return list;
 	}
+
+
+	/**
+	 * 无分页查询员工列表
+	 * @param
+	 * @return
+	 */
+	public List<User> findYgList(){
+		List<User> list = userDao.findYgList();
+		return list;
+	}
+
 
 
 	/**

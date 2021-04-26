@@ -90,19 +90,21 @@ public class PzMenuController extends BaseController {
     public Map<String,Object> doSave(PzMenu pzMenu,HttpServletRequest request,HttpServletResponse response,Model model){
         Map<String,Object> returnMap = new HashMap<>();
         Integer flag = 0;
+        User user = UserUtils.getUser();
 
         //修改：判断当前用户是否与创建用户一致
         String pzMenuId = pzMenu.getId();
         if (StringUtils.isNotBlank(pzMenuId)) {
             PzMenu menuById = pzMenuService.get(pzMenuId);
-            String userId = UserUtils.getUser().getId();
+            String userId = user.getId();
             String createBy = menuById.getCreateBy().getId();
-            if (menuById.getCreateBy()==null || !menuById.getCreateBy().getId().equals(userId)) {
+            if (menuById.getCreateBy()==null || !createBy.equals(userId)) {
                 addMessageAjax(returnMap, "0", "当前用户无权限！！！");
                 return returnMap;
             }
         }
 
+            pzMenu.setRestaurantID(user.getOffice().getId());
             flag =  pzMenuService.saveOrUpdate(pzMenu);
 
 

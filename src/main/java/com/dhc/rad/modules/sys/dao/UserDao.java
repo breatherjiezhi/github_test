@@ -117,4 +117,6 @@ public interface UserDao extends CrudDao<User> {
 	List<Map<String,String>> findPzMenuScoreById(@Param("userId") String userId);
 
 	public Integer userRecharge(User user);
+
+	public List<User> findYgList();
 }

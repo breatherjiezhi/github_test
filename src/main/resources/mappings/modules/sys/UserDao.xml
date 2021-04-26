@@ -145,7 +145,7 @@
         a.remarks,
         a.login_flag,
         a.photo,
-		a.user_integral,
+        a.user_integral,
         a.create_by AS "createBy.id",
         a.create_date,
         a.update_by AS "updateBy.id",
@@ -236,7 +236,7 @@
         a.remarks,
         a.login_flag,
         a.photo,
-		a.user_integral,
+        a.user_integral,
         a.create_by AS "createBy.id",
         a.create_date,
         a.update_by AS "updateBy.id",
@@ -366,7 +366,7 @@
         a.remarks,
         a.login_flag,
         a.photo,
-		a.user_integral,
+        a.user_integral,
         a.create_by AS "createBy.id",
         a.create_date,
         a.update_by AS "updateBy.id",
@@ -429,7 +429,7 @@
         a.remarks,
         a.login_flag,
         a.photo,
-		a.user_integral,
+        a.user_integral,
         a.create_by AS "createBy.id",
         a.create_date,
         a.update_by AS "updateBy.id",
@@ -483,7 +483,7 @@
         a.remarks,
         a.login_flag,
         a.photo,
-		a.user_integral,
+        a.user_integral,
         a.create_by AS "createBy.id",
         a.create_date,
         a.update_by AS "updateBy.id",
@@ -754,5 +754,19 @@
         SET  user_integral = user_integral + #{userIntegral}
         WHERE  LOGIN_NAME  = #{LOGIN_NAME}
     </update>
+
+
+    <!-- 员工用户信息用于充值 -->
+    <select id="findYgList" resultType="User">
+        SELECT
+        a.ID,
+        a.LOGIN_NAME
+        FROM
+        sys_user a
+        LEFT JOIN sys_user_role ur ON a.id = ur.USER_ID
+        LEFT JOIN sys_role r ON ur.ROLE_ID = r.ID
+        WHERE
+        r.ENNAME = 'staff'
+    </select>
 
 </mapper>

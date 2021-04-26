@@ -188,7 +188,7 @@
 					{name:'office.name',index:'office_id', editable: true,width:60},
 					{name:'mobile',index:'mobile', editable: true,width:60},
 					{name:'userType',index:'userType', editable: true,width:60,hidden:true},
-                    {name:'role.name',index:'role.name', editable: true,width:80},
+                    {name:'roleNames',index:'role.name', editable: true,width:80},
 					{name:'loginFlag',index:'loginFlag', editable: true,width:55},
 					{name:'View',index:'View',width:30},
 					{name:'id',index:'id',hidden:true}

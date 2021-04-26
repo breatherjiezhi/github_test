@@ -14,6 +14,12 @@ public class PzMenu extends DataEntity<PzMenu> {
      * 菜单名称
      */
     private String menuName;
+
+
+    /**
+     * 供餐商id officeid
+     */
+    private String restaurantID;
     /**
      * 菜单描述
      */
@@ -130,5 +136,14 @@ public class PzMenu extends DataEntity<PzMenu> {
 
     public void setGcsName(String gcsName) {
         this.gcsName = gcsName;
+    }
+
+
+    public String getRestaurantID() {
+        return restaurantID;
+    }
+
+    public void setRestaurantID(String restaurantID) {
+        this.restaurantID = restaurantID;
     }
 }

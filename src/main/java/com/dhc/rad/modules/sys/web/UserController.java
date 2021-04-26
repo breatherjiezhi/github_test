@@ -786,7 +786,7 @@ public class UserController extends BaseController {
         try {
             String fileName = "批量充值模版.xlsx";
             List<UserTemplate> list = Lists.newArrayList();
-            List<User> userList = systemService.findUser(new User());
+            List<User> userList = systemService.findYgList();
             if (userList.size() > 0) {
                 for (User user : userList) {
                     UserTemplate u = new UserTemplate();

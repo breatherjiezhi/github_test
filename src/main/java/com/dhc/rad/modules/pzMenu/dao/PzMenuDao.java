@@ -48,5 +48,9 @@ public interface PzMenuDao extends CrudDao<PzMenu> {
      */
     Integer downPzMenu(List<String> ids);
 
+    Integer findMenuCount(@Param("id") String id);
+
+    Integer updateMenuCount(PzMenu pzMenu);
+
     //Integer submitPzMenu(PzMenu pzMenu);
 }

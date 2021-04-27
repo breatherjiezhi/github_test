@@ -3,6 +3,8 @@ package com.dhc.rad.modules.pzOrder.entity;
 import com.dhc.rad.common.persistence.DataEntity;
 import com.dhc.rad.modules.pzBoxCode.entity.PzBoxCode;
 
+import java.math.BigDecimal;
+
 /**
  * @author 10951
  */
@@ -35,6 +37,32 @@ public class PzOrder extends DataEntity<PzOrder> {
      */
     private String menuType;
 
+    /**
+     *套餐所需积分
+     */
+    private BigDecimal menuIntegral;
+
+    /**
+     *吃饭日期
+     */
+    private String eatDate;
+
+
+    public BigDecimal getMenuIntegral() {
+        return menuIntegral;
+    }
+
+    public void setMenuIntegral(BigDecimal menuIntegral) {
+        this.menuIntegral = menuIntegral;
+    }
+
+    public String getEatDate() {
+        return eatDate;
+    }
+
+    public void setEatDate(String eatDate) {
+        this.eatDate = eatDate;
+    }
 
     public String getServiceUnitId() {
         return serviceUnitId;

@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.dhc.rad.modules.pzBoxCode.dao.PzBoxCodeDao">
-    <resultMap id="BaseResultMap" type="com.dhc.rad.modules.pzBoxCode.entity.PzBoxCode" >
-        <result column="service_unit_id" property="serviceUnitId" />
+<mapper namespace="com.dhc.rad.modules.pzUserScore.dao.PzUserScoreDao">
+    <resultMap id="BaseResultMap" type="com.dhc.rad.modules.pzUserScore.entity.PzUserScore" >
+        <result column="user_id" property="userId" />
         <result column="restaurant_id" property="restaurantId" />
-        <result column="box_code" property="boxCode" />
-        <result column="box_cn_name" property="boxCnName" />
+        <result column="canteen_integral" property="canteenIntegral" />
         <result column="create_by" property="createBy.id" />
         <result column="update_by" property="updateBy.id" />
         <result column="create_date" property="createDate" />
@@ -15,7 +14,7 @@
     </resultMap>
 
     <update id="deleteByIds">
-        UPDATE pz_box_code
+        UPDATE pz_user_score
         SET
         del_flag = '1'
         WHERE id in
@@ -28,37 +27,34 @@
     <select id="get" resultMap="BaseResultMap">
         SELECT
             a.ID,
-            a.service_unit_id,
+            a.user_id,
             a.restaurant_id,
-            a.box_code,
-            a.box_cn_name,
+            a.canteen_integral,
             a.create_by,
             a.update_by,
             a.create_date,
             a.update_date,
             a.remarks,
             a.del_flag
-        FROM pz_box_code a
+        FROM pz_user_score a
         WHERE a.ID = #{id} and a.del_flag ='0'
     </select>
 
-    <insert id="insert" parameterType="com.dhc.rad.modules.pzBoxCode.entity.PzBoxCode">
-        INSERT INTO pz_box_code
+    <insert id="insert" parameterType="com.dhc.rad.modules.pzUserScore.entity.PzUserScore">
+        INSERT INTO pz_user_score
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test ="null != id and ''!= id">
                 id,
             </if>
-            <if test ="null != serviceUnitId and ''!= serviceUnitId">
-                service_unit_id,
+
+            <if test ="null != userId and ''!= userId">
+                user_id,
             </if>
             <if test ="null != restaurantId and ''!= restaurantId">
                 restaurant_id,
             </if>
-            <if test ="null != boxCode and ''!= boxCode">
-                box_code,
-            </if>
-            <if test ="null != boxCnName and ''!= boxCnName">
-                box_cn_name,
+            <if test ="null != canteenIntegral and ''!= canteenIntegral">
+                canteen_integral,
             </if>
             <if test ="null != createBy and ''!= createBy">
                 create_by,
@@ -83,17 +79,14 @@
             <if test ="null != id and ''!= id">
                 #{id},
             </if>
-            <if test ="null != serviceUnitId and ''!= serviceUnitId">
-                #{serviceUnitId},
+            <if test ="null != userId and ''!= userId">
+                #{userId},
             </if>
             <if test ="null != restaurantId and ''!= restaurantId">
                 #{restaurantId},
             </if>
-            <if test ="null != boxCode and ''!= boxCode">
-                #{boxCode},
-            </if>
-            <if test ="null != boxCnName and ''!= boxCnName">
-                #{boxCnName},
+            <if test ="null != canteenIntegral and ''!= canteenIntegral">
+                #{canteenIntegral},
             </if>
             <if test ="null != createBy and ''!= createBy">
                 #{createBy.id},
@@ -116,13 +109,12 @@
         </trim>
     </insert>
 
-    <update id="update" parameterType="com.dhc.rad.modules.pzBoxCode.entity.PzBoxCode">
-        UPDATE pz_box_code
+    <update id="update" parameterType="com.dhc.rad.modules.pzUserScore.entity.PzUserScore">
+        UPDATE pz_user_score
         <set>
-            <if test ="null != serviceUnitId and ''!= serviceUnitId">  service_unit_id= #{serviceUnitId},</if>
+            <if test ="null != userId and ''!= userId"> user_id= #{userId},</if>
             <if test ="null != restaurantId and ''!= restaurantId">  restaurant_id = #{restaurantId},</if>
-            <if test ="null != boxCode and ''!= boxCode">  box_code = #{boxCode},</if>
-            <if test ="null != boxCnName and ''!= boxCnName">  box_cn_name = #{boxCnName},</if>
+            <if test ="null != canteenIntegral and ''!= canteenIntegral">  canteen_integral = #{canteenIntegral},</if>
             <if test ="null != createBy and ''!= createBy">  CREATE_BY = #{createBy.id},</if>
             <if test ="null != updateBy and ''!= updateBy">  UPDATE_BY = #{updateBy.id},</if>
             <if test ="null != createDate and ''!= createDate">  CREATE_DATE = #{createDate},</if>
@@ -132,23 +124,12 @@
         WHERE  id = #{id} and del_flag ='0'
     </update>
 
-
-    <select id="findCountByBoxCode" resultType="java.lang.Integer">
-        SELECT
-            COUNT( 1 )
-        FROM
-            pz_box_code
-        WHERE
-            BOX_CODE = #{boxCode} and del_flag ='0'
-    </select>
-
     <select id="findList" resultMap="BaseResultMap">
         SELECT
         ID,
-        service_unit_id,
+        user_id,
         restaurant_id,
-        box_code,
-        box_cn_name,
+        canteen_integral,
         create_by,
         update_by,
         create_date,
@@ -156,12 +137,10 @@
         remarks,
         del_flag
         FROM
-        pz_box_code
+        pz_user_score
         WHERE del_flag ='0'
-        <if test ="null != serviceUnitId and ''!= serviceUnitId"> AND service_unit_id= #{serviceUnitId}</if>
-        <if test ="null != restaurantId and ''!= restaurantId">AND  restaurant_id = #{restaurantId}</if>
-        <if test ="null != boxCode and ''!= boxCode"> AND box_code = #{boxCode}</if>
-        <if test ="null != boxCnName and ''!= boxCnName"> AND box_cn_name = #{boxCnName}</if>
+        <if test ="null != restaurantId and ''!= restaurantId"> AND restaurant_id = #{restaurantId}</if>
+        <if test ="null != canteenIntegral and ''!= canteenIntegral"> AND canteen_integral = #{canteenIntegral}</if>
         <if test ="null != createBy and ''!= createBy"> AND CREATE_BY = #{createBy.id}</if>
         <if test ="null != updateBy and ''!= updateBy"> AND UPDATE_BY = #{updateBy.id}</if>
         <if test ="null != createDate and ''!= createDate"> AND CREATE_DATE = #{createDate}</if>
@@ -177,4 +156,6 @@
         </choose>
 
     </select>
+
+
 </mapper>

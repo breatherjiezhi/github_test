@@ -99,6 +99,16 @@ public class Global {
     //已上架
     public static final int MENU_UP_ON_SALE=1;
 
+    /**
+     * 积分类型
+     */
+    //0 扣分
+    public static final int SCORE_TYPE_DEDUCT =0;
+    //1 加分
+    public static final int SCORE_TYPE_ADD =1;
+    //2 转换积分
+    public static final int SCORE_TYPE_CHANGE =2;
+
 
 
 

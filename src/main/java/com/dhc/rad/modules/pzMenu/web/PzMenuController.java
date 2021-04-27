@@ -104,7 +104,7 @@ public class PzMenuController extends BaseController {
             }
         }
 
-            pzMenu.setRestaurantID(user.getOffice().getId());
+            pzMenu.setRestaurantId(user.getOffice().getId());
             flag =  pzMenuService.saveOrUpdate(pzMenu);
 
 

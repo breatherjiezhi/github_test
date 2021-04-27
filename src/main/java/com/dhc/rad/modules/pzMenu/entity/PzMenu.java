@@ -19,7 +19,7 @@ public class PzMenu extends DataEntity<PzMenu> {
     /**
      * 供餐商id officeid
      */
-    private String restaurantID;
+    private String restaurantId;
     /**
      * 菜单描述
      */
@@ -139,11 +139,11 @@ public class PzMenu extends DataEntity<PzMenu> {
     }
 
 
-    public String getRestaurantID() {
-        return restaurantID;
+    public String getRestaurantId() {
+        return restaurantId;
     }
 
-    public void setRestaurantID(String restaurantID) {
-        this.restaurantID = restaurantID;
+    public void setRestaurantId(String restaurantId) {
+        this.restaurantId = restaurantId;
     }
 }

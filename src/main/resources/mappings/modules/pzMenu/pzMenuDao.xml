@@ -3,7 +3,7 @@
 <mapper namespace="com.dhc.rad.modules.pzMenu.dao.PzMenuDao">
     <resultMap id="BaseResultMap" type="com.dhc.rad.modules.pzMenu.entity.PzMenu" >
         <result column="menu_name" property="menuName" />
-        <result column="restaurant_id" property="restaurantID" />
+        <result column="restaurant_id" property="restaurantId" />
         <result column="menu_description" property="menuDescription" />
         <result column="menu_img_url" property="menuImgUrl" />
         <result column="menu_limited" property="menuLimited" />

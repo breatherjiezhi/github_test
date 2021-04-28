@@ -76,4 +76,8 @@ public class HolidayService extends CrudService<HolidayDao, Holiday> {
     }
 
 
+    @Transactional(readOnly = false)
+    public Holiday getByDate(String holidayDate) {
+        return holidayDao.getByDate(holidayDate);
+    }
 }

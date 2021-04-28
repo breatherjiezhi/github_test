@@ -114,4 +114,9 @@ public class PzMenuService extends CrudService<PzMenuDao,PzMenu> {
     public Integer downPzMenu(List<String> ids) {
         return pzMenuDao.downPzMenu(ids);
     }
+
+    @Transactional(readOnly = false)
+    public Integer findMenuCount(String menuId) {
+        return pzMenuDao.findMenuCount(menuId);
+    }
 }

@@ -5,6 +5,7 @@ package com.dhc.rad.modules.sys.service;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +22,9 @@ import com.dhc.rad.modules.sys.utils.UserUtils;
 @Service
 @Transactional(readOnly = true)
 public class OfficeService extends TreeService<OfficeDao, Office> {
+
+	@Autowired
+	private OfficeDao OfficeDao;
 
 	public List<Office> findAll(){
 		return UserUtils.getOfficeList();
@@ -56,6 +60,12 @@ public class OfficeService extends TreeService<OfficeDao, Office> {
 
 	public List<Office> getCompanys() {
 		return UserUtils.getCompanys();
+	}
+
+
+	public List<Office> findRestaurantOffice(){
+		return OfficeDao.findRestaurantOffice();
+
 	}
 	
 }

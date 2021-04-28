@@ -205,5 +205,14 @@
 					<if test="dbName == 'oracle'">'%,'||#{id}||',%'</if>
 					<if test="dbName == 'mysql'">CONCAT('%,', #{id}, ',%')</if>
 	</update>
+
+
+	<select id="findRestaurantOffice" resultType="Office">
+		SELECT
+		<include refid="companyColumns"/>
+		FROM sys_office a
+		WHERE a.del_flag = '0' AND a.type = '5'
+	</select>
+
 	
 </mapper>

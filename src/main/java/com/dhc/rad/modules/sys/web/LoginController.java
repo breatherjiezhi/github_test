@@ -8,6 +8,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.dhc.rad.common.utils.ConstantUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.web.util.WebUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -108,6 +109,7 @@ public class LoginController extends BaseController{
 		
 
 		String username = WebUtils.getCleanParam(request, FormAuthenticationFilter.DEFAULT_USERNAME_PARAM);
+		String roleList = WebUtils.getCleanParam(request, FormAuthenticationFilter.DEFAULT_ROLE_LIST_PARAM);
 		boolean rememberMe = WebUtils.isTrue(request, FormAuthenticationFilter.DEFAULT_REMEMBER_ME_PARAM);
 		boolean mobile = WebUtils.isTrue(request, FormAuthenticationFilter.DEFAULT_MOBILE_PARAM);
 		String exception = (String)request.getAttribute(FormAuthenticationFilter.DEFAULT_ERROR_KEY_ATTRIBUTE_NAME);
@@ -120,6 +122,7 @@ public class LoginController extends BaseController{
 		model.addAttribute(FormAuthenticationFilter.DEFAULT_USERNAME_PARAM, username);
 		model.addAttribute(FormAuthenticationFilter.DEFAULT_REMEMBER_ME_PARAM, rememberMe);
 		model.addAttribute(FormAuthenticationFilter.DEFAULT_MOBILE_PARAM, mobile);
+		model.addAttribute(FormAuthenticationFilter.DEFAULT_ROLE_LIST_PARAM, roleList);
 //		model.addAttribute(FormAuthenticationFilter.DEFAULT_ERROR_KEY_ATTRIBUTE_NAME, exception);
 //		model.addAttribute("message", message);
 		
@@ -139,7 +142,7 @@ public class LoginController extends BaseController{
 		// 如果是手机登录，则返回JSON字符串
 		if (mobile){
 			Map<String,Object> map = Maps.newHashMap();
-			map.put("status", "601");
+			map.put("status", ConstantUtils.ResCode.LOGINFAIL);
 			map.put("data", model);
 			map.put("message", message);
 	        return renderString(response, map);
@@ -187,7 +190,7 @@ public class LoginController extends BaseController{
 			if (request.getParameter("login") != null) {
 				//TODO:maliang 定义了一个map集合返回
 				Map<String, Object> map = Maps.newHashMap();
-				map.put("status", "600");
+				map.put("status", ConstantUtils.ResCode.LOGINSUCCESS);
 				map.put("data", principal);
 //				map.put("sessionid", principal.getSessionid());
 				map.put("message", "登录成功");

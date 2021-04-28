@@ -78,6 +78,7 @@
 		a.remarks,
 		a.login_flag,
 		a.photo,
+		a.user_integral,
         a.user_integral,
 		a.create_by AS "createBy.id",
 		a.create_date,
@@ -144,8 +145,8 @@
         a.login_date,
         a.remarks,
         a.login_flag,
-        a.photo,
         a.user_integral,
+        a.photo,
         a.create_by AS "createBy.id",
         a.create_date,
         a.update_by AS "updateBy.id",
@@ -733,16 +734,9 @@
             IFNULL(us.CANTEEN_INTEGRAL ,'0') as canteenIntegral
         FROM
             (
-
-                SELECT
-                    u.`NAME`,
-                    u.ID
-                FROM
-                    sys_user u
-                        LEFT JOIN sys_user_role ur ON u.id = ur.USER_ID
-                        LEFT JOIN sys_role r ON ur.ROLE_ID = r.ID
-                WHERE
-                    r.ENNAME = 'gcs'
+              SELECT a.ID,a.NAME
+		      FROM sys_office a
+		      WHERE a.del_flag = '0' AND a.type = '5'
             ) d
                 LEFT JOIN pz_user_score us ON us.RESTAURANT_ID = d.ID
                 AND us.USER_ID =#{userId} AND us.DEL_FLAG='0'

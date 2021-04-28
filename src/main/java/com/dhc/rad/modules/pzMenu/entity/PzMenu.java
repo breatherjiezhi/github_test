@@ -58,6 +58,17 @@ public class PzMenu extends DataEntity<PzMenu> {
     private String gcsName;
 
 
+    //所属餐厅名称
+    private String restaurantName;
+
+    public String getRestaurantName() {
+        return restaurantName;
+    }
+
+    public void setRestaurantName(String restaurantName) {
+        this.restaurantName = restaurantName;
+    }
+
     public String getMenuName() {
         return menuName;
     }

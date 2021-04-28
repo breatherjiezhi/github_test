@@ -10,6 +10,8 @@ import java.util.List;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotNull;
 
+import com.dhc.rad.modules.sys.utils.BigDecimalSerialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;
 
@@ -60,6 +62,7 @@ public class User extends DataEntity<User> {
 
     private String projectOrgId;
 
+	@JsonSerialize(using = BigDecimalSerialize.class)
     private BigDecimal userIntegral; //用户积分
 
 	private List<UserScore> userScoreList;

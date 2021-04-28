@@ -8,6 +8,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.dhc.rad.common.config.Global;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -52,7 +53,7 @@ public class LogoutController extends BaseController{
 			resultMap.put("message", e.getMessage());
 			return resultMap;
 		}
-		resultMap.put("status", "200");
+		resultMap.put("status", ConstantUtils.ResCode.SUCCESS);
 		resultMap.put("message", "退出成功");
 		return resultMap;
 		

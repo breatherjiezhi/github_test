@@ -25,14 +25,15 @@ public class FormAuthenticationFilter extends org.apache.shiro.web.filter.authc.
 	public static final String DEFAULT_MOBILE_PARAM = "mobileLogin";
 	public static final String DEFAULT_MESSAGE_PARAM = "message";
 	public static final String DEFAULT_AJAX_PARAM = "ajaxReq";
+	public static final String DEFAULT_ROLE_LIST_PARAM="roleList";
 
 	private String captchaParam = DEFAULT_CAPTCHA_PARAM;
 	private String mobileLoginParam = DEFAULT_MOBILE_PARAM;
 	private String messageParam = DEFAULT_MESSAGE_PARAM;
 	private String ajaxReqParam = DEFAULT_AJAX_PARAM;
-	
-	
-	
+	private String roleList = DEFAULT_ROLE_LIST_PARAM;
+
+
 	
 
 	protected AuthenticationToken createToken(ServletRequest request, ServletResponse response) {
@@ -73,7 +74,8 @@ public class FormAuthenticationFilter extends org.apache.shiro.web.filter.authc.
 	public String getAjaxReqParam() {
 		return ajaxReqParam;
 	}
-	
+
+	public String getRoleList(){ return roleList;}
 	/**
 	 * 登录成功之后跳转URL
 	 */

@@ -4,6 +4,7 @@
     <resultMap id="BaseResultMap" type="com.dhc.rad.modules.pzMenu.entity.PzMenu" >
         <result column="menu_name" property="menuName" />
         <result column="restaurant_id" property="restaurantId" />
+        <result column="restaurant_name" property="restaurantName" />
         <result column="menu_description" property="menuDescription" />
         <result column="menu_img_url" property="menuImgUrl" />
         <result column="menu_limited" property="menuLimited" />
@@ -332,5 +333,33 @@
         WHERE
             ID = #{id}  AND del_flag = '0'
     </select>
+
+
+    <select id="findListByRid" resultMap="BaseResultMap">
+        SELECT
+        m.ID,
+        m.restaurant_id,
+        m.menu_name,
+        m.menu_description,
+        m.menu_img_url,
+        m.menu_limited,
+        m.menu_count,
+        m.menu_type,
+        m.menu_status,
+        m.menu_up,
+        m.examine_info,
+        m.create_by,
+        m.update_by,
+        m.create_date,
+        m.update_date,
+        m.remarks,
+        m.del_flag
+        FROM
+        pz_menu m
+        WHERE m.del_flag ='0' and  m.menu_up='1'
+        <if test ="null != restaurantId and ''!= restaurantId"> AND m.restaurant_id = #{restaurantId}</if>
+        ORDER BY  m.create_date DESC
+    </select>
+
 
 </mapper>

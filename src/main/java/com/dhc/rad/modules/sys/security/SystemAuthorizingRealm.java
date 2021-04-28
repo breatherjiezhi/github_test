@@ -86,7 +86,7 @@ public class SystemAuthorizingRealm extends AuthorizingRealm {
 				}
 				
 				byte[] salt = Encodes.decodeHex(user.getPassword().substring(0,16));
-				return new SimpleAuthenticationInfo(new Principal(user, token.isMobileLogin()), 
+				return new SimpleAuthenticationInfo(new Principal(user, token.isMobileLogin()),
 						user.getPassword().substring(16), ByteSource.Util.bytes(salt), getName());
 				
 			} else {
@@ -261,6 +261,7 @@ public class SystemAuthorizingRealm extends AuthorizingRealm {
 		private String loginName; // 登录名
 		private String name; // 姓名
 		private boolean mobileLogin; // 是否手机登录
+		private String roleList;
 		
 		
 //		private Map<String, Object> cacheMap;
@@ -270,8 +271,15 @@ public class SystemAuthorizingRealm extends AuthorizingRealm {
 			this.loginName = user.getLoginName();
 			this.name = user.getName();
 			this.mobileLogin = mobileLogin;
-			
+			for (Role role : user.getRoleList()) {
+				if(StringUtils.isNotBlank(this.roleList)){
+					this.roleList=this.roleList+","+role.getEnname();
+				}else{
+					this.roleList=role.getEnname();
+				}
+			}
 		}
+
 
 		public String getId() {
 			return id;
@@ -288,7 +296,8 @@ public class SystemAuthorizingRealm extends AuthorizingRealm {
 		public boolean isMobileLogin() {
 			return mobileLogin;
 		}
-		
+
+		public String getRoleList(){ return  roleList;}
 		
 //		@JsonIgnore
 //		public Map<String, Object> getCacheMap() {

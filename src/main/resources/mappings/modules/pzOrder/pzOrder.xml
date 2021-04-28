@@ -73,7 +73,7 @@
             <if test="null != menuIntegral and ''!= menuIntegral">
                 menu_integral,
             </if>
-            <if test="null != menuType and ''!= menuType">
+            <if test="null != menuType">
                 menu_type,
             </if>
             <if test="null != createBy and ''!= createBy">
@@ -111,7 +111,7 @@
             <if test="null != restaurantId and ''!= restaurantId">
                 #{restaurantId},
             </if>
-            <if test="null != menuType and ''!= menuType">
+            <if test="null != menuType">
                 #{menuType},
             </if>
             <if test="null != eatDate and ''!= eatDate">

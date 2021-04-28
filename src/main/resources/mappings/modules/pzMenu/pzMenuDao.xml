@@ -122,19 +122,19 @@
             <if test ="null != menuImgUrl and ''!= menuImgUrl">
                 menu_img_url,
             </if>
-            <if test ="null != menuLimited and ''!= menuLimited">
+            <if test ="null != menuLimited">
                 menu_limited,
             </if>
             <if test ="null != menuCount and ''!= menuCount">
                 menu_count,
             </if>
-            <if test ="null != menuType and ''!= menuType">
+            <if test ="null != menuType">
                 menu_type,
             </if>
-            <if test ="null != menuStatus and ''!= menuStatus">
+            <if test ="null != menuStatus">
                 menu_status,
             </if>
-            <if test ="null != menuUp and ''!= menuUp">
+            <if test ="null != menuUp">
                 menu_up,
             </if>
             <if test ="null != examineInfo and ''!= examineInfo">
@@ -175,19 +175,19 @@
             <if test ="null != menuImgUrl and ''!= menuImgUrl">
                 #{menuImgUrl},
             </if>
-            <if test ="null != menuLimited and ''!= menuLimited">
+            <if test ="null != menuLimited">
                 #{menuLimited},
             </if>
             <if test ="null != menuCount and ''!= menuCount">
                 #{menuCount},
             </if>
-            <if test ="null != menuType and ''!= menuType">
+            <if test ="null != menuType">
                 #{menuType},
             </if>
-            <if test ="null != menuStatus and ''!= menuStatus">
+            <if test ="null != menuStatus">
                 #{menuStatus},
             </if>
-            <if test ="null != menuUp and ''!= menuUp">
+            <if test ="null != menuUp">
                 #{menuUp},
             </if>
             <if test ="null != examineInfo and ''!= examineInfo">

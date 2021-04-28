@@ -181,8 +181,6 @@
                         var rowData = $("#grid-table").getRowData(id);
                         var scoreType = getDictLabel(${fns:toJson(fns:getDictList("pz_score_type"))}, rowData.scoreType);
 
-
-
                         var viewBtn = '';
 
                         if( rowData.menuStatus=='0'){
@@ -206,9 +204,6 @@
                                     '</div>';
                             }
                         }
-
-
-
 
                         $(grid_selector).jqGrid('setRowData', ids[i], {
                             scoreType: scoreType,

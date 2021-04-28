@@ -51,14 +51,14 @@
             <if test ="null != userId and ''!= userId">
                 user_id,
             </if>
-            <if test ="null != scoreType and ''!= scoreType">
+            <if test ="null != scoreType">
                 score_type,
-            </if>
-            <if test ="null != scoreDescription and ''!= scoreDescription">
-                score_description,
             </if>
             <if test ="null != scoreChange and ''!= scoreChange">
                 score_change,
+            </if>
+            <if test ="null != scoreDescription and ''!= scoreDescription">
+                score_description,
             </if>
             <if test ="null != createBy and ''!= createBy">
                 create_by,
@@ -86,14 +86,14 @@
             <if test ="null != userId and ''!= userId">
                 #{userId},
             </if>
-            <if test ="null != scoreDescription and ''!= scoreDescription">
-                #{scoreDescription},
+            <if test ="null != scoreType">
+                #{scoreType},
             </if>
             <if test ="null != scoreChange and ''!= scoreChange">
                 #{scoreChange},
             </if>
-            <if test ="null != scoreType and ''!= scoreType">
-                #{scoreType},
+            <if test ="null != scoreDescription and ''!= scoreDescription">
+                #{scoreDescription},
             </if>
             <if test ="null != createBy and ''!= createBy">
                 #{createBy.id},

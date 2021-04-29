@@ -1,5 +1,10 @@
 package com.dhc.rad.modbus.entity.func;
 
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+
+import javax.servlet.http.HttpServletRequest;
+import java.io.File;
 import java.util.BitSet;
 
 /**
@@ -23,4 +28,16 @@ public class Util {
         }
         return bitString.toString();
     }
+
+
+    public static String getImgUrl(){
+        ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        HttpServletRequest request = requestAttributes.getRequest();
+        String localAddr = request.getLocalAddr();
+        int serverPort = request.getServerPort();
+        String imgUrl= "https://" + localAddr + ":" + serverPort + File.separator;
+        return  imgUrl;
+    }
+
+
 }

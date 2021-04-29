@@ -5,6 +5,7 @@ import com.dhc.rad.common.utils.ConstantUtils;
 import com.dhc.rad.common.utils.StringUtils;
 import com.dhc.rad.common.utils.TimeUtils;
 import com.dhc.rad.common.web.BaseController;
+import com.dhc.rad.modbus.entity.func.Util;
 import com.dhc.rad.modules.holiday.entity.Holiday;
 import com.dhc.rad.modules.holiday.service.HolidayService;
 import com.dhc.rad.modules.pzMenu.entity.PzMenu;
@@ -22,7 +23,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.servlet.http.HttpServletRequest;
+import java.io.File;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -55,7 +60,7 @@ public class WxOrderController extends BaseController {
         String userId = user.getId();
 
         //获取当前时间下一周时间集合
-        List<String> nextWeekDateList = TimeUtils.getNextWeekDateList();
+        List<String> nextWeekDateList = TimeUtils.getNextWeekEatDate();
 
         //根据当前用户id 根据当前时间获取下一周1-7时间
         String nextDate = nextWeekDateList.stream().collect(Collectors.joining(","));
@@ -185,6 +190,20 @@ public class WxOrderController extends BaseController {
         order.setEatDate(nextWeekEatDate);
         List<PzOrder> list = pzOrderService.findList(order);
         if(list.size()>0){
+            Map<String,Object> temp = new HashMap<>();
+            PzOrder  pzOrder = list.get(0);
+            temp.put("orderId", pzOrder.getId());
+            temp.put("eatDate", pzOrder.getEatDate());
+            temp.put("noEatDate", pzOrder.getEatDate());
+            PzMenu pzMenu = pzMenuService.get(pzOrder.getMenuId());
+            temp.put("menuId", pzMenu.getId());
+            temp.put("name",pzMenu.getMenuName());
+            temp.put("limited", pzMenu.getMenuLimited());
+            temp.put("num", pzMenu.getMenuCount());
+            temp.put("menuDescript",pzMenu.getMenuDescription() );
+            temp.put("imgUrl", Util.getImgUrl() +pzMenu.getMenuImgUrl());
+            temp.put("menuType",  pzMenu.getMenuType());
+            temp.put("price",  TimeUtils.getNextWeekEatDate().size());
             returnMap.put("data", list.get(0));
             returnMap.put("status", ConstantUtils.ResCode.SUCCESS);
             returnMap.put("message", ConstantUtils.ResCode.SUCCESSMSG);
@@ -219,6 +238,20 @@ public class WxOrderController extends BaseController {
         order.setEatDate(currentWeekEatDate);
         List<PzOrder> list = pzOrderService.findList(order);
         if(list.size()>0){
+            Map<String,Object> temp = new HashMap<>();
+            PzOrder  pzOrder = list.get(0);
+            temp.put("orderId", pzOrder.getId());
+            temp.put("eatDate", pzOrder.getEatDate());
+            temp.put("noEatDate", pzOrder.getEatDate());
+            PzMenu pzMenu = pzMenuService.get(pzOrder.getMenuId());
+            temp.put("menuId", pzMenu.getId());
+            temp.put("name",pzMenu.getMenuName());
+            temp.put("limited", pzMenu.getMenuLimited());
+            temp.put("num", pzMenu.getMenuCount());
+            temp.put("menuDescript",pzMenu.getMenuDescription() );
+            temp.put("imgUrl", Util.getImgUrl() +pzMenu.getMenuImgUrl());
+            temp.put("menuType",  pzMenu.getMenuType());
+            temp.put("price",  TimeUtils.getNextWeekEatDate().size());
             returnMap.put("data", list.get(0));
             returnMap.put("status", ConstantUtils.ResCode.SUCCESS);
             returnMap.put("message", ConstantUtils.ResCode.SUCCESSMSG);

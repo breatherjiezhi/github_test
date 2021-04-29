@@ -3,14 +3,13 @@ package com.dhc.rad.modules.pzOrder.web;
 import com.dhc.rad.common.persistence.Page;
 import com.dhc.rad.common.utils.StringUtils;
 import com.dhc.rad.common.web.BaseController;
+import com.dhc.rad.modbus.entity.func.Util;
 import com.dhc.rad.modules.pzOrder.entity.PzOrder;
 import com.dhc.rad.modules.pzOrder.service.PzOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -91,11 +90,8 @@ public class PzOrderController extends BaseController {
     @RequestMapping(value = "form")
     public String form(PzOrder pzOrder, Model model){
 
-        ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-        HttpServletRequest request = requestAttributes.getRequest();
-        String localAddr = request.getLocalAddr();
-        int serverPort = request.getServerPort();
-        model.addAttribute("httpUrl", "http://"+localAddr +":"+ serverPort+ File.separator);
+
+        model.addAttribute("httpUrl", Util.getImgUrl());
         model.addAttribute("pzOrder", pzOrder);
         return "modules/pzOrder/pzOrderForm";
     }

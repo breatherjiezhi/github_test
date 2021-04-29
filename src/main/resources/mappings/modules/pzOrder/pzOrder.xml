@@ -194,8 +194,8 @@
         <if test="null != serviceUnitId and ''!= serviceUnitId">AND service_unit_id= #{serviceUnitId}</if>
         <if test="null != restaurantId and ''!= restaurantId">AND restaurant_id = #{restaurantId}</if>
         <if test="null != menuType and ''!= menuType">AND menu_type = #{menuType}</if>
-        <if test="null != eatDate and ''!= eatDate">AND eat_date = #{eatDate}</if>
-        <if test="null != noEatDate and ''!= noEatDate">AND no_eat_date = #{noEatDate}</if>
+        <if test="null != eatDate">AND eat_date = #{eatDate}</if>
+        <if test="null != noEatDate">AND no_eat_date = #{noEatDate}</if>
         <if test="null != menuIntegral and ''!= menuIntegral">AND menu_integral = #{menuIntegral}</if>
         <if test="null != createBy and ''!= createBy">AND CREATE_BY = #{createBy.id}</if>
         <if test="null != updateBy and ''!= updateBy">AND UPDATE_BY = #{updateBy.id}</if>

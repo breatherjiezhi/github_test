@@ -5,6 +5,7 @@ import com.dhc.rad.common.persistence.Page;
 import com.dhc.rad.common.utils.ObjectUtils;
 import com.dhc.rad.common.utils.StringUtils;
 import com.dhc.rad.common.web.BaseController;
+import com.dhc.rad.modbus.entity.func.Util;
 import com.dhc.rad.modules.holiday.entity.Holiday;
 import com.dhc.rad.modules.pzMenu.entity.PzMenu;
 import com.dhc.rad.modules.pzMenu.service.PzMenuService;
@@ -75,12 +76,7 @@ public class PzMenuController extends BaseController {
 
     @RequestMapping(value = "form")
     public String form(PzMenu pzMenu, Model model) {
-
-        ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-        HttpServletRequest request = requestAttributes.getRequest();
-        String localAddr = request.getLocalAddr();
-        int serverPort = request.getServerPort();
-        model.addAttribute("httpUrl", "https://" + localAddr + ":" + serverPort + File.separator);
+        model.addAttribute("httpUrl", Util.getImgUrl());
         model.addAttribute("pzMenu", pzMenu);
         return "modules/pzMenu/pzMenuForm";
     }
@@ -275,11 +271,7 @@ public class PzMenuController extends BaseController {
      */
     @RequestMapping(value = "noExamineForm")
     public String noExamineForm(PzMenu pzMenu, Model model) {
-        ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-        HttpServletRequest request = requestAttributes.getRequest();
-        String localAddr = request.getLocalAddr();
-        int serverPort = request.getServerPort();
-        model.addAttribute("httpUrl", "http://" + localAddr + ":" + serverPort + File.separator);
+        model.addAttribute("httpUrl", Util.getImgUrl());
         model.addAttribute("pzMenuSubmit", pzMenu);
         return "modules/pzMenu/pzMenuNoExamineForm";
     }

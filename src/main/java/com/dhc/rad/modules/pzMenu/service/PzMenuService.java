@@ -124,4 +124,9 @@ public class PzMenuService extends CrudService<PzMenuDao,PzMenu> {
     public List<PzMenu> findListByRid(String restaurantId){
         return pzMenuDao.findListByRid(restaurantId);
     }
+
+    public PzMenu get(String id){return pzMenuDao.get(id);}
+
+
+
 }

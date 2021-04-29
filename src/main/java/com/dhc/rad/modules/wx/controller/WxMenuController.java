@@ -3,6 +3,7 @@ package com.dhc.rad.modules.wx.controller;
 
 import com.dhc.rad.common.utils.ConstantUtils;
 import com.dhc.rad.common.utils.TimeUtils;
+import com.dhc.rad.modbus.entity.func.Util;
 import com.dhc.rad.modules.holiday.service.HolidayService;
 import com.dhc.rad.modules.pzMenu.entity.PzMenu;
 import com.dhc.rad.modules.pzMenu.service.PzMenuService;
@@ -66,9 +67,6 @@ public class WxMenuController {
     @RequestMapping(value = {"findAllRestaurant"},method = RequestMethod.POST)
     @ResponseBody
     public Map<String, Object>  findAllRestaurant(HttpServletRequest request, HttpServletResponse response, Model model) {
-        String localAddr = request.getLocalAddr();
-        int serverPort = request.getServerPort();
-        String url= "https://" + localAddr + ":" + serverPort + File.separator;
         List<Office> officeList = officeService.findRestaurantOffice();
         List<Map<String,Object>> dataList = new ArrayList<Map<String,Object>>();
         for (Office office : officeList) {
@@ -84,7 +82,7 @@ public class WxMenuController {
                 temp1.put("limited", pzMenu.getMenuLimited());
                 temp1.put("num", pzMenu.getMenuCount());
                 temp1.put("menuDescript",pzMenu.getMenuDescription() );
-                temp1.put("imgUrl", url+pzMenu.getMenuImgUrl());
+                temp1.put("imgUrl", Util.getImgUrl() +pzMenu.getMenuImgUrl());
                 temp1.put("menuType",  pzMenu.getMenuType());
                 temp1.put("price",  TimeUtils.getNextWeekEatDate().size());
                 category.add(temp1);

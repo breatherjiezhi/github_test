@@ -5,6 +5,9 @@ import com.dhc.rad.common.config.Global;
 import com.dhc.rad.common.persistence.Page;
 import com.dhc.rad.common.quartz.entity.GlobalConstant;
 import com.dhc.rad.common.utils.ConstantUtils;
+import com.dhc.rad.common.utils.TimeUtils;
+import com.dhc.rad.modules.holiday.entity.Holiday;
+import com.dhc.rad.modules.holiday.service.HolidayService;
 import com.dhc.rad.modules.pzMenu.entity.PzMenu;
 import com.dhc.rad.modules.pzMenu.service.PzMenuService;
 import com.dhc.rad.modules.sys.entity.Office;
@@ -23,6 +26,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping(value = "${adminPath}/wx/wxMenu")
@@ -34,6 +38,9 @@ public class WxMenuController {
 
     @Autowired
     private OfficeService officeService;
+
+    @Autowired
+    private HolidayService holidayService;
 
 
 
@@ -83,6 +90,18 @@ public class WxMenuController {
                 temp1.put("menuDescript",pzMenu.getMenuDescription() );
                 temp1.put("imgUrl", url+pzMenu.getMenuImgUrl());
                 temp1.put("menuType",  pzMenu.getMenuType());
+
+                //获取当前时间下一周时间集合
+                List<String> dateList = TimeUtils.getNextWeekDateList();
+                //去除下一周节假日日期
+                List<String> eatDateList = new ArrayList<>();
+                eatDateList = dateList.stream()
+                        .filter(s -> {
+                            Holiday holiday = holidayService.getByDate(s);
+                            return holiday == null;
+                        })
+                        .collect(Collectors.toList());
+                temp1.put("price",  eatDateList.size());
                 category.add(temp1);
             }
             temp.put("category", category);

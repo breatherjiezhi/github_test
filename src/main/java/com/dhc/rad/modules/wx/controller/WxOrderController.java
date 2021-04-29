@@ -204,11 +204,11 @@ public class WxOrderController extends BaseController {
             temp.put("imgUrl", Util.getImgUrl() +pzMenu.getMenuImgUrl());
             temp.put("menuType",  pzMenu.getMenuType());
             temp.put("price",  TimeUtils.getNextWeekEatDate().size());
-            returnMap.put("data", list.get(0));
+            returnMap.put("data", temp);
             returnMap.put("status", ConstantUtils.ResCode.SUCCESS);
             returnMap.put("message", ConstantUtils.ResCode.SUCCESSMSG);
         }else{
-            returnMap.put("data", new ArrayList<PzOrder>());
+            returnMap.put("data", null);
             returnMap.put("status", ConstantUtils.ResCode.NODATA);
             returnMap.put("message", ConstantUtils.ResCode.NODATAMSG);
         }
@@ -252,11 +252,11 @@ public class WxOrderController extends BaseController {
             temp.put("imgUrl", Util.getImgUrl() +pzMenu.getMenuImgUrl());
             temp.put("menuType",  pzMenu.getMenuType());
             temp.put("price",  TimeUtils.getNextWeekEatDate().size());
-            returnMap.put("data", list.get(0));
+            returnMap.put("data", temp);
             returnMap.put("status", ConstantUtils.ResCode.SUCCESS);
             returnMap.put("message", ConstantUtils.ResCode.SUCCESSMSG);
         }else{
-            returnMap.put("data", new ArrayList<PzOrder>());
+            returnMap.put("data", null);
             returnMap.put("status", ConstantUtils.ResCode.NODATA);
             returnMap.put("message", ConstantUtils.ResCode.NODATAMSG);
         }

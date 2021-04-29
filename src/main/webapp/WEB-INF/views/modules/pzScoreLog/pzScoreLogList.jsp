@@ -43,6 +43,22 @@
                                 </div>
                             </div>
 
+                            <div class="col-xs-12 col-sm-4 no-padding">
+                                <div class="new-search clearfix">
+                                    <label class=" col-xs-12 col-sm-4" for="scoreType"
+                                           data-locale="scoreClassify">积分分类</label>
+                                    <div class="col-xs-12 col-sm-8 no-padding">
+                                        <form:select path="scoreClassify" class="chosen-select form-control width-100"
+                                                     data-placeholder="点击选择...">
+                                            <option value="">---请选择---</option>
+                                            <form:options items="${fns:getDictList('pz_score_classify')}" itemLabel="label"
+                                                          itemValue="value"
+                                                          htmlEscape="false"/>
+                                        </form:select>
+                                    </div>
+                                </div>
+                            </div>
+
                         </div>
 
                         <div class="form-group">
@@ -146,16 +162,20 @@
                     'id',
                     '<span data-locale="userId">用户名称</span>',
                     '<span data-locale="scoreType">积分类型</span>',
+                    '<span data-locale="scoreClassify">积分分类</span>',
                     '<span data-locale="scoreChange">变动积分</span>',
                     '<span data-locale="scoreDescription">积分变动描述</span>',
+                    '<span data-locale="createDate">创建时间</span>',
                     '<span data-locale="view">操作</span>'
                 ],
                 colModel: [
                     {name: 'id', index: 'id', hidden: true},
                     {name: 'userId', index: 'user_id'},
                     {name: 'scoreType', index: 'score_type'},
+                    {name: 'scoreClassify', index: 'score_classify'},
                     {name: 'scoreChange', index: 'score_change'},
                     {name: 'scoreDescription', index: 'score_description'},
+                    {name: 'createDate', index: 'create_date'},
                     {name: 'view', index: 'view' ,sortable: false}
                 ],
                 viewrecords: true,
@@ -180,6 +200,7 @@
 
                         var rowData = $("#grid-table").getRowData(id);
                         var scoreType = getDictLabel(${fns:toJson(fns:getDictList("pz_score_type"))}, rowData.scoreType);
+                        var scoreClassify = getDictLabel(${fns:toJson(fns:getDictList("pz_score_classify"))}, rowData.scoreClassify);
 
                         var viewBtn = '';
 

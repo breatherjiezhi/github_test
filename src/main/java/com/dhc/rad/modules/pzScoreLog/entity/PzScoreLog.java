@@ -17,6 +17,12 @@ public class PzScoreLog extends DataEntity<PzScoreLog> {
     private String userId;
 
     /**
+     * 餐厅id
+     */
+    private String restaurantId;
+
+
+    /**
      * 积分类型： 0扣分 1加分 2转换积分
      */
     private Integer scoreType;
@@ -30,6 +36,27 @@ public class PzScoreLog extends DataEntity<PzScoreLog> {
      * 变动积分(+1/-1)
      */
     private String scoreChange;
+
+    /**
+     *积分分类 0 卡券 1 积分
+     */
+    private Integer scoreClassify;
+
+    public String getRestaurantId() {
+        return restaurantId;
+    }
+
+    public void setRestaurantId(String restaurantId) {
+        this.restaurantId = restaurantId;
+    }
+
+    public Integer getScoreClassify() {
+        return scoreClassify;
+    }
+
+    public void setScoreClassify(Integer scoreClassify) {
+        this.scoreClassify = scoreClassify;
+    }
 
     public String getUserId() {
         return userId;

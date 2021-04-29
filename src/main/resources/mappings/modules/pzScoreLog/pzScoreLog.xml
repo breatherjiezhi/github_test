@@ -153,33 +153,35 @@
 
     <select id="findList" resultMap="BaseResultMap">
         SELECT
-        ID,
-        user_id,
-        restaurant_id,
-        score_type,
-        score_description,
-        score_change,
-        score_classify,
-        create_by,
-        update_by,
-        create_date,
-        update_date,
-        remarks,
-        del_flag
+        psl.ID,
+        psl.user_id,
+        su.`NAME`  userName,
+        psl.restaurant_id,
+        psl.score_type,
+        psl.score_description,
+        psl.score_change,
+        psl.score_classify,
+        psl.create_by,
+        psl.update_by,
+        psl.create_date,
+        psl.update_date,
+        psl.remarks,
+        psl.del_flag
         FROM
-        pz_score_log
-        WHERE del_flag ='0'
-        <if test ="null != userId and ''!= userId">AND  user_id= #{userId}</if>
-        <if test ="null != restaurantId and ''!= restaurantId"> AND restaurant_id= #{restaurantId}</if>
-        <if test ="null != scoreType and ''!= scoreType"> AND score_type = #{scoreType}</if>
-        <if test ="null != scoreDescription and ''!= scoreDescription"> AND score_description = #{scoreDescription}</if>
-        <if test ="null != scoreChange and ''!= scoreChange"> AND score_change = #{scoreChange}</if>
-        <if test ="null != scoreClassify and ''!= scoreClassify"> AND score_classify = #{scoreClassify}</if>
-        <if test ="null != createBy and ''!= createBy"> AND CREATE_BY = #{createBy.id}</if>
-        <if test ="null != updateBy and ''!= updateBy"> AND UPDATE_BY = #{updateBy.id}</if>
-        <if test ="null != createDate and ''!= createDate"> AND CREATE_DATE = #{createDate}</if>
-        <if test ="null != updateDate and ''!= updateDate"> AND UPDATE_DATE = #{updateDate}</if>
-        <if test ="null != remarks and ''!= remarks"> AND remarks = #{remarks}</if>
+        pz_score_log psl LEFT JOIN sys_user su ON su.ID=psl.USER_ID
+        WHERE psl.del_flag ='0'
+        <if test ="null != userId and ''!= userId">AND  psl.user_id= #{userId}</if>
+        <if test ="null != userName and ''!= userName">AND  su.`NAME`like concat('%',#{userName},'%')</if>
+        <if test ="null != restaurantId and ''!= restaurantId"> AND psl.restaurant_id= #{restaurantId}</if>
+        <if test ="null != scoreType and ''!= scoreType"> AND psl.score_type = #{scoreType}</if>
+        <if test ="null != scoreDescription and ''!= scoreDescription"> AND psl.score_description = #{scoreDescription}</if>
+        <if test ="null != scoreChange and ''!= scoreChange"> AND psl.score_change = #{scoreChange}</if>
+        <if test ="null != scoreClassify and ''!= scoreClassify"> AND psl.score_classify = #{scoreClassify}</if>
+        <if test ="null != createBy and ''!= createBy"> AND psl.CREATE_BY = #{createBy.id}</if>
+        <if test ="null != updateBy and ''!= updateBy"> AND psl.UPDATE_BY = #{updateBy.id}</if>
+        <if test ="null != createDate and ''!= createDate"> AND psl.CREATE_DATE = #{createDate}</if>
+        <if test ="null != updateDate and ''!= updateDate"> AND psl.UPDATE_DATE = #{updateDate}</if>
+        <if test ="null != remarks and ''!= remarks"> AND psl.remarks = #{remarks}</if>
         <choose>
             <when test="page !=null and page.orderBy != null and page.orderBy != ''">
                 ORDER BY ${page.orderBy}
@@ -192,32 +194,34 @@
     </select>
     <select id="findScoreById" resultMap="BaseResultMap">
         SELECT
-        ID,
-        user_id,
-        restaurant_id,
-        score_type,
-        score_description,
-        score_change,
-        score_classify,
-        create_by,
-        update_by,
-        create_date,
-        update_date,
-        remarks,
-        del_flag
+        psl.ID,
+        psl.user_id,
+        su.`NAME`  userName,
+        psl.restaurant_id,
+        psl.score_type,
+        psl.score_description,
+        psl.score_change,
+        psl.score_classify,
+        psl.create_by,
+        psl.update_by,
+        psl.create_date,
+        psl.update_date,
+        psl.remarks,
+        psl.del_flag
         FROM
-        pz_score_log
-        WHERE del_flag ='0' and user_id = #{userId}
-        <if test ="null != restaurantId and ''!= restaurantId"> AND restaurant_id= #{restaurantId}</if>
-        <if test ="null != scoreType and ''!= scoreType">AND  score_type = #{scoreType}</if>
-        <if test ="null != scoreDescription and ''!= scoreDescription"> AND score_description = #{scoreDescription}</if>
-        <if test ="null != scoreChange and ''!= scoreChange"> AND score_change = #{scoreChange}</if>
-        <if test ="null != scoreClassify and ''!= scoreClassify"> AND score_classify = #{scoreClassify}</if>
-        <if test ="null != createBy and ''!= createBy"> AND CREATE_BY = #{createBy.id}</if>
-        <if test ="null != updateBy and ''!= updateBy"> AND UPDATE_BY = #{updateBy.id}</if>
-        <if test ="null != createDate and ''!= createDate"> AND CREATE_DATE = #{createDate}</if>
-        <if test ="null != updateDate and ''!= updateDate"> AND UPDATE_DATE = #{updateDate}</if>
-        <if test ="null != remarks and ''!= remarks"> AND remarks = #{remarks}</if>
+        pz_score_log psl LEFT JOIN sys_user su ON su.ID=psl.USER_ID
+        WHERE psl.del_flag ='0' and psl.user_id = #{userId}
+        <if test ="null != userName and ''!= userName">AND  su.`NAME`like concat('%',#{userName},'%') </if>
+        <if test ="null != restaurantId and ''!= restaurantId"> AND psl.restaurant_id= #{restaurantId}</if>
+        <if test ="null != scoreType and ''!= scoreType">AND  psl.score_type = #{scoreType}</if>
+        <if test ="null != scoreDescription and ''!= scoreDescription"> AND psl.score_description = #{scoreDescription}</if>
+        <if test ="null != scoreChange and ''!= scoreChange"> AND psl.score_change = #{scoreChange}</if>
+        <if test ="null != scoreClassify and ''!= scoreClassify"> AND psl.score_classify = #{scoreClassify}</if>
+        <if test ="null != createBy and ''!= createBy"> AND psl.CREATE_BY = #{createBy.id}</if>
+        <if test ="null != updateBy and ''!= updateBy"> AND psl.UPDATE_BY = #{updateBy.id}</if>
+        <if test ="null != createDate and ''!= createDate"> AND psl.CREATE_DATE = #{createDate}</if>
+        <if test ="null != updateDate and ''!= updateDate"> AND psl.UPDATE_DATE = #{updateDate}</if>
+        <if test ="null != remarks and ''!= remarks"> AND psl.remarks = #{remarks}</if>
         <choose>
             <when test="page !=null and page.orderBy != null and page.orderBy != ''">
                 ORDER BY ${page.orderBy}

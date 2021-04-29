@@ -12,6 +12,7 @@ import com.dhc.rad.modules.pzOrder.entity.PzOrder;
 import com.dhc.rad.modules.pzOrder.service.PzOrderService;
 import com.dhc.rad.modules.pzScoreLog.entity.PzScoreLog;
 import com.dhc.rad.modules.sys.entity.User;
+import com.dhc.rad.modules.sys.service.SystemService;
 import com.dhc.rad.modules.sys.utils.UserUtils;
 import com.dhc.rad.modules.wx.service.WxOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +44,9 @@ public class WxOrderController extends BaseController {
 
     @Autowired
     private PzOrderService pzOrderService;
+
+    @Autowired
+    private SystemService systemService;
 
 
     @RequestMapping(value = "orderMenu", method = RequestMethod.POST)
@@ -93,7 +97,8 @@ public class WxOrderController extends BaseController {
 
         BigDecimal userIntegral = null;
         if (user != null) {
-            userIntegral = user.getUserIntegral();
+            User serviceUser = systemService.getUserId(userId);
+            userIntegral = serviceUser.getUserIntegral();
         }
 
         //计算餐券数
@@ -167,6 +172,33 @@ public class WxOrderController extends BaseController {
             addMessageAjax(returnMap, "0", "订餐失败");
         }
 
+        return returnMap;
+    }
+
+    @RequestMapping(value = "findOrderNextWeek", method = RequestMethod.POST)
+    @ResponseBody
+    public Map<String,Object> findOrderNextWeekById(){
+        Map<String,Object> returnMap = new HashMap<>();
+        //获取当前时间下一周时间集合
+        List<String> dateList = TimeUtils.getNextWeekDateList();
+        //去除下一周节假日日期
+        List<String> eatDateList = new ArrayList<>();
+        eatDateList = dateList.stream()
+                .filter(date -> {
+                    Holiday holiday = holidayService.getByDate(date);
+                    return holiday == null;
+                })
+                .collect(Collectors.toList());
+
+        //根据当前用户id 根据当前时间获取下一周1-7时间
+        String nextDate = eatDateList.stream().collect(Collectors.joining(","));
+        String userId = UserUtils.getUser().getId();
+        PzOrder order = new PzOrder();
+        order.setUserId(userId);
+        order.setEatDate(nextDate);
+        List<PzOrder> list = pzOrderService.findList(order);
+
+        returnMap.put("order", list.get(0));
         return returnMap;
     }
 

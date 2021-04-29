@@ -19,10 +19,10 @@
                         <div class="form-group">
                             <div class="col-xs-12 col-sm-4 no-padding">
                                 <div class="new-search clearfix">
-                                    <label class=" col-xs-12 col-sm-4" for="userId"
-                                           data-locale="userId">用户名称</label>
+                                    <label class=" col-xs-12 col-sm-4" for="userName"
+                                           data-locale="userName">用户名称</label>
                                     <div class="col-xs-12 col-sm-8 no-padding">
-                                        <input type="text" id="userId" class="ace width-100 newsearchInput"/>
+                                        <input type="text" id="userName" class="ace width-100 newsearchInput"/>
                                     </div>
                                 </div>
                             </div>
@@ -45,7 +45,7 @@
 
                             <div class="col-xs-12 col-sm-4 no-padding">
                                 <div class="new-search clearfix">
-                                    <label class=" col-xs-12 col-sm-4" for="scoreType"
+                                    <label class=" col-xs-12 col-sm-4" for="scoreClassify"
                                            data-locale="scoreClassify">积分分类</label>
                                     <div class="col-xs-12 col-sm-8 no-padding">
                                         <form:select path="scoreClassify" class="chosen-select form-control width-100"
@@ -160,7 +160,7 @@
                 },
                 colNames: [
                     'id',
-                    '<span data-locale="userId">用户名称</span>',
+                    '<span data-locale="userName">用户名称</span>',
                     '<span data-locale="scoreType">积分类型</span>',
                     '<span data-locale="scoreClassify">积分分类</span>',
                     '<span data-locale="scoreChange">变动积分</span>',
@@ -170,7 +170,7 @@
                 ],
                 colModel: [
                     {name: 'id', index: 'id', hidden: true},
-                    {name: 'userId', index: 'user_id'},
+                    {name: 'userName', index: 'user_name'},
                     {name: 'scoreType', index: 'score_type'},
                     {name: 'scoreClassify', index: 'score_classify'},
                     {name: 'scoreChange', index: 'score_change'},
@@ -434,12 +434,13 @@
 
             //search list by condition
             $("#query").click(function () {
-                var userId = $("#userId").val();
+                var userName = $("#userName").val();
                 var scoreType = $("#scoreType").val();
+                var scoreClassify = $("#scoreClassify").val();
                 $(grid_selector).jqGrid('setGridParam', {
                     url: "${ctx}/pzScoreLog/searchPage",
                     mtype: "post",
-                    postData: {'userId': userId, 'scoreType': scoreType}, //发送数据
+                    postData: {'userName': userName, 'scoreType': scoreType,'scoreClassify':scoreClassify}, //发送数据
                     page: 1
                 }).trigger("reloadGrid"); //重新载入
             });
@@ -453,7 +454,7 @@
                 $(grid_selector).jqGrid('setGridParam', {
                     url: "${ctx}/pzScoreLog/searchPage",
                     mtype: "post",
-                    postData: {'userId': '', 'scoreType': ''},
+                    postData: {'userName': '', 'scoreType': '','scoreClassify':''},
                     page: 1
                 }).trigger("reloadGrid"); //重新载入
             });

@@ -3,7 +3,6 @@ package com.dhc.rad.modules.wx.controller;
 import com.dhc.rad.common.config.Global;
 import com.dhc.rad.common.utils.StringUtils;
 import com.dhc.rad.common.utils.TimeUtils;
-import com.dhc.rad.common.utils.WeekUtils;
 import com.dhc.rad.common.web.BaseController;
 import com.dhc.rad.modules.holiday.entity.Holiday;
 import com.dhc.rad.modules.holiday.service.HolidayService;
@@ -24,7 +23,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.math.BigDecimal;
-import java.sql.Time;
 import java.util.*;
 import java.util.stream.Collectors;
 

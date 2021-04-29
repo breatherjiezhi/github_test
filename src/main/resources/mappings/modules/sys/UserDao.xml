@@ -79,7 +79,6 @@
 		a.login_flag,
 		a.photo,
 		a.user_integral,
-        a.user_integral,
 		a.create_by AS "createBy.id",
 		a.create_date,
 		a.update_by AS "updateBy.id",
@@ -746,7 +745,7 @@
     <update id="userRecharge">
         UPDATE sys_user
         SET  user_integral = user_integral + #{userIntegral}
-        WHERE  LOGIN_NAME  = #{LOGIN_NAME}
+        WHERE  LOGIN_NAME  = #{loginName}
     </update>
 
 

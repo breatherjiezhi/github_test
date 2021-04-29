@@ -642,7 +642,7 @@ public class UserController extends BaseController {
     @ResponseBody
     @RequestMapping(value = "infoData")
     public User infoData() {
-        return UserUtils.getUser();
+        return systemService.getUserId(UserUtils.getUser().getId());
     }
 
     /**

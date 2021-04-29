@@ -194,7 +194,7 @@ public class WxOrderController extends BaseController {
             PzOrder  pzOrder = list.get(0);
             temp.put("orderId", pzOrder.getId());
             temp.put("eatDate", pzOrder.getEatDate());
-            temp.put("noEatDate", pzOrder.getEatDate());
+            temp.put("noEatDate", pzOrder.getNoEatDate());
             PzMenu pzMenu = pzMenuService.get(pzOrder.getMenuId());
             temp.put("menuId", pzMenu.getId());
             temp.put("name",pzMenu.getMenuName());
@@ -242,7 +242,7 @@ public class WxOrderController extends BaseController {
             PzOrder  pzOrder = list.get(0);
             temp.put("orderId", pzOrder.getId());
             temp.put("eatDate", pzOrder.getEatDate());
-            temp.put("noEatDate", pzOrder.getEatDate());
+            temp.put("noEatDate", pzOrder.getNoEatDate());
             PzMenu pzMenu = pzMenuService.get(pzOrder.getMenuId());
             temp.put("menuId", pzMenu.getId());
             temp.put("name",pzMenu.getMenuName());

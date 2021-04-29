@@ -228,6 +228,7 @@
 
                         $(grid_selector).jqGrid('setRowData', ids[i], {
                             scoreType: scoreType,
+                            scoreClassify:scoreClassify,
                             view: viewBtn
                         });
                     }

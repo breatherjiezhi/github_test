@@ -96,6 +96,9 @@
             <if test ="null != userId and ''!= userId">
                 #{userId},
             </if>
+            <if test ="null != restaurantId and ''!= restaurantId">
+                #{restaurantId},
+            </if>
             <if test ="null != scoreType">
                 #{scoreType},
             </if>
@@ -133,6 +136,7 @@
         UPDATE pz_score_log
         <set>
             <if test ="null != userId and ''!= userId">  user_id= #{userId},</if>
+            <if test ="null != restaurantId and ''!= restaurantId">  restaurant_id= #{restaurantId},</if>
             <if test ="null != scoreType and ''!= scoreType">  score_type = #{scoreType},</if>
             <if test ="null != scoreDescription and ''!= scoreDescription">  score_description = #{scoreDescription},</if>
             <if test ="null != scoreChange and ''!= scoreChange">  score_change = #{scoreChange},</if>
@@ -151,6 +155,7 @@
         SELECT
         ID,
         user_id,
+        restaurant_id,
         score_type,
         score_description,
         score_change,
@@ -165,6 +170,7 @@
         pz_score_log
         WHERE del_flag ='0'
         <if test ="null != userId and ''!= userId">AND  user_id= #{userId}</if>
+        <if test ="null != restaurantId and ''!= restaurantId"> AND restaurant_id= #{restaurantId}</if>
         <if test ="null != scoreType and ''!= scoreType"> AND score_type = #{scoreType}</if>
         <if test ="null != scoreDescription and ''!= scoreDescription"> AND score_description = #{scoreDescription}</if>
         <if test ="null != scoreChange and ''!= scoreChange"> AND score_change = #{scoreChange}</if>
@@ -188,6 +194,7 @@
         SELECT
         ID,
         user_id,
+        restaurant_id,
         score_type,
         score_description,
         score_change,
@@ -201,6 +208,7 @@
         FROM
         pz_score_log
         WHERE del_flag ='0' and user_id = #{userId}
+        <if test ="null != restaurantId and ''!= restaurantId"> AND restaurant_id= #{restaurantId}</if>
         <if test ="null != scoreType and ''!= scoreType">AND  score_type = #{scoreType}</if>
         <if test ="null != scoreDescription and ''!= scoreDescription"> AND score_description = #{scoreDescription}</if>
         <if test ="null != scoreChange and ''!= scoreChange"> AND score_change = #{scoreChange}</if>

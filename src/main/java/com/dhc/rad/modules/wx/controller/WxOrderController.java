@@ -1,6 +1,7 @@
 package com.dhc.rad.modules.wx.controller;
 
 import com.dhc.rad.common.config.Global;
+import com.dhc.rad.common.utils.ConstantUtils;
 import com.dhc.rad.common.utils.StringUtils;
 import com.dhc.rad.common.utils.TimeUtils;
 import com.dhc.rad.common.web.BaseController;
@@ -183,8 +184,16 @@ public class WxOrderController extends BaseController {
         order.setUserId(userId);
         order.setEatDate(nextWeekEatDate);
         List<PzOrder> list = pzOrderService.findList(order);
+        if(list.size()>0){
+            returnMap.put("data", list.get(0));
+            returnMap.put("status", ConstantUtils.ResCode.SUCCESS);
+            returnMap.put("message", ConstantUtils.ResCode.SUCCESSMSG);
+        }else{
+            returnMap.put("data", new ArrayList<PzOrder>());
+            returnMap.put("status", ConstantUtils.ResCode.NODATA);
+            returnMap.put("message", ConstantUtils.ResCode.NODATAMSG);
+        }
 
-        returnMap.put("nextOrder", list.get(0));
         return returnMap;
     }
 
@@ -209,8 +218,15 @@ public class WxOrderController extends BaseController {
         order.setUserId(userId);
         order.setEatDate(currentWeekEatDate);
         List<PzOrder> list = pzOrderService.findList(order);
-
-        returnMap.put("currentOrder", list.get(0));
+        if(list.size()>0){
+            returnMap.put("data", list.get(0));
+            returnMap.put("status", ConstantUtils.ResCode.SUCCESS);
+            returnMap.put("message", ConstantUtils.ResCode.SUCCESSMSG);
+        }else{
+            returnMap.put("data", new ArrayList<PzOrder>());
+            returnMap.put("status", ConstantUtils.ResCode.NODATA);
+            returnMap.put("message", ConstantUtils.ResCode.NODATAMSG);
+        }
         return returnMap;
     }
 

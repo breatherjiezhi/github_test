@@ -47,6 +47,18 @@ public class PzOrder extends DataEntity<PzOrder> {
      */
     private String eatDate;
 
+    /**
+     *不吃饭日期
+     */
+    private String noEatDate;
+
+    public String getNoEatDate() {
+        return noEatDate;
+    }
+
+    public void setNoEatDate(String noEatDate) {
+        this.noEatDate = noEatDate;
+    }
 
     public BigDecimal getMenuIntegral() {
         return menuIntegral;

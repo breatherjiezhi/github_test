@@ -9,6 +9,7 @@
         <result column="menu_type" property="menuType"/>
         <result column="menu_integral" property="menuIntegral"/>
         <result column="eat_date" property="eatDate"/>
+        <result column="no_eat_date" property="noEatDate"/>
         <result column="create_by" property="createBy.id"/>
         <result column="update_by" property="updateBy.id"/>
         <result column="create_date" property="createDate"/>
@@ -37,6 +38,7 @@
                a.menu_type,
                a.menu_integral,
                a.eat_date,
+               a.no_eat_date,
                a.create_by,
                a.update_by,
                a.create_date,
@@ -69,6 +71,9 @@
             </if>
             <if test="null != eatDate and ''!= eatDate">
                 eat_date,
+            </if>
+            <if test="null != noEatDate and ''!= noEatDate">
+                no_eat_date,
             </if>
             <if test="null != menuIntegral and ''!= menuIntegral">
                 menu_integral,
@@ -117,6 +122,9 @@
             <if test="null != eatDate and ''!= eatDate">
                 #{eatDate},
             </if>
+            <if test="null != noEatDate and ''!= noEatDate">
+                #{noEatDate},
+            </if>
             <if test="null != menuIntegral and ''!= menuIntegral">
                 #{menuIntegral},
             </if>
@@ -150,6 +158,7 @@
             <if test="null != restaurantId and ''!= restaurantId">restaurant_id = #{restaurantId},</if>
             <if test="null != menuType and ''!= menuType">menu_type = #{menuType},</if>
             <if test="null != eatDate and ''!= eatDate">eat_date = #{eatDate},</if>
+            <if test="null != noEatDate and ''!= noEatDate">no_eat_date = #{noEatDate},</if>
             <if test="null != menuIntegral and ''!= menuIntegral">menu_integral = #{menuIntegral},</if>
             <if test="null != createBy and ''!= createBy">CREATE_BY = #{createBy.id},</if>
             <if test="null != updateBy and ''!= updateBy">UPDATE_BY = #{updateBy.id},</if>
@@ -170,6 +179,7 @@
         menu_type,
         menu_integral,
         eat_date,
+        no_eat_date,
         create_by,
         update_by,
         create_date,
@@ -185,6 +195,7 @@
         <if test="null != restaurantId and ''!= restaurantId">AND restaurant_id = #{restaurantId}</if>
         <if test="null != menuType and ''!= menuType">AND menu_type = #{menuType}</if>
         <if test="null != eatDate and ''!= eatDate">AND eat_date = #{eatDate}</if>
+        <if test="null != noEatDate and ''!= noEatDate">AND no_eat_date = #{noEatDate}</if>
         <if test="null != menuIntegral and ''!= menuIntegral">AND menu_integral = #{menuIntegral}</if>
         <if test="null != createBy and ''!= createBy">AND CREATE_BY = #{createBy.id}</if>
         <if test="null != updateBy and ''!= updateBy">AND UPDATE_BY = #{updateBy.id}</if>

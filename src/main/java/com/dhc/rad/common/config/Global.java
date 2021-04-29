@@ -109,6 +109,14 @@ public class Global {
     //2 转换积分
     public static final int SCORE_TYPE_CHANGE =2;
 
+    /**
+     * 积分分类
+     */
+    //0 卡券
+    public static final int SCORE_CLASSIFY_COUPON = 0;
+    //1 积分
+    public static final int SCORE_CLASSIFY_INTEGRAL = 1;
+
 
 
 

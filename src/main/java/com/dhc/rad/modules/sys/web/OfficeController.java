@@ -225,7 +225,7 @@ public class OfficeController extends BaseController {
 	@ResponseBody
 	@RequestMapping(value = "treeData")
 	public List<Map<String, Object>> treeData(@RequestParam(required=false) String extId, @RequestParam(required=false) String type,
-			@RequestParam(required=false) Long grade, @RequestParam(required=false) Boolean isAll, HttpServletResponse response) {
+											  @RequestParam(required=false) Long grade, @RequestParam(required=false) Boolean isAll, HttpServletResponse response) {
 		List<Map<String, Object>> mapList = Lists.newArrayList();
 		List<Office> list = officeService.findList(isAll);
 		for (int i=0; i<list.size(); i++){
@@ -246,6 +246,14 @@ public class OfficeController extends BaseController {
 			}
 		}
 		return mapList;
+	}
+
+
+
+	@ResponseBody
+	@RequestMapping(value = "findRestaurantOffice")
+	public List<Office> findRestaurantOffice(HttpServletResponse response) {
+		return officeService.findRestaurantOffice();
 	}
 	
 	/**

@@ -70,7 +70,7 @@
     </div>
 </div>
 <script type="text/javascript">
-    var scripts = [null, '${ctxStatic}/assets/js/fuelux/fuelux.spinner.js', '${ctxStatic}/assets/js/date-time/bootstrap-datepicker.js', '${ctxStatic}/assets/js/date-time/bootstrap-datepicker.zh-CN.min.js', null];
+    var scripts = [null, '${ctxStatic}/assets/js/fuelux/fuelux.spinner.js', '${ctxStatic}/assets/js/date-time/bootstrap-datepicker.js', '${ctxStatic}/assets/js/date-time/bootstrap-datepicker.zh-CN.min.js','${ctxStatic}/bootstrap-treeview/js/bootstrap-treeview.js', null];
     $('.page-content-area').ace_ajax('loadScripts', scripts, function () {
         jQuery(function ($) {
             var select2 = $('.select2');
@@ -91,7 +91,6 @@
             var pager_selector = "#grid-pager";
             var toolbarTop = grid_selector + '_toppager';
             var isAdd = true;
-            var isAlldel = false;
             var isShow = "";
             var isShow2 = "";
 
@@ -138,18 +137,20 @@
                 },
                 colNames: [
                     'id',
-                    '<span data-locale="restaurantId">餐厅名称</span>',
-                    '<span data-locale="serviceUnitId">服务单元名称</span>',
                     '<span data-locale="boxCode">箱子编码</span>',
                     '<span data-locale="boxCnName">箱子中文名称</span>',
+                    '<span data-locale="restaurantId">餐厅名称</span>',
+                    '<span data-locale="serviceUnitId">服务单元名称</span>',
+                    '<span data-locale="AreaLocation">投料点名称</span>',
                     '<span data-locale="view">操作</span>'
                 ],
                 colModel: [
                     {name: 'id', index: 'id', hidden: true},
                     {name: 'boxCode', index: 'box_code'},
                     {name: 'boxCnName', index: 'box_cn_name'},
-                    {name: 'serviceUnitId', index: 'serviceUnit_id'},
-                    {name: 'restaurant_id', index: 'restaurant_id'},
+                    {name: 'restaurantName', index: 'restaurant_id', sortable: false},
+                    {name: 'serviceUnit', index: 'serviceUnit_id', sortable: false},
+                    {name: 'areaName', index: 'restaurant_id', sortable: false},
                     {name: 'view', index: 'view' ,sortable: false}
                 ],
                 viewrecords: true,
@@ -171,59 +172,18 @@
                     var ids = $(grid_selector).jqGrid('getDataIDs');
                     for (var i = 0; i < ids.length; i++) {
                         var id = ids[i];
-
                         var rowData = $("#grid-table").getRowData(id);
-                        var menuLimited = getDictLabel(${fns:toJson(fns:getDictList("pz_menu_limited"))}, rowData.menuLimited);
-                        var menuType = getDictLabel(${fns:toJson(fns:getDictList("pz_menu_type"))}, rowData.menuType);
-                        var menuStatus = getDictLabel(${fns:toJson(fns:getDictList("pz_menu_status"))}, rowData.menuStatus);
-                        var menuUp = getDictLabel(${fns:toJson(fns:getDictList("pz_menu_up"))}, rowData.menuUp);
-
-
                         var viewBtn = '';
-
-                        if( rowData.menuStatus=='0'){
                             viewBtn = '<div class="action-buttons" style="white-space:normal">'+
                                 '<a data-action="edit" data-id="'+rowData.id+'" href="javascript:void(0);" class="tooltip-success green" data-rel="tooltip" title="编辑"  style="border-color:#69aa46 "><i class="ace-icon fa fa-pencil bigger-130"></i></a>'+
-                                '<a data-action="submit" data-id="'+rowData.id+'" href="javascript:void(0);" class="tooltip-success green" data-rel="tooltip" title="提交" style="border-color:#69aa46"><i class="ace-icon fa fa-check bigger-130"></i></a>'+
+                                '<a data-action="print" data-id="'+rowData.id+'" href="javascript:void(0);" class="tooltip-success green" data-rel="tooltip" title="打印" style="border-color:#69aa46"><i class="ace-icon fa fa fa-print bigger-130"></i></a>'+
                                 '</div>';
-                        }else if( rowData.menuStatus=='2'){
-                            viewBtn = '<div class="action-buttons" style="white-space:normal">'+
-                                '<a data-action="edit" data-id="'+rowData.id+'" href="javascript:void(0);" class="tooltip-success green" data-rel="tooltip" title="编辑"  style="border-color:#69aa46 "><i class="ace-icon fa fa-pencil bigger-130"></i></a>'+
-                                '</div>';
-                        }else if( rowData.menuStatus=='3'){
-                            if(rowData.menuUp=='0'){
-                                viewBtn = '<div class="action-buttons" style="white-space:normal">'+
-                                    '<a data-action="edit" data-id="'+rowData.id+'" href="javascript:void(0);" class="tooltip-success green" data-rel="tooltip" title="编辑"  style="border-color:#69aa46 "><i class="ace-icon fa fa-pencil bigger-130"></i></a>'+
-                                    '<a data-action="upShelf" data-id="'+rowData.id+'" href="javascript:void(0);" class="tooltip-success green" data-rel="tooltip" title="上架"  style="border-color:#69aa46 "><i class="ace-icon fa fa-level-up bigger-130"></i></a>'+
-                                    '</div>';
-                            }else{
-                                viewBtn = '<div class="action-buttons" style="white-space:normal">'+
-                                    '<a data-action="downShelf" data-id="'+rowData.id+'" href="javascript:void(0);" class="tooltip-success green" data-rel="tooltip" title="下架"  style="border-color:#69aa46 "><i class="ace-icon fa fa-level-down bigger-130"></i></a>'+
-                                    '</div>';
-                            }
-                        }
-
-
-
 
                         $(grid_selector).jqGrid('setRowData', ids[i], {
-                            menuLimited: menuLimited,
-                            menuType: menuType,
-                            menuStatus: menuStatus,
-                            menuUp: menuUp,
                             view: viewBtn
                         });
                     }
 
-
-
-
-                    //删除按钮
-                    $(grid_selector).find('a[data-action=delete]').on('click', function(event) {
-                        $(grid_selector).jqGrid('resetSelection');
-                        var id = $(this).attr('data-id');
-                        doDelete(id);
-                    });
 
                     //编辑
                     $(grid_selector).find('a[data-action=edit]').on('click', function(event) {
@@ -232,26 +192,11 @@
                         _edita(id);
                     });
 
-                    //提交审核
-                    $(grid_selector).find('a[data-action=submit]').on('click', function(event) {
+                    //打印条码
+                    $(grid_selector).find('a[data-action=print]').on('click', function(event) {
                         $(grid_selector).jqGrid('resetSelection');
                         var id = $(this).attr('data-id');
-                        submitMenu(id);
-                    });
-
-
-                    //上架
-                    $(grid_selector).find('a[data-action=upShelf]').on('click', function(event) {
-                        $(grid_selector).jqGrid('resetSelection');
-                        var id = $(this).attr('data-id');
-                        upShelf(id);
-                    });
-
-                    //下架
-                    $(grid_selector).find('a[data-action=downShelf]').on('click', function(event) {
-                        $(grid_selector).jqGrid('resetSelection');
-                        var id = $(this).attr('data-id');
-                        downShelf(id);
+                        _boxCode(id);
                     });
                 }
             });
@@ -268,10 +213,10 @@
                     addfunc: openDialogAdd,
                     addtext: "<span data-locale='add'>新增</span>",
                     addtitle: '',
-                    del: isAlldel,
+                    del: true,
                     delicon: 'ace-icon fa fa-trash-o',
                     delfunc: doDelete,
-                    deltext: "<span data-locale='BatchDelete'>批量删除</span>",
+                    deltext: "<span data-locale='BatchDelete'>删除</span>",
                     deltitle: '',
                     search: false,
                     refresh: true,
@@ -286,7 +231,37 @@
                 {},  // delete instead that del:false we need this
                 {multipleSearch: true}, // enable the advanced searching
                 {closeOnEscape: true} /* allow the view dialog to be closed when user press ESC key*/
-            )
+            ).jqGrid("navButtonAdd",toolbarTop,{
+                caption:"<span data-locale='BarcodePrinting'>条形码打印</span>",
+                buttonicon:"ace-icon fa fa-download",
+                title:"条形码打印",
+                onClickButton: printBoxCode,
+                position:"first" ,
+                id:"printBoxCode"
+            });
+
+
+
+            function printBoxCode() {
+                var selectedIds = $(grid_selector).jqGrid("getGridParam", "selarrrow");
+                if (selectedIds.length ==0) {
+                    $.msg_confirm.Init({
+                        'msg': '确认要打印所有的记录吗？',//这个参数可选，默认值：'这是信息提示！'
+                        'confirm_fn': function () {
+                            _boxCode(selectedIds)
+                        },//这个参数可选，默认值：function(){} 空的方法体
+                        'cancel_fn': function () {
+                            $(grid_selector).jqGrid('resetSelection');
+                        }//这个参数可选，默认值：function(){} 空的方法体
+                    });
+                } else {
+                    _boxCode(selectedIds);
+                }
+            }
+
+            function _boxCode(ids){
+                window.open("${ctxReport}/HtmReport/doPrintBoxCode.htm?param="+ids);
+            }
 
 
             function openDialogAdd() {
@@ -297,11 +272,12 @@
                 var id = id;
                 var params = {"id": id};
                 $.get("${ctx}/pzBoxCode/form", params, function (data, textStatus, object) {
+                    $(".ui-dialog").remove();
                     $("#editDivId").closest(".ui-dialog").remove();
                     $("#editDivId").html(object.responseText).dialog({
                         modal: true,
                         width: 600,
-                        height: 700,
+                        height: 400,
                         title: "<div class='widget-header widget-header-small widget-header-flat'><h4 class='smaller' style='line-height:2'><i class='ace-icon fa fa-th-large'></i>&nbsp;<span data-locale='PzBoxCodeInfo.'>箱子编码信息</span></h4></div>",
                         title_html: true,
                         buttons: [
@@ -324,9 +300,71 @@
                         ],
                         open: function (event, ui) {
 
-                            $(".ui-dialog-title .widget-header").on('mouseenter', function () {
+                            var select2 = $('.select2');
+                            var select2width = select2.parent().width();
+                            $('.select2').css('width',select2width).select2({allowClear:true});
+                            //选择框
+                            if(!ace.vars['touch']) {
+                                $('.chosen-select').chosen({allow_single_deselect:true});
+                                $(window).off('resize.chosen').on('resize.chosen', function() {
+                                    $('.chosen-select,.select2').each(function() {
+                                        var $this = $(this);
+                                        $this.next().css({'width': $this.parent().width()});
+                                    });
+                                }).trigger('resize.chosen');
+                            }
+                        },
+                        create: function( event, ui ) {
+                            $(".ui-dialog-title .widget-header").on('mouseenter',function(){
                                 $(".ui-dialog-content input").blur();
                             })
+
+                            $("#selectOfficeMenu").on('click', function(e) {
+                                e.preventDefault();
+                                var dialog = $( "#selectOfficeTreeDiv" ).removeClass('hide').dialog({
+                                    modal: true,
+                                    width:300,
+                                    height:400,
+                                    title: "<div class='widget-header widget-header-small widget-header-flat'><h4 class='smaller' style='line-height:2'><i class='ace-icon fa fa-university'></i>&nbsp;<span data-locale='Selectdepartment'>选择服务单元</span></h4></div>",
+                                    title_html: true,
+                                    buttons: [
+                                        {
+                                            text: "确定",
+                                            "class" : "btn btn-primary btn-minier",
+                                            "data-locale":"define",
+                                            click: function() {
+                                                $("#inputForm input#serviceUnit").val($('#popuptreeview').attr('data-text'));
+                                                $("#inputForm input#serviceUnitId").val($('#popuptreeview').attr('data-id'));
+                                                $( this ).dialog( "close" );
+                                            }
+                                        },
+                                        {
+                                            text: "取消",
+                                            "class" : "btn btn-minier",
+                                            "data-locale":"cancel",
+                                            click: function() {
+                                                $( this ).dialog( "close" );
+                                            }
+                                        }
+                                    ],
+                                    open: function( event, ui ) {
+                                        $.getJSON( "${ctx}/sys/office/getOfficetree",{"treetype":1},function(data) {
+                                            $('#popuptreeview').treeview({
+                                                data: data,
+                                                levels: 4,
+                                                showBorder:true,
+                                                emptyIcon:'fa fa-file-o',
+                                                collapseIcon:'fa fa-folder-open-o',
+                                                expandIcon:'fa fa-folder-o',
+                                                onNodeSelected: function(event, node) {
+                                                    $('#popuptreeview').attr('data-id',node.id);
+                                                    $('#popuptreeview').attr('data-text',node.text);
+                                                },
+                                            });
+                                        });
+                                    }
+                                });
+                            });
                         }
                     });
                     //动作设备页面维护表单验证
@@ -391,7 +429,7 @@
                     'confirm_fn': function () {
                         var ids = id+"";
                         var params = {"ids":ids};
-                        $.post("${ctx}/pzMenu/deleteByIds", params, function (result) {
+                        $.post("${ctx}/pzBoxCode/deleteByIds", params, function (result) {
                             if (result.messageStatus == "1") {
                                 $.msg_show.Init({
                                     'msg': result.message,

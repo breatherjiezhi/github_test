@@ -30,15 +30,6 @@ public class PzBoxCodeController extends BaseController {
     @Autowired
     private PzBoxCodeService pzBoxCodeService;
 
-    @ModelAttribute
-    public PzBoxCode get(@RequestParam(required = false)String id){
-        if(StringUtils.isNotBlank(id)){
-            return pzBoxCodeService.get(id);
-        }else {
-
-            return new PzBoxCode();
-        }
-    }
 
     @RequestMapping(value = {"list"})
     public String list(PzBoxCode pzBoxCode, HttpServletRequest request, HttpServletResponse response, Model model){
@@ -60,7 +51,13 @@ public class PzBoxCodeController extends BaseController {
 
     @RequestMapping(value = "form")
     public String form(PzBoxCode pzBoxCode,Model model){
-        model.addAttribute("pzBoxCode", pzBoxCode);
+        PzBoxCode pc= pzBoxCodeService.get(pzBoxCode.getId());
+        if(pc!=null){
+            model.addAttribute("pzBoxCode", pc);
+        }else{
+            model.addAttribute("pzBoxCode", new PzBoxCode());
+        }
+
         return "modules/pzBoxCode/pzBoxCodeForm";
     }
 

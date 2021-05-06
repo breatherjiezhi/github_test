@@ -12,6 +12,10 @@
         <result column="update_date" property="updateDate" />
         <result column="remarks" property="remarks" />
         <result column="del_flag" property="delFlag" />
+        <result column="restaurant_name" property="restaurantName" />
+        <result column="service_unit" property="serviceUnit" />
+        <result column="area_name" property="areaName" />
+
     </resultMap>
 
     <update id="deleteByIds">
@@ -26,20 +30,17 @@
     </update>
 
     <select id="get" resultMap="BaseResultMap">
-        SELECT
-            a.ID,
-            a.service_unit_id,
-            a.restaurant_id,
-            a.box_code,
-            a.box_cn_name,
-            a.create_by,
-            a.update_by,
-            a.create_date,
-            a.update_date,
-            a.remarks,
-            a.del_flag
-        FROM pz_box_code a
-        WHERE a.ID = #{id} and a.del_flag ='0'
+    SELECT
+	pbc.*,
+	so.`NAME` AS 'SERVICE_UNIT',
+	sso.`NAME` AS 'RESTAURANT_NAME',
+	sa.`NAME` AS 'AREA_NAME'
+    FROM
+	pz_box_code pbc
+	LEFT JOIN sys_office so ON pbc.SERVICE_UNIT_ID = so.ID
+	LEFT JOIN sys_office sso ON pbc.RESTAURANT_ID = sso.ID
+	LEFT JOIN sys_area sa ON so.AREA_ID = sa.ID
+	Where pbc.ID = #{id} and pbc.del_flag ='0'
     </select>
 
     <insert id="insert" parameterType="com.dhc.rad.modules.pzBoxCode.entity.PzBoxCode">
@@ -144,35 +145,31 @@
 
     <select id="findList" resultMap="BaseResultMap">
         SELECT
-        ID,
-        service_unit_id,
-        restaurant_id,
-        box_code,
-        box_cn_name,
-        create_by,
-        update_by,
-        create_date,
-        update_date,
-        remarks,
-        del_flag
+        pbc.*,
+        so.`NAME` AS 'SERVICE_UNIT',
+        sso.`NAME` AS 'RESTAURANT_NAME',
+        sa.`NAME` AS 'AREA_NAME'
         FROM
-        pz_box_code
-        WHERE del_flag ='0'
-        <if test ="null != serviceUnitId and ''!= serviceUnitId"> AND service_unit_id= #{serviceUnitId}</if>
-        <if test ="null != restaurantId and ''!= restaurantId">AND  restaurant_id = #{restaurantId}</if>
-        <if test ="null != boxCode and ''!= boxCode"> AND box_code = #{boxCode}</if>
-        <if test ="null != boxCnName and ''!= boxCnName"> AND box_cn_name = #{boxCnName}</if>
-        <if test ="null != createBy and ''!= createBy"> AND CREATE_BY = #{createBy.id}</if>
-        <if test ="null != updateBy and ''!= updateBy"> AND UPDATE_BY = #{updateBy.id}</if>
-        <if test ="null != createDate and ''!= createDate"> AND CREATE_DATE = #{createDate}</if>
-        <if test ="null != updateDate and ''!= updateDate"> AND UPDATE_DATE = #{updateDate}</if>
-        <if test ="null != remarks and ''!= remarks"> AND remarks = #{remarks}</if>
+        pz_box_code pbc
+        LEFT JOIN sys_office so ON pbc.SERVICE_UNIT_ID = so.ID
+        LEFT JOIN sys_office sso ON pbc.RESTAURANT_ID = sso.ID
+        LEFT JOIN sys_area sa ON so.AREA_ID = sa.ID
+        Where pbc.del_flag ='0'
+        <if test ="null != serviceUnitId and ''!= serviceUnitId"> AND pbc.service_unit_id= #{serviceUnitId}</if>
+        <if test ="null != restaurantId and ''!= restaurantId">AND  pbc.restaurant_id = #{restaurantId}</if>
+        <if test ="null != boxCode and ''!= boxCode"> AND pbc.box_code = #{boxCode}</if>
+        <if test ="null != boxCnName and ''!= boxCnName"> AND pbc.box_cn_name = #{boxCnName}</if>
+        <if test ="null != createBy and ''!= createBy"> AND pbc.CREATE_BY = #{createBy.id}</if>
+        <if test ="null != updateBy and ''!= updateBy"> AND pbc.UPDATE_BY = #{updateBy.id}</if>
+        <if test ="null != createDate and ''!= createDate"> AND pbc.CREATE_DATE = #{createDate}</if>
+        <if test ="null != updateDate and ''!= updateDate"> AND pbc.UPDATE_DATE = #{updateDate}</if>
+        <if test ="null != remarks and ''!= remarks"> AND pbc.remarks = #{remarks}</if>
         <choose>
             <when test="page !=null and page.orderBy != null and page.orderBy != ''">
                 ORDER BY ${page.orderBy}
             </when>
             <otherwise>
-                ORDER BY  create_date DESC
+                ORDER BY  pbc.create_date DESC
             </otherwise>
         </choose>
 

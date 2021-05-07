@@ -278,30 +278,30 @@ public class WxOrderController extends BaseController {
 
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             String nowDate = sdf.format(new Date());
-            List<List<String>> eatDateList = new ArrayList<>();
+            List<Map<String,Object>> eatDateList = new ArrayList<>();
 
             String[] eatDateTemp = pzOrder.getEatDate() == null ? new String[0] : pzOrder.getEatDate().split(",");
             String noEatDate = pzOrder.getNoEatDate();
             for (int i =0;i<eatDateTemp.length;i++){
-                List<String> tempList = new ArrayList<>();
+                Map<String,Object> tempList = new HashMap<String,Object>();
                 if(StringUtils.isNotBlank(eatDateTemp[i])){
-                    tempList.add(eatDateTemp[i]);
+                    tempList.put("eatDate",eatDateTemp[i]);
                     //当前日期是否可吃
                     if(noEatDate.indexOf(eatDateTemp[i])>0){
-                        tempList.add("noEat");
+                        tempList.put("eatFlag",false);
                     }else{
-                        tempList.add("eat");
+                        tempList.put("eatFlag",true);
                     }
                     //yes为可选 no为不可选
                     if(nowDate.compareTo(eatDateTemp[i])<=0){
-                        tempList.add("no");
+                        tempList.put("checkFlag",false);
                     }else{
-                        tempList.add("yes");
+                        tempList.put("checkFlag",true);
                     }
                 }
                 eatDateList.add(tempList);
             }
-            temp.put("eatDate",eatDateList);
+            temp.put("eatDateList",eatDateList);
             PzMenu pzMenu = pzMenuService.get(pzOrder.getMenuId());
             temp.put("menuId", pzMenu.getId());
             temp.put("name", pzMenu.getMenuName());

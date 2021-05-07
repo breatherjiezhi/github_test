@@ -22,4 +22,6 @@ public interface PzBoxCodeDao extends CrudDao<PzBoxCode> {
     Integer deleteByIds(List<String> ids);
 
     Integer findCountByBoxCode(@Param("boxCode") String boxCode);
+
+    PzBoxCode findByBoxCode(@Param("boxCode") String boxCode);
 }

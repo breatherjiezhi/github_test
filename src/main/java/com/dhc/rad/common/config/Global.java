@@ -112,7 +112,7 @@ public class Global {
     /**
      * 积分分类
      */
-    //0 卡券
+    //0 餐券
     public static final int SCORE_CLASSIFY_COUPON = 0;
     //1 积分
     public static final int SCORE_CLASSIFY_INTEGRAL = 1;

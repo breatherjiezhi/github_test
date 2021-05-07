@@ -42,7 +42,13 @@ public class PzBoxCodeService extends CrudService<PzBoxCodeDao, PzBoxCode> {
         return pzBoxCodeDao.deleteByIds(ids);
     }
 
+    @Transactional(readOnly = false)
     public Integer findCountByBoxCode(String boxCode) {
         return pzBoxCodeDao.findCountByBoxCode(boxCode);
+    }
+
+    @Transactional(readOnly = false)
+    public PzBoxCode findByBoxCode(String boxCode) {
+        return pzBoxCodeDao.findByBoxCode(boxCode);
     }
 }

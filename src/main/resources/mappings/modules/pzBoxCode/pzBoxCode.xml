@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.dhc.rad.modules.pzBoxCode.dao.PzBoxCodeDao">
-    <resultMap id="BaseResultMap" type="com.dhc.rad.modules.pzBoxCode.entity.PzBoxCode" >
-        <result column="service_unit_id" property="serviceUnitId" />
-        <result column="restaurant_id" property="restaurantId" />
-        <result column="box_code" property="boxCode" />
-        <result column="box_cn_name" property="boxCnName" />
-        <result column="create_by" property="createBy.id" />
-        <result column="update_by" property="updateBy.id" />
-        <result column="create_date" property="createDate" />
-        <result column="update_date" property="updateDate" />
-        <result column="remarks" property="remarks" />
-        <result column="del_flag" property="delFlag" />
-        <result column="restaurant_name" property="restaurantName" />
-        <result column="service_unit" property="serviceUnit" />
-        <result column="area_name" property="areaName" />
+    <resultMap id="BaseResultMap" type="com.dhc.rad.modules.pzBoxCode.entity.PzBoxCode">
+        <result column="service_unit_id" property="serviceUnitId"/>
+        <result column="restaurant_id" property="restaurantId"/>
+        <result column="box_code" property="boxCode"/>
+        <result column="box_cn_name" property="boxCnName"/>
+        <result column="create_by" property="createBy.id"/>
+        <result column="update_by" property="updateBy.id"/>
+        <result column="create_date" property="createDate"/>
+        <result column="update_date" property="updateDate"/>
+        <result column="remarks" property="remarks"/>
+        <result column="del_flag" property="delFlag"/>
+        <result column="restaurant_name" property="restaurantName"/>
+        <result column="service_unit" property="serviceUnit"/>
+        <result column="area_name" property="areaName"/>
 
     </resultMap>
 
@@ -30,88 +30,87 @@
     </update>
 
     <select id="get" resultMap="BaseResultMap">
-    SELECT
-	pbc.*,
-	so.`NAME` AS 'SERVICE_UNIT',
-	sso.`NAME` AS 'RESTAURANT_NAME',
-	sa.`NAME` AS 'AREA_NAME'
-    FROM
-	pz_box_code pbc
-	LEFT JOIN sys_office so ON pbc.SERVICE_UNIT_ID = so.ID
-	LEFT JOIN sys_office sso ON pbc.RESTAURANT_ID = sso.ID
-	LEFT JOIN sys_area sa ON so.AREA_ID = sa.ID
-	Where pbc.ID = #{id} and pbc.del_flag ='0'
+        SELECT pbc.*,
+               so.`NAME`  AS 'SERVICE_UNIT',
+               sso.`NAME` AS 'RESTAURANT_NAME',
+               sa.`NAME`  AS 'AREA_NAME'
+        FROM pz_box_code pbc
+                 LEFT JOIN sys_office so ON pbc.SERVICE_UNIT_ID = so.ID
+                 LEFT JOIN sys_office sso ON pbc.RESTAURANT_ID = sso.ID
+                 LEFT JOIN sys_area sa ON so.AREA_ID = sa.ID
+        Where pbc.ID = #{id}
+          and pbc.del_flag = '0'
     </select>
 
     <insert id="insert" parameterType="com.dhc.rad.modules.pzBoxCode.entity.PzBoxCode">
         INSERT INTO pz_box_code
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test ="null != id and ''!= id">
+            <if test="null != id and ''!= id">
                 id,
             </if>
-            <if test ="null != serviceUnitId and ''!= serviceUnitId">
+            <if test="null != serviceUnitId and ''!= serviceUnitId">
                 service_unit_id,
             </if>
-            <if test ="null != restaurantId and ''!= restaurantId">
+            <if test="null != restaurantId and ''!= restaurantId">
                 restaurant_id,
             </if>
-            <if test ="null != boxCode and ''!= boxCode">
+            <if test="null != boxCode and ''!= boxCode">
                 box_code,
             </if>
-            <if test ="null != boxCnName and ''!= boxCnName">
+            <if test="null != boxCnName and ''!= boxCnName">
                 box_cn_name,
             </if>
-            <if test ="null != createBy and ''!= createBy">
+            <if test="null != createBy and ''!= createBy">
                 create_by,
             </if>
-            <if test ="null != updateBy and ''!= updateBy">
+            <if test="null != updateBy and ''!= updateBy">
                 update_by,
             </if>
-            <if test ="null != createDate and ''!= createDate">
+            <if test="null != createDate and ''!= createDate">
                 create_date,
             </if>
-            <if test ="null != updateDate and ''!= updateDate">
+            <if test="null != updateDate and ''!= updateDate">
                 update_date,
             </if>
-            <if test ="null != remarks and ''!= remarks">
+            <if test="null != remarks and ''!= remarks">
                 remarks,
             </if>
-            <if test ="null != delFlag and ''!= delFlag">
+            <if test="null != delFlag and ''!= delFlag">
                 del_flag
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test ="null != id and ''!= id">
+            <if test="null != id and ''!= id">
                 #{id},
             </if>
-            <if test ="null != serviceUnitId and ''!= serviceUnitId">
+            <if test="null != serviceUnitId and ''!= serviceUnitId">
                 #{serviceUnitId},
             </if>
-            <if test ="null != restaurantId and ''!= restaurantId">
+            <if test="null != restaurantId and ''!= restaurantId">
                 #{restaurantId},
             </if>
-            <if test ="null != boxCode and ''!= boxCode">
+            <if test="null != boxCode and ''!= boxCode">
                 #{boxCode},
             </if>
-            <if test ="null != boxCnName and ''!= boxCnName">
+            <if test="null != boxCnName and ''!= boxCnName">
                 #{boxCnName},
             </if>
-            <if test ="null != createBy and ''!= createBy">
+            <if test="null != createBy and ''!= createBy">
                 #{createBy.id},
             </if>
-            <if test ="null != updateBy and ''!= updateBy">
+            <if test="null != updateBy and ''!= updateBy">
                 #{updateBy.id},
             </if>
-            <if test ="null != createDate and ''!= createDate">
+            <if test="null != createDate and ''!= createDate">
                 #{createDate},
             </if>
-            <if test ="null != updateDate and ''!= updateDate">
+            <if test="null != updateDate and ''!= updateDate">
                 #{updateDate},
             </if>
-            <if test ="null != remarks and ''!= remarks">
+            <if test="null != remarks and ''!= remarks">
                 #{remarks},
             </if>
-            <if test ="null != delFlag and ''!= delFlag">
+            <if test="null != delFlag and ''!= delFlag">
                 #{delFlag}
             </if>
         </trim>
@@ -120,27 +119,25 @@
     <update id="update" parameterType="com.dhc.rad.modules.pzBoxCode.entity.PzBoxCode">
         UPDATE pz_box_code
         <set>
-            <if test ="null != serviceUnitId and ''!= serviceUnitId">  service_unit_id= #{serviceUnitId},</if>
-            <if test ="null != restaurantId and ''!= restaurantId">  restaurant_id = #{restaurantId},</if>
-            <if test ="null != boxCode and ''!= boxCode">  box_code = #{boxCode},</if>
-            <if test ="null != boxCnName and ''!= boxCnName">  box_cn_name = #{boxCnName},</if>
-            <if test ="null != createBy and ''!= createBy">  CREATE_BY = #{createBy.id},</if>
-            <if test ="null != updateBy and ''!= updateBy">  UPDATE_BY = #{updateBy.id},</if>
-            <if test ="null != createDate and ''!= createDate">  CREATE_DATE = #{createDate},</if>
-            <if test ="null != updateDate and ''!= updateDate">  UPDATE_DATE = #{updateDate},</if>
-            <if test ="null != remarks and ''!= remarks">  remarks = #{remarks}</if>
+            <if test="null != serviceUnitId and ''!= serviceUnitId">service_unit_id= #{serviceUnitId},</if>
+            <if test="null != restaurantId and ''!= restaurantId">restaurant_id = #{restaurantId},</if>
+            <if test="null != boxCode and ''!= boxCode">box_code = #{boxCode},</if>
+            <if test="null != boxCnName and ''!= boxCnName">box_cn_name = #{boxCnName},</if>
+            <if test="null != createBy and ''!= createBy">CREATE_BY = #{createBy.id},</if>
+            <if test="null != updateBy and ''!= updateBy">UPDATE_BY = #{updateBy.id},</if>
+            <if test="null != createDate and ''!= createDate">CREATE_DATE = #{createDate},</if>
+            <if test="null != updateDate and ''!= updateDate">UPDATE_DATE = #{updateDate},</if>
+            <if test="null != remarks and ''!= remarks">remarks = #{remarks}</if>
         </set>
-        WHERE  id = #{id} and del_flag ='0'
+        WHERE id = #{id} and del_flag ='0'
     </update>
 
 
     <select id="findCountByBoxCode" resultType="java.lang.Integer">
-        SELECT
-            COUNT( 1 )
-        FROM
-            pz_box_code
-        WHERE
-            BOX_CODE = #{boxCode} and del_flag ='0'
+        SELECT COUNT(1)
+        FROM pz_box_code
+        WHERE BOX_CODE = #{boxCode}
+          and del_flag = '0'
     </select>
 
     <select id="findList" resultMap="BaseResultMap">
@@ -155,23 +152,35 @@
         LEFT JOIN sys_office sso ON pbc.RESTAURANT_ID = sso.ID
         LEFT JOIN sys_area sa ON so.AREA_ID = sa.ID
         Where pbc.del_flag ='0'
-        <if test ="null != serviceUnitId and ''!= serviceUnitId"> AND pbc.service_unit_id= #{serviceUnitId}</if>
-        <if test ="null != restaurantId and ''!= restaurantId">AND  pbc.restaurant_id = #{restaurantId}</if>
-        <if test ="null != boxCode and ''!= boxCode"> AND pbc.box_code = #{boxCode}</if>
-        <if test ="null != boxCnName and ''!= boxCnName"> AND pbc.box_cn_name = #{boxCnName}</if>
-        <if test ="null != createBy and ''!= createBy"> AND pbc.CREATE_BY = #{createBy.id}</if>
-        <if test ="null != updateBy and ''!= updateBy"> AND pbc.UPDATE_BY = #{updateBy.id}</if>
-        <if test ="null != createDate and ''!= createDate"> AND pbc.CREATE_DATE = #{createDate}</if>
-        <if test ="null != updateDate and ''!= updateDate"> AND pbc.UPDATE_DATE = #{updateDate}</if>
-        <if test ="null != remarks and ''!= remarks"> AND pbc.remarks = #{remarks}</if>
+        <if test="null != serviceUnitId and ''!= serviceUnitId">AND pbc.service_unit_id= #{serviceUnitId}</if>
+        <if test="null != restaurantId and ''!= restaurantId">AND pbc.restaurant_id = #{restaurantId}</if>
+        <if test="null != boxCode and ''!= boxCode">AND pbc.box_code = #{boxCode}</if>
+        <if test="null != boxCnName and ''!= boxCnName">AND pbc.box_cn_name = #{boxCnName}</if>
+        <if test="null != createBy and ''!= createBy">AND pbc.CREATE_BY = #{createBy.id}</if>
+        <if test="null != updateBy and ''!= updateBy">AND pbc.UPDATE_BY = #{updateBy.id}</if>
+        <if test="null != createDate and ''!= createDate">AND pbc.CREATE_DATE = #{createDate}</if>
+        <if test="null != updateDate and ''!= updateDate">AND pbc.UPDATE_DATE = #{updateDate}</if>
+        <if test="null != remarks and ''!= remarks">AND pbc.remarks = #{remarks}</if>
         <choose>
             <when test="page !=null and page.orderBy != null and page.orderBy != ''">
                 ORDER BY ${page.orderBy}
             </when>
             <otherwise>
-                ORDER BY  pbc.create_date DESC
+                ORDER BY pbc.create_date DESC
             </otherwise>
         </choose>
 
+    </select>
+    <select id="findByBoxCode" resultMap="BaseResultMap">
+        SELECT pbc.*,
+               so.`NAME`  AS 'SERVICE_UNIT',
+               sso.`NAME` AS 'RESTAURANT_NAME',
+               sa.`NAME`  AS 'AREA_NAME'
+        FROM pz_box_code pbc
+                 LEFT JOIN sys_office so ON pbc.SERVICE_UNIT_ID = so.ID
+                 LEFT JOIN sys_office sso ON pbc.RESTAURANT_ID = sso.ID
+                 LEFT JOIN sys_area sa ON so.AREA_ID = sa.ID
+        Where pbc.BOX_CODE = #{boxCode}
+          and pbc.del_flag = '0'
     </select>
 </mapper>

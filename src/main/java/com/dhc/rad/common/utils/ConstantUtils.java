@@ -317,7 +317,7 @@ public class ConstantUtils {
         public static final String ERRORMSG = "系统异常";
 
         public static final String PASSLIMITSMSG = "权限不足";
-        public static final String ParameterException = "参数为空";
+        public static final String ParameterException = "参数为空或者参数异常";
 
         public static final String INFONOEXIST = "信息不存在";
 

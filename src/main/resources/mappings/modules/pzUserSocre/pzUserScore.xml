@@ -123,6 +123,19 @@
         </set>
         WHERE  id = #{id} and del_flag ='0'
     </update>
+    <update id="updateUserScore" parameterType="com.dhc.rad.modules.pzUserScore.entity.PzUserScore">
+        UPDATE pz_user_score
+        <set>
+            <if test ="null != canteenIntegral">  canteen_integral = #{canteenIntegral},</if>
+            <if test ="null != createBy and ''!= createBy">  CREATE_BY = #{createBy.id},</if>
+            <if test ="null != updateBy and ''!= updateBy">  UPDATE_BY = #{updateBy.id},</if>
+            <if test ="null != createDate and ''!= createDate">  CREATE_DATE = #{createDate},</if>
+            <if test ="null != updateDate and ''!= updateDate">  UPDATE_DATE = #{updateDate},</if>
+            <if test ="null != remarks and ''!= remarks">  remarks = #{remarks}</if>
+        </set>
+        WHERE  restaurant_id = #{restaurantId} and  user_id= #{userId} and del_flag ='0'
+
+    </update>
 
     <select id="findList" resultMap="BaseResultMap">
         SELECT
@@ -155,6 +168,24 @@
             </otherwise>
         </choose>
 
+    </select>
+    <select id="getByUserIdAndRestaurantId" resultMap="BaseResultMap">
+        SELECT
+            ID,
+            user_id,
+            restaurant_id,
+            canteen_integral,
+            create_by,
+            update_by,
+            create_date,
+            update_date,
+            remarks,
+            del_flag
+        FROM
+            pz_user_score
+        WHERE
+            user_id = #{userId}
+          AND restaurant_id = #{restaurantId} AND del_flag ='0'
     </select>
 
 

@@ -34,7 +34,6 @@ public interface PzMenuDao extends CrudDao<PzMenu> {
      * @Description: 菜单上架操作
      * @Param: idList
      * @return: Integer
-     * @Author: zhengXiang
      * @Date: 2021/4/20
      */
     Integer upPzMenu(List<String> ids);
@@ -43,7 +42,6 @@ public interface PzMenuDao extends CrudDao<PzMenu> {
      * @Description: 菜单下架
      * @Param: ids
      * @return: Integer
-     * @Author: zhengXiang
      * @Date: 2021/4/20
      */
     Integer downPzMenu(List<String> ids);

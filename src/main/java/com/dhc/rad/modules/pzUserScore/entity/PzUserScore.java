@@ -4,6 +4,8 @@ import com.dhc.rad.common.persistence.DataEntity;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+
 /**
  * @author 10951
  */
@@ -25,7 +27,7 @@ public class PzUserScore extends DataEntity<PzUserScore> {
     /**
      * 个人餐厅所属积分
      */
-    private String canteenIntegral;
+    private BigDecimal canteenIntegral;
 
     public String getUserId() {
         return userId;
@@ -43,11 +45,11 @@ public class PzUserScore extends DataEntity<PzUserScore> {
         this.restaurantId = restaurantId;
     }
 
-    public String getCanteenIntegral() {
+    public BigDecimal getCanteenIntegral() {
         return canteenIntegral;
     }
 
-    public void setCanteenIntegral(String canteenIntegral) {
+    public void setCanteenIntegral(BigDecimal canteenIntegral) {
         this.canteenIntegral = canteenIntegral;
     }
 }

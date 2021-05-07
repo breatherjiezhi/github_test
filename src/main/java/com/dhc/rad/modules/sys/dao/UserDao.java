@@ -111,7 +111,6 @@ public interface UserDao extends CrudDao<User> {
 	* @Description: 根据用户id查询个人所属餐厅积分
 	* @Param:  userId
 	* @return:  List<Map<String,String>>
-	* @Author: zhengXiang
 	* @Date: 2021/4/20
 	*/
 	List<Map<String,String>> findPzMenuScoreById(@Param("userId") String userId);

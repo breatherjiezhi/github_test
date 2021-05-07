@@ -1,6 +1,8 @@
 package com.dhc.rad.modules.pzOrder.service;
 
 import com.dhc.rad.common.service.CrudService;
+import com.dhc.rad.common.utils.ObjectUtils;
+import com.dhc.rad.common.utils.StringUtils;
 import com.dhc.rad.modules.pzOrder.dao.PzOrderDao;
 import com.dhc.rad.modules.pzOrder.entity.PzOrder;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,5 +33,19 @@ public class PzOrderService extends CrudService<PzOrderDao, PzOrder> {
         pzOrder.setMenuId(menuId);
         pzOrder.preInsert();
         return pzOrderDao.insert(pzOrder);
+    }
+
+    @Transactional(readOnly = false)
+    public Integer saveOrUpdate(PzOrder pzOrder) {
+        if(ObjectUtils.isNotEmpty(pzOrder)){
+            if(StringUtils.isNotBlank(pzOrder.getId())){
+                pzOrder.preUpdate();
+                return pzOrderDao.update(pzOrder);
+            }else{
+                pzOrder.preInsert();
+                return pzOrderDao.insert(pzOrder);
+            }
+        }
+        return 0;
     }
 }

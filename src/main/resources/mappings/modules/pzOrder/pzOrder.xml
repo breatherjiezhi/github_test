@@ -157,8 +157,8 @@
             <if test="null != serviceUnitId and ''!= serviceUnitId">service_unit_id= #{serviceUnitId},</if>
             <if test="null != restaurantId and ''!= restaurantId">restaurant_id = #{restaurantId},</if>
             <if test="null != menuType and ''!= menuType">menu_type = #{menuType},</if>
-            <if test="null != eatDate and ''!= eatDate">eat_date = #{eatDate},</if>
-            <if test="null != noEatDate and ''!= noEatDate">no_eat_date = #{noEatDate},</if>
+            <if test="null != eatDate">eat_date = #{eatDate},</if>
+            <if test="null != noEatDate">no_eat_date = #{noEatDate},</if>
             <if test="null != menuIntegral and ''!= menuIntegral">menu_integral = #{menuIntegral},</if>
             <if test="null != createBy and ''!= createBy">CREATE_BY = #{createBy.id},</if>
             <if test="null != updateBy and ''!= updateBy">UPDATE_BY = #{updateBy.id},</if>

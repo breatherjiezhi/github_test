@@ -41,4 +41,9 @@ public class PzUserScoreService extends CrudService<PzUserScoreDao, PzUserScore>
 
         return pzUserScoreDao.deleteByIds(ids);
     }
+
+    @Transactional(readOnly = false)
+    public PzUserScore getByUserIdAndRestaurantId(String userId, String restaurantId) {
+        return pzUserScoreDao.getByUserIdAndRestaurantId(userId,restaurantId);
+    }
 }

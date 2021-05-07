@@ -156,8 +156,7 @@ public class PzMenuController extends BaseController {
     /**
      * @Description: 审核菜单是否合格
      * @Param: pzMenu
-     * @return: Map<String   ,   Object>
-     * @Author: zhengXiang
+     * @return: Map<String,Object>
      * @Date: 2021/4/21
      */
     @RequestMapping(value = "updateStatus", method = RequestMethod.POST)
@@ -280,7 +279,6 @@ public class PzMenuController extends BaseController {
      * @Description: 菜单上架
      * @Param: pzMenu  request response
      * @return: Map<String   ,   Object>
-     * @Author: zhengXiang
      * @Date: 2021/4/20
      */
     @RequestMapping(value = "upPzMenu", method = RequestMethod.POST)
@@ -323,7 +321,6 @@ public class PzMenuController extends BaseController {
      * @Description: 菜单下架
      * @Param: pzMenu  request response
      * @return: Map<String   ,   Object>
-     * @Author: zhengXiang
      * @Date: 2021/4/20
      */
     @RequestMapping(value = "downPzMenu", method = RequestMethod.POST)

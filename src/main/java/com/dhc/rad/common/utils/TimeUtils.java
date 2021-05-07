@@ -347,7 +347,6 @@ public class TimeUtils {
      * @Description: 根据当前时间获取当前周1-7
      * @Param: null
      * @return: List<String>
-     * @Author: zhengXiang
      * @Date: 2020/2/28
      */
     public static List<String> getCurrentWeekDateList() {
@@ -376,7 +375,6 @@ public class TimeUtils {
      * @Description: 获取当前日期的下周一到下周日的所有日期集合
      * @Param: null
      * @return: List<String>
-     * @Author: zhengXiang
      * @Date: 2021/4/28
      */
     public static List<String> getNextWeekDateList() {
@@ -419,15 +417,14 @@ public class TimeUtils {
      * @Description: 根据当前时间获取下一周eatDate
      * @Param: null
      * @return: String
-     * @Author: zhengXiang
      * @Date: 2020/2/28
      */
     public static List<String> getNextWeekEatDate() {
         //获取当前时间下一周时间集合
-        List<String> dateList = getNextWeekDateList();
+        List<String> nextEatDateList = getNextWeekDateList();
         //去除下一周节假日日期
-        List<String> nextEatDateList = new ArrayList<>();
-        nextEatDateList = dateList.stream()
+        List<String> dateList = new ArrayList<>();
+        dateList = nextEatDateList.stream()
                 .filter(date -> {
                     Holiday holiday = holidayDao.getByDate(date);
                     return holiday == null;
@@ -437,22 +434,21 @@ public class TimeUtils {
         //根据当前用户id 根据当前时间获取下一周1-7时间
 //        String nextDate = eatDateList.stream().collect(Collectors.joining(","));
 
-        return nextEatDateList;
+        return dateList;
     }
 
     /**
      * @Description: 根据当前时间获取当前周的eatDate
      * @Param: null
      * @return: String
-     * @Author: zhengXiang
      * @Date: 2020/2/28
      */
     public static List<String> getCurrentWeekEatDate() {
         //获取当前时间当前周时间集合
-        List<String> dateList = getCurrentWeekDateList();
+        List<String> currentEatDateList = getCurrentWeekDateList();
         //去除当前周节假日日期
-        List<String> currentEatDateList = new ArrayList<>();
-        currentEatDateList = dateList.stream()
+        List<String>  dateList= new ArrayList<>();
+        dateList = currentEatDateList.stream()
                 .filter(date -> {
                     Holiday holiday = holidayDao.getByDate(date);
                     return holiday == null;
@@ -462,7 +458,7 @@ public class TimeUtils {
         //根据当前用户id 根据当前时间获取当前周1-7时间
 //        String currentDate = eatDateList.stream().collect(Collectors.joining(","));
 
-        return currentEatDateList;
+        return dateList;
     }
 
 }

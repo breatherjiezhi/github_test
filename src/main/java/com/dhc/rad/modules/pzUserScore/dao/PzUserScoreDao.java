@@ -3,6 +3,7 @@ package com.dhc.rad.modules.pzUserScore.dao;
 import com.dhc.rad.common.persistence.CrudDao;
 import com.dhc.rad.common.persistence.annotation.MyBatisDao;
 import com.dhc.rad.modules.pzUserScore.entity.PzUserScore;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -19,4 +20,7 @@ public interface PzUserScoreDao extends CrudDao<PzUserScore> {
      */
     Integer deleteByIds(List<String> ids);
 
+    Integer updateUserScore(PzUserScore pzUserScore);
+
+    PzUserScore getByUserIdAndRestaurantId(@Param("userId") String userId, @Param("restaurantId") String restaurantId);
 }

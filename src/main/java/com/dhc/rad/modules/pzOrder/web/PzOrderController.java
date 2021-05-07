@@ -33,7 +33,6 @@ public class PzOrderController extends BaseController {
      * @Description: 根据订单id获取订单信息
      * @Param: id
      * @return: PzOrder
-     * @Author: zhengXiang
      * @Date: 2021/4/22
      */
     @ModelAttribute
@@ -48,7 +47,6 @@ public class PzOrderController extends BaseController {
     * @Description: 查所有订单信息
     * @Param: pzOrder
     * @return: 页面跳转到pzOrderList.jsp页面
-    * @Author: zhengXiang
     * @Date: 2021/4/22
     */
     @RequestMapping(value = {"list"})
@@ -62,7 +60,6 @@ public class PzOrderController extends BaseController {
     * @Description: 根据条件分页查询
     * @Param: pzOrder
     * @return: Map<String,Object>
-    * @Author: zhengXiang
     * @Date: 2021/4/22
     */
     @RequestMapping(value = {"searchPage"})
@@ -84,7 +81,6 @@ public class PzOrderController extends BaseController {
     * @Description:  表单提交数据
     * @Param:  pzOrder
     * @return: 页面跳转pzOrderForm.jsp页面
-    * @Author: zhengXiang
     * @Date: 2021/4/22
     */
     @RequestMapping(value = "form")
@@ -100,7 +96,6 @@ public class PzOrderController extends BaseController {
     * @Description: 批量删除
     * @Param: ids
     * @return: Map<String, Object>
-    * @Author: zhengXiang
     * @Date: 2021/4/22
     */
     @RequestMapping(value = "deleteByIds", method = RequestMethod.POST)

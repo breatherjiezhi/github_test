@@ -32,6 +32,8 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -60,7 +62,7 @@ public class WxOrderController extends BaseController {
     /**
      * @Description: 订餐功能
      * @Param: menuId：套餐id
-     * @return: Map<String, Object>
+     * @return: Map<String ,   Object>
      * @Date: 2021/5/6
      */
     @RequestMapping(value = "orderMenu", method = RequestMethod.POST)
@@ -193,7 +195,7 @@ public class WxOrderController extends BaseController {
     /**
      * @Description: 查询当前用户下一周的订餐信息
      * @Param: null
-     * @return: Map<String, Object>
+     * @return: Map<String ,   Object>
      * @Date: 2021/4/29
      */
     @RequestMapping(value = "findOrderNextWeek", method = RequestMethod.POST)
@@ -252,7 +254,7 @@ public class WxOrderController extends BaseController {
     /**
      * @Description: 查询当前用户当前周的订餐信息
      * @Param: null
-     * @return: Map<String, Object>
+     * @return: Map<String ,   Object>
      * @Date: 2021/4/29
      */
     @RequestMapping(value = "findOrderCurrentWeek", method = RequestMethod.POST)
@@ -273,22 +275,33 @@ public class WxOrderController extends BaseController {
             PzOrder pzOrder = list.get(0);
             //订单id
             temp.put("orderId", pzOrder.getId());
-            //吃的日期
-            String eatDate = pzOrder.getEatDate();
-            if (eatDate != null) {
-                eatDate = eatDate.substring(0, eatDate.length() - 1);
-                temp.put("eatDate", eatDate);
-            } else {
-                temp.put("eatDate", "");
-            }
-            //不吃日期
+
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            String nowDate = sdf.format(new Date());
+            List<List<String>> eatDateList = new ArrayList<>();
+
+            String[] eatDateTemp = pzOrder.getEatDate() == null ? new String[0] : pzOrder.getEatDate().split(",");
             String noEatDate = pzOrder.getNoEatDate();
-            if (noEatDate != null) {
-                noEatDate = noEatDate.substring(0, noEatDate.length() - 1);
-                temp.put("noEatDate", noEatDate);
-            } else {
-                temp.put("noEatDate", "");
+            for (int i =0;i<eatDateTemp.length;i++){
+                List<String> tempList = new ArrayList<>();
+                if(StringUtils.isNotBlank(eatDateTemp[i])){
+                    tempList.add(eatDateTemp[i]);
+                    //当前日期是否可吃
+                    if(noEatDate.indexOf(eatDateTemp[i])>0){
+                        tempList.add("noEat");
+                    }else{
+                        tempList.add("eat");
+                    }
+                    //yes为可选 no为不可选
+                    if(nowDate.compareTo(eatDateTemp[i])<=0){
+                        tempList.add("no");
+                    }else{
+                        tempList.add("yes");
+                    }
+                }
+                eatDateList.add(tempList);
             }
+            temp.put("eatDate",eatDateList);
             PzMenu pzMenu = pzMenuService.get(pzOrder.getMenuId());
             temp.put("menuId", pzMenu.getId());
             temp.put("name", pzMenu.getMenuName());
@@ -313,7 +326,7 @@ public class WxOrderController extends BaseController {
     /**
      * @Description: 吃/不吃
      * @Param: mark:吃/不吃的标志 orderId:订单id date:日期
-     * @return: Map<String, Object>
+     * @return: Map<String ,   Object>
      * @Date: 2021/4/30
      */
     @RequestMapping(value = "chooseEatOrNoEat", method = RequestMethod.POST)
@@ -368,11 +381,11 @@ public class WxOrderController extends BaseController {
             PzUserScore pzUserScore = null;
             pzUserScore = pzUserScoreService.getByUserIdAndRestaurantId(pzOrder.getUserId(), pzOrder.getRestaurantId());
             //TODO:餐券与积分 1：1
-            if(pzUserScore!=null){
+            if (pzUserScore != null) {
                 BigDecimal canteenIntegral = pzUserScore.getCanteenIntegral();
                 BigDecimal newCanteenIntegral = canteenIntegral.add(new BigDecimal(1));
                 pzUserScore.setCanteenIntegral(newCanteenIntegral);
-            }else {
+            } else {
                 pzUserScore = new PzUserScore();
                 pzUserScore.setRestaurantId(pzOrder.getRestaurantId());
                 pzUserScore.setUserId(pzOrder.getUserId());

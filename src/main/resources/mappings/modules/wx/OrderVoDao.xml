@@ -32,10 +32,10 @@ FROM
 	LEFT JOIN sys_area sa on so.AREA_ID=sa.id
 	LEFT JOIN sys_office sso ON po.RESTAURANT_ID = sso.id
 	LEFT JOIN sys_user su ON po.user_id = su.id
-	LEFT JOIN pz_delivery pd ON po.RESTAURANT_ID = pd.RESTAURANT_ID and po.SERVICE_UNIT_ID=pd.SERVICE_UNIT_ID and po.EAT_DATE= #{eatDate}
+	LEFT JOIN pz_delivery pd ON po.RESTAURANT_ID = pd.RESTAURANT_ID and po.SERVICE_UNIT_ID=pd.SERVICE_UNIT_ID and pd.EAT_DATE='2021-05-10'
 	LEFT JOIN pz_box_code pbc on pbc.id = pd.box_id
 WHERE
-	po.EAT_DATE =  #{eatDates} AND su.OFFICE_ID= #{officeId}
+	po.EAT_DATE =  #{eatDates} AND po.SERVICE_UNIT_ID= #{officeId}
 
     </select>
 

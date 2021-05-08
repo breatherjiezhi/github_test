@@ -48,6 +48,8 @@ public interface PzMenuDao extends CrudDao<PzMenu> {
 
     Integer findMenuCount(@Param("id") String id);
 
+    Integer findVersion(@Param("id") String id);
+
     Integer updateMenuCount(PzMenu pzMenu);
 
     List<PzMenu> findListByRid(@Param("restaurantId")String restaurantId);

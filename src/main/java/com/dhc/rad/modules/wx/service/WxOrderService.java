@@ -38,10 +38,10 @@ public class WxOrderService extends CrudService<PzMenuDao, PzMenu> {
     private PzUserScoreDao pzUserScoreDao;
 
     @Transactional(readOnly = false)
-    public Integer updateMenuCount(String id, int realStock) {
+    public Integer updateMenuCount(String id, int version) {
         PzMenu pzMenu = new PzMenu();
         pzMenu.setId(id);
-        pzMenu.setMenuCount(realStock);
+        pzMenu.setVersion(version);
         return pzMenuDao.updateMenuCount(pzMenu);
     }
 
@@ -52,11 +52,15 @@ public class WxOrderService extends CrudService<PzMenuDao, PzMenu> {
      * @Date: 2021/4/28
      */
     @Transactional
-    public Integer orderMenu(String menuId, Integer remainMenuCount, PzOrder pzOrder, User user, PzScoreLog pzScoreLog) {
+    public Integer orderMenu(PzMenu pzMenu, PzOrder pzOrder, User user, PzScoreLog pzScoreLog) {
 
 
         //更新套餐余量
-        Integer updateMenuCount = updateMenuCount(menuId, remainMenuCount);
+        Integer updateMenuCount = updateMenuCount(pzMenu.getId(), pzMenu.getVersion());
+
+        if (updateMenuCount == null || updateMenuCount == 0) {
+            return 0;
+        }
 
         //新增订单
         pzOrder.preInsert();

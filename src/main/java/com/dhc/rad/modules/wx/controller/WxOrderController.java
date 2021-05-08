@@ -126,17 +126,24 @@ public class WxOrderController extends BaseController {
             addMessageAjax(returnMap, "0", "餐券已使用完毕，请充值");
             return returnMap;
         }
-        //修改套餐余量
+        //餐厅套餐信息
+        PzMenu pzMenu = pzMenuService.get(menuId);
+        if (null == pzMenu) {
+            addMessageAjax(returnMap, "0", "查询不到套餐信息，请重新核对");
+            return returnMap;
+        }
+
         //查询套餐余量
-        Integer menuCount = pzMenuService.findMenuCount(menuId);
+//        Integer menuCount = pzMenuService.findMenuCount(menuId);
+        Integer menuCount = pzMenu.getMenuCount();
         //剩余套餐数量
-        BigDecimal remainMenuDecimal = BigDecimal.valueOf(menuCount).subtract(couponCount);
+        /*BigDecimal remainMenuDecimal = BigDecimal.valueOf(menuCount).subtract(new BigDecimal(1));
         Integer compare = remainMenuDecimal.compareTo(BigDecimal.ZERO);
         if (compare < 0) {
             addMessageAjax(returnMap, "0", "套餐余量不足，请选择其他套餐");
             return returnMap;
-        }
-        Integer remainMenuCount = Integer.parseInt(String.valueOf(remainMenuDecimal));
+        }*/
+//        Integer remainMenuCount = Integer.parseInt(String.valueOf(remainMenuDecimal));
 
         //生成订单
         PzOrder pzOrder = new PzOrder();
@@ -148,12 +155,7 @@ public class WxOrderController extends BaseController {
         pzOrder.setMenuIntegral(couponCount);
         //吃饭日期
         pzOrder.setEatDate(nextDate);
-        //餐厅id
-        PzMenu pzMenu = pzMenuService.get(menuId);
-        if (pzMenu == null) {
-            addMessageAjax(returnMap, "0", "查询不到套餐信息，请重新核对");
-            return returnMap;
-        }
+
         pzOrder.setRestaurantId(pzMenu.getRestaurantId());
         //服务单元id
         String serviceUnitId = UserUtils.getUser().getOffice().getId();
@@ -178,13 +180,12 @@ public class WxOrderController extends BaseController {
         String description = user.getId() + "-" + user.getLoginName() + "：" + pzScoreLog.getScoreChange() + "积分";
         pzScoreLog.setScoreDescription(description);
 
-
         //订餐：新增订单信息 新增用户积分记录信息 更新用户积分(sys_user)
-        Integer flag = wxOrderService.orderMenu(menuId, remainMenuCount, pzOrder, user, pzScoreLog);
+        Integer flag = wxOrderService.orderMenu(pzMenu, pzOrder, user, pzScoreLog);
 
         if (flag > 0) {
             returnMap.put("consumeIntegral", couponCount.toString());
-            addMessageAjax(returnMap, "1", "订餐成功,剩余：" + remainMenuCount);
+            addMessageAjax(returnMap, "1", "订餐成功" );
         } else {
             addMessageAjax(returnMap, "0", "订餐失败");
         }

@@ -61,6 +61,9 @@ public class PzMenu extends DataEntity<PzMenu> {
     //所属餐厅名称
     private String restaurantName;
 
+    // 版本号
+    private int version;
+
     public String getRestaurantName() {
         return restaurantName;
     }
@@ -156,5 +159,14 @@ public class PzMenu extends DataEntity<PzMenu> {
 
     public void setRestaurantId(String restaurantId) {
         this.restaurantId = restaurantId;
+    }
+
+
+    public int getVersion() {
+        return version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
     }
 }

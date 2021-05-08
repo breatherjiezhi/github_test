@@ -20,6 +20,7 @@
         <result column="remarks" property="remarks" />
         <result column="del_flag" property="delFlag" />
         <result column="gcs_name" property="gcsName" />
+        <result column="version" property="version" />
     </resultMap>
 
     <update id="deleteByIds">
@@ -52,7 +53,8 @@
         create_date,
         update_date,
         remarks,
-        del_flag
+        del_flag,
+        version
         FROM
         pz_menu
         WHERE del_flag ='0' and CREATE_BY = #{userId}
@@ -100,7 +102,8 @@
             a.create_date,
             a.update_date,
             a.remarks,
-            a.del_flag
+            a.del_flag,
+            a.version
         FROM pz_menu a
         WHERE a.ID = #{id} and a.del_flag ='0'
     </select>
@@ -286,6 +289,7 @@
         m.update_date,
         m.remarks,
         m.del_flag,
+        m.version,
         o.name as gcs_name
         FROM
         pz_menu m
@@ -319,15 +323,28 @@
 
     <update id="updateMenuCount" parameterType="com.dhc.rad.modules.pzMenu.entity.PzMenu">
         UPDATE pz_menu
-        SET MENU_COUNT = #{menuCount}
+        SET
+            MENU_COUNT = MENU_COUNT - 1,
+            VERSION = VERSION + 1
         WHERE
             id = #{id}
-          AND DEL_FLAG = '0'
+            AND VERSION = #{version}
+            AND DEL_FLAG = '0'
+            AND MENU_COUNT > 0
     </update>
 
     <select id="findMenuCount" resultType="java.lang.Integer">
         SELECT
             MENU_COUNT
+        FROM
+            pz_menu
+        WHERE
+            ID = #{id}  AND del_flag = '0'
+    </select>
+
+    <select id="findVersion" resultType="java.lang.Integer">
+        SELECT
+            VERSION
         FROM
             pz_menu
         WHERE
@@ -353,7 +370,8 @@
         m.create_date,
         m.update_date,
         m.remarks,
-        m.del_flag
+        m.del_flag,
+        m.version
         FROM
         pz_menu m
         WHERE m.del_flag ='0' and  m.menu_up='1'

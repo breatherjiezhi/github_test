@@ -10,6 +10,7 @@ import com.dhc.rad.modules.pzMenu.entity.PzMenu;
 import com.dhc.rad.modules.pzMenuFile.dao.PzMenuFileDao;
 import com.dhc.rad.modules.pzMenuFile.entity.PzMenuFile;
 import com.dhc.rad.modules.pzMenuFile.service.PzMenuFileService;
+import com.dhc.rad.modules.sys.entity.User;
 import com.dhc.rad.modules.sys.utils.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -118,6 +119,11 @@ public class PzMenuService extends CrudService<PzMenuDao,PzMenu> {
     @Transactional(readOnly = false)
     public Integer findMenuCount(String menuId) {
         return pzMenuDao.findMenuCount(menuId);
+    }
+
+    @Transactional(readOnly = false)
+    public Integer findVersion(String menuId) {
+        return pzMenuDao.findVersion(menuId);
     }
 
 

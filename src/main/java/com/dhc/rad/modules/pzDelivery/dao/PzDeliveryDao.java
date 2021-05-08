@@ -18,4 +18,10 @@ public interface PzDeliveryDao extends CrudDao<PzDelivery> {
      * @return Integer
      */
     Integer deleteByIds(List<String> ids);
+
+
+    Integer updateDelivery(PzDelivery pzDelivery);
+
+
+    PzDelivery getDelivery(PzDelivery pzDelivery);
 }

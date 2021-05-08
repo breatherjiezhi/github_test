@@ -36,6 +36,22 @@ public class PzDeliveryService extends CrudService<PzDeliveryDao, PzDelivery> {
         return 0;
     }
 
+    @Transactional(readOnly = false)
+    public Integer saveOrUpdateDelivery(PzDelivery pzDelivery) {
+        if(pzDelivery!=null){
+            if(pzDeliveryDao.getDelivery(pzDelivery)!=null){
+                pzDelivery.preUpdate();
+                return pzDeliveryDao.updateDelivery(pzDelivery);
+            }else{
+                pzDelivery.preInsert();
+                return pzDeliveryDao.insert(pzDelivery);
+            }
+        }else{
+            return 0;
+        }
+
+    }
+
 
     @Transactional(readOnly = false)
     public Integer deleteByIds(List<String> ids) {

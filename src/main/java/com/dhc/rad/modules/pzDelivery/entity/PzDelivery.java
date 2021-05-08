@@ -1,6 +1,9 @@
 package com.dhc.rad.modules.pzDelivery.entity;
 
 import com.dhc.rad.common.persistence.DataEntity;
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+import java.util.Date;
 
 /**
  * @author 10951
@@ -17,6 +20,25 @@ public class PzDelivery extends DataEntity<PzDelivery> {
      */
     private String serviceUnitId;
 
+    /**
+     * 配送箱子id
+     */
+
+    private String boxId;
+
+    /**
+     * 送达日期
+     */
+    private Date eatDate;
+
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    public Date getEatDate() {
+        return eatDate;
+    }
+
+    public void setEatDate(Date eatDate) {
+        this.eatDate = eatDate;
+    }
 
     public String getRestaurantId() {
         return restaurantId;
@@ -32,5 +54,13 @@ public class PzDelivery extends DataEntity<PzDelivery> {
 
     public void setServiceUnitId(String serviceUnitId) {
         this.serviceUnitId = serviceUnitId;
+    }
+
+    public String getBoxId() {
+        return boxId;
+    }
+
+    public void setBoxId(String boxId) {
+        this.boxId = boxId;
     }
 }

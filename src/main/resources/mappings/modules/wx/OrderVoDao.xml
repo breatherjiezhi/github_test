@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dhc.rad.modules.wx.dao.OrderVoDao">
+    <resultMap id="BaseResultMap" type="com.dhc.rad.modules.wx.entity.OrderVo">
+        <result property="userName" column="USER_NAME"/>
+        <result property="userNo" column="USER_NO"/>
+        <result property="menuName" column="MENU_NAME"/>
+        <result property="serviceUnit" column="SERVICE_UNIT"/>
+        <result property="restaurantName" column="RESTAURANT_NAME"/>
+        <result property="noEatDate" column="NO_EAT_DATE"/>
+        <result property="areaLocation" column="AREA_LOCATION"/>
+        <result property="boxName" column="BOX_NAME"/>
+        <result property="deliveryFlag" column="DELIVERY_FLAG"/>
+    </resultMap>
+
+
+    <select id="findServiceUnitOrder" resultMap="BaseResultMap">
+SELECT
+	su.`NO` as 'USER_NO',
+	su.`NAME` AS 'USER_NAME' ,
+	pm.MENU_NAME,
+	so.`NAME` AS 'SERVICE_UNIT',
+	sso.`NAME` AS 'RESTAURANT_NAME',
+		sa.AREA_LOCATION,
+	po.NO_EAT_DATE,
+		pbc.BOX_CN_NAME as 'BOX_NAME',
+		IFNULL(pd.ID,0) as 'DELIVERY_FLAG'
+FROM
+	pz_order po
+	LEFT JOIN pz_menu pm ON po.menu_id = pm.id
+	LEFT JOIN sys_office so ON po.SERVICE_UNIT_ID = so.id
+	LEFT JOIN sys_area sa on so.AREA_ID=sa.id
+	LEFT JOIN sys_office sso ON po.RESTAURANT_ID = sso.id
+	LEFT JOIN sys_user su ON po.user_id = su.id
+	LEFT JOIN pz_delivery pd ON po.RESTAURANT_ID = pd.RESTAURANT_ID and po.SERVICE_UNIT_ID=pd.SERVICE_UNIT_ID and po.EAT_DATE= #{eatDate}
+	LEFT JOIN pz_box_code pbc on pbc.id = pd.box_id
+WHERE
+	po.EAT_DATE =  #{eatDates} AND su.OFFICE_ID= #{officeId}
+
+    </select>
+
+
+</mapper>

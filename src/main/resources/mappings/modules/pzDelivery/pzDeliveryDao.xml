@@ -4,6 +4,8 @@
     <resultMap id="BaseResultMap" type="com.dhc.rad.modules.pzDelivery.entity.PzDelivery" >
         <result column="restaurant_id" property="restaurantId" />
         <result column="service_unit_id" property="serviceUnitId" />
+        <result column="eat_date" property="eatDate" />
+        <result column="box_id" property="boxId" />
         <result column="create_by" property="createBy.id" />
         <result column="update_by" property="updateBy.id" />
         <result column="create_date" property="createDate" />
@@ -29,6 +31,8 @@
         ID,
         restaurant_id,
         service_unit_id,
+        eat_date,
+        box_id,
         CREATE_BY,
         CREATE_DATE,
         UPDATE_BY,
@@ -40,6 +44,8 @@
         WHERE del_flag ='0'
         <if test ="null != restaurantId and ''!= restaurantId"> AND restaurant_id = #{restaurantId}</if>
         <if test ="null != serviceUnitId and ''!= serviceUnitId"> AND service_unit_id =#{serviceUnitId}</if>
+        <if test ="null != eatDate and ''!= eatDate"> AND eat_date =#{eatDate}</if>
+        <if test ="null != boxId and ''!= boxId"> AND box_id =#{boxId}</if>
         <if test ="null != createBy and ''!= createBy"> AND CREATE_BY = #{createBy.id}</if>
         <if test ="null != updateBy and ''!= updateBy"> AND UPDATE_BY = #{updateBy.id}</if>
         <if test ="null != createDate and ''!= createDate"> AND CREATE_DATE = #{createDate}</if>
@@ -63,6 +69,8 @@
             a.ID,
             a.restaurant_id,
             a.service_unit_id,
+            a.eat_date,
+            a.box_id,
             a.CREATE_BY,
             a.CREATE_DATE,
             a.UPDATE_BY,
@@ -84,6 +92,13 @@
             </if>
             <if test ="null != serviceUnitId and ''!= serviceUnitId">
                 service_unit_id,
+            </if>
+            <if test ="null != eatDate and ''!= eatDate">
+                eat_date,
+            </if>
+
+            <if test ="null != boxId and ''!= boxId">
+                box_id,
             </if>
             <if test ="null != createBy and ''!= createBy">
                 create_by,
@@ -114,6 +129,12 @@
             <if test ="null != serviceUnitId and ''!= serviceUnitId">
                 #{serviceUnitId},
             </if>
+            <if test ="null != eatDate and ''!= eatDate">
+                #{eatDate},
+            </if>
+            <if test ="null != boxId and ''!= boxId">
+                #{boxId},
+            </if>
             <if test ="null != createBy and ''!= createBy">
                 #{createBy.id},
             </if>
@@ -140,6 +161,8 @@
         <set>
             <if test ="null != restaurantId and ''!= restaurantId">restaurant_id = #{restaurantId},</if>
             <if test ="null != serviceUnitId and ''!= serviceUnitId">service_unit_id = #{serviceUnitId},</if>
+            <if test ="null != eatDate and ''!= eatDate">eat_date = #{eatDate},</if>
+            <if test ="null != boxId and ''!= boxId">box_id = #{boxId},</if>
             <if test ="null != createBy and ''!= createBy">create_by = #{createBy.id},</if>
             <if test ="null != updateBy and ''!= updateBy">update_by = #{updateBy.id},</if>
             <if test ="null != createDate and ''!= createDate">create_date = #{createDate},</if>
@@ -148,5 +171,42 @@
         </set>
         WHERE  id = #{id} and del_flag ='0'
     </update>
+
+
+    <update id="updateDelivery" parameterType="com.dhc.rad.modules.pzDelivery.entity.PzDelivery">
+        UPDATE pz_delivery
+        <set>
+            <if test ="null != restaurantId and ''!= restaurantId">restaurant_id = #{restaurantId},</if>
+            <if test ="null != serviceUnitId and ''!= serviceUnitId">service_unit_id = #{serviceUnitId},</if>
+            <if test ="null != boxId and ''!= boxId">box_id = #{boxId},</if>
+            <if test ="null != eatDate and ''!= eatDate">eat_date = #{eatDate},</if>
+            <if test ="null != createBy and ''!= createBy">create_by = #{createBy.id},</if>
+            <if test ="null != updateBy and ''!= updateBy">update_by = #{updateBy.id},</if>
+            <if test ="null != createDate and ''!= createDate">create_date = #{createDate},</if>
+            <if test ="null != updateDate and ''!= updateDate">update_date = #{updateDate},</if>
+            <if test ="null != remarks and ''!= remarks">remarks = #{remarks},</if>
+        </set>
+        WHERE  eat_date = #{eatDate} and  restaurant_id = #{restaurantId} and service_unit_id = #{serviceUnitId}
+    </update>
+
+
+
+    <select id="getDelivery" resultMap="BaseResultMap">
+        SELECT
+            a.ID,
+            a.restaurant_id,
+            a.service_unit_id,
+            a.eat_date,
+            a.box_id,
+            a.CREATE_BY,
+            a.CREATE_DATE,
+            a.UPDATE_BY,
+            a.UPDATE_DATE,
+            a.REMARKS,
+            a.del_flag
+        FROM pz_delivery a
+        WHERE eat_date = #{eatDate} and  restaurant_id = #{restaurantId} and service_unit_id = #{serviceUnitId} and del_flag ='0' order CREATE_DATE desc limit 1
+    </select>
+
 
 </mapper>

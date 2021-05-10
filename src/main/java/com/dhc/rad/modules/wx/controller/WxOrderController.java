@@ -154,12 +154,12 @@ public class WxOrderController extends BaseController {
 //        Integer menuCount = pzMenuService.findMenuCount(menuId);
             Integer menuCount = pzMenu.getMenuCount();
             //剩余套餐数量
-        /*BigDecimal remainMenuDecimal = BigDecimal.valueOf(menuCount).subtract(new BigDecimal(1));
-        Integer compare = remainMenuDecimal.compareTo(BigDecimal.ZERO);
-        if (compare < 0) {
-            addMessageAjax(returnMap, "0", "套餐余量不足，请选择其他套餐");
-            return returnMap;
-        }*/
+            BigDecimal remainMenuDecimal = BigDecimal.valueOf(menuCount).subtract(new BigDecimal(1));
+            Integer compare = remainMenuDecimal.compareTo(BigDecimal.ZERO);
+            if (compare < 0) {
+                addMessageAjax(returnMap, "0", "套餐余量不足，请选择其他套餐");
+                return returnMap;
+            }
 //        Integer remainMenuCount = Integer.parseInt(String.valueOf(remainMenuDecimal));
 
             //生成订单
@@ -304,7 +304,7 @@ public class WxOrderController extends BaseController {
             List<Map<String, Object>> eatDateList = new ArrayList<>();
 
             String[] eatDateTemp = pzOrder.getEatDate() == null ? new String[0] : pzOrder.getEatDate().split(",");
-            String noEatDate = pzOrder.getNoEatDate()==null ? "" : pzOrder.getNoEatDate();
+            String noEatDate = pzOrder.getNoEatDate() == null ? "" : pzOrder.getNoEatDate();
             for (int i = 0; i < eatDateTemp.length; i++) {
                 Map<String, Object> tempList = new HashMap<String, Object>();
                 if (StringUtils.isNotBlank(eatDateTemp[i])) {
@@ -510,7 +510,7 @@ public class WxOrderController extends BaseController {
         List<Map<String, Object>> eatDateList = new ArrayList<>();
 
         String[] eatDateTemp = pzOrder.getEatDate() == null ? new String[0] : pzOrder.getEatDate().split(",");
-        noEatDate = noEatDate ==null ? "" : pzOrder.getNoEatDate();
+        noEatDate = noEatDate == null ? "" : pzOrder.getNoEatDate();
         for (int i = 0; i < eatDateTemp.length; i++) {
             Map<String, Object> tempList = new HashMap<String, Object>();
             if (StringUtils.isNotBlank(eatDateTemp[i])) {

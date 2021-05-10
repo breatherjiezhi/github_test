@@ -747,6 +747,11 @@
         SET  user_integral = user_integral + #{userIntegral}
         WHERE  LOGIN_NAME  = #{loginName}
     </update>
+    <update id="updateIntegral">
+        UPDATE sys_user
+        SET  user_integral = user_integral - #{userIntegral}
+        WHERE  ID  = #{id}
+    </update>
 
 
     <!-- 员工用户信息用于充值 -->

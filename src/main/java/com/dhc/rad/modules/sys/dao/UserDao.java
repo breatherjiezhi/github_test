@@ -118,4 +118,6 @@ public interface UserDao extends CrudDao<User> {
 	public Integer userRecharge(User user);
 
 	public List<User> findYgList();
+
+	Integer updateIntegral(User user);
 }

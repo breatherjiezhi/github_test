@@ -68,7 +68,7 @@ public class WxOrderService extends CrudService<PzMenuDao, PzMenu> {
 
         //扣除积分
         user.preUpdate();
-        Integer updateIntegral = userDao.update(user);
+        Integer updateIntegral = userDao.updateIntegral(user);
 
         //新增记录
         pzScoreLog.preInsert();

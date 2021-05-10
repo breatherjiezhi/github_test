@@ -138,7 +138,7 @@ public class WxOrderController extends BaseController {
             BigDecimal remainIntegral = userIntegral.subtract(couponCount);
             //如果不足，返回 重新充值
             int compareTo = remainIntegral.compareTo(BigDecimal.ZERO);
-            if (compareTo == 0 || compareTo < 0) {
+            if (compareTo < 0) {
                 addMessageAjax(returnMap, "0", "餐券已使用完毕，请充值");
                 return returnMap;
             }

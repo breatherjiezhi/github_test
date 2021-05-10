@@ -70,11 +70,12 @@ public class WxOrderController extends BaseController {
     @RequestMapping(value = "orderMenu", method = RequestMethod.POST)
     @ResponseBody
     public Map<String, Object> orderMenu(@RequestParam("menuId") String menuId) {
+
         // 1. 配置文件
         Config config = new Config();
         config.useSingleServer()
-                .setAddress("redis://172.16.2.91:6379")
-                .setPassword("123456")
+                .setAddress(Global.getConfig("redis.address"))
+                .setPassword(Global.getConfig("redis.password"))
                 .setDatabase(0);
         //2. 构造RedissonClient
         RedissonClient redissonClient = Redisson.create(config);

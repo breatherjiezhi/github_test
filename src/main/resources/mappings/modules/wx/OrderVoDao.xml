@@ -14,7 +14,7 @@
     </resultMap>
 
 
-    <select id="findServiceUnitOrder" resultMap="BaseResultMap">
+<select id="findServiceUnitOrder" resultMap="BaseResultMap">
 SELECT
 	su.`NO` as 'USER_NO',
 	su.`NAME` AS 'USER_NAME' ,
@@ -24,8 +24,8 @@ SELECT
 		sa.AREA_LOCATION,
 	po.NO_EAT_DATE,
 		pbc.BOX_CN_NAME as 'BOX_NAME',
-		IFNULL(pd.ID,0) as 'DELIVERY_FLAG'
-FROM
+		IF(pd.ID&lt;&gt;'NULL',1,0) AS 'DELIVERY_FLAG'
+		FROM
 	pz_order po
 	LEFT JOIN pz_menu pm ON po.menu_id = pm.id
 	LEFT JOIN sys_office so ON po.SERVICE_UNIT_ID = so.id

@@ -97,7 +97,9 @@ public class WxDeliveryController {
         pzDelivery.setBoxId(boxId);
 
         //配送日期
-        pzDelivery.setEatDate(new Date());
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String nowDate = sdf.format(new Date());
+        pzDelivery.setEatDate(nowDate);
 
         //存储配送信息
         Integer flag = pzDeliveryService.saveOrUpdateDelivery(pzDelivery);
@@ -118,7 +120,7 @@ public class WxDeliveryController {
 
     @RequestMapping(value = "getOrderInfo", method = RequestMethod.POST)
     @ResponseBody
-    public Map<String, Object> saveByBoxCode() {
+    public Map<String, Object> getOrderInfo() {
         Map<String, Object> returnMap = new HashMap<>();
         String officeId = UserUtils.getUser().getOffice().getId();
 

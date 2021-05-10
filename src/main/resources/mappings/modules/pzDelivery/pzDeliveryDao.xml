@@ -186,7 +186,7 @@
             <if test ="null != updateDate and ''!= updateDate">update_date = #{updateDate},</if>
             <if test ="null != remarks and ''!= remarks">remarks = #{remarks},</if>
         </set>
-        WHERE  eat_date = #{eatDate} and  restaurant_id = #{restaurantId} and service_unit_id = #{serviceUnitId}
+        WHERE  eat_date = #{eatDate} and  restaurant_id = #{restaurantId} and service_unit_id = #{serviceUnitId} and box_id = #{boxId}
     </update>
 
 
@@ -205,7 +205,7 @@
             a.REMARKS,
             a.del_flag
         FROM pz_delivery a
-        WHERE eat_date = #{eatDate} and  restaurant_id = #{restaurantId} and service_unit_id = #{serviceUnitId} and del_flag ='0' order CREATE_DATE desc limit 1
+        WHERE eat_date = #{eatDate} and  restaurant_id = #{restaurantId} and service_unit_id = #{serviceUnitId} and box_id=#{boxId} and del_flag ='0' order by CREATE_DATE desc limit 1
     </select>
 
 

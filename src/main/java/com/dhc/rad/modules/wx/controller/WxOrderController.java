@@ -303,13 +303,13 @@ public class WxOrderController extends BaseController {
             List<Map<String, Object>> eatDateList = new ArrayList<>();
 
             String[] eatDateTemp = pzOrder.getEatDate() == null ? new String[0] : pzOrder.getEatDate().split(",");
-            String noEatDate = pzOrder.getNoEatDate();
+            String noEatDate = pzOrder.getNoEatDate()==null ? "" : pzOrder.getNoEatDate();
             for (int i = 0; i < eatDateTemp.length; i++) {
                 Map<String, Object> tempList = new HashMap<String, Object>();
                 if (StringUtils.isNotBlank(eatDateTemp[i])) {
                     tempList.put("eatDate", eatDateTemp[i]);
                     //当前日期是否可吃
-                    if (noEatDate.indexOf(eatDateTemp[i]) > 0) {
+                    if (noEatDate.indexOf(eatDateTemp[i]) >= 0) {
                         tempList.put("eatFlag", false);
                     } else {
                         tempList.put("eatFlag", true);
@@ -446,6 +446,7 @@ public class WxOrderController extends BaseController {
                 returnMap.put("status", ConstantUtils.ResCode.SERVERERROR);
                 returnMap.put("message", ConstantUtils.ResCode.UPDATEFAIL);
             }
+
             //选择吃
         } else if ("true".equals(mark)) {
             if (!noEatDate.contains(date)) {
@@ -502,6 +503,33 @@ public class WxOrderController extends BaseController {
             }
 
         }
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String nowDate = sdf.format(new Date());
+        List<Map<String, Object>> eatDateList = new ArrayList<>();
+
+        String[] eatDateTemp = pzOrder.getEatDate() == null ? new String[0] : pzOrder.getEatDate().split(",");
+        noEatDate = noEatDate ==null ? "" : pzOrder.getNoEatDate();
+        for (int i = 0; i < eatDateTemp.length; i++) {
+            Map<String, Object> tempList = new HashMap<String, Object>();
+            if (StringUtils.isNotBlank(eatDateTemp[i])) {
+                tempList.put("eatDate", eatDateTemp[i]);
+                //当前日期是否可吃
+                if (noEatDate.indexOf(eatDateTemp[i]) >= 0) {
+                    tempList.put("eatFlag", false);
+                } else {
+                    tempList.put("eatFlag", true);
+                }
+                //yes为可选 no为不可选
+                if (nowDate.compareTo(eatDateTemp[i]) <= 0) {
+                    tempList.put("checkFlag", false);
+                } else {
+                    tempList.put("checkFlag", true);
+                }
+            }
+            eatDateList.add(tempList);
+        }
+        returnMap.put("eatDateList", eatDateList);
 
         return returnMap;
 

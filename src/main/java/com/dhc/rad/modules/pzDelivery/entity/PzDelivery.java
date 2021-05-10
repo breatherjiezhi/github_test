@@ -29,14 +29,13 @@ public class PzDelivery extends DataEntity<PzDelivery> {
     /**
      * 送达日期
      */
-    private Date eatDate;
+    private String eatDate;
 
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    public Date getEatDate() {
+    public String getEatDate() {
         return eatDate;
     }
 
-    public void setEatDate(Date eatDate) {
+    public void setEatDate(String eatDate) {
         this.eatDate = eatDate;
     }
 

@@ -57,7 +57,7 @@
         version
         FROM
         pz_menu
-        WHERE del_flag ='0' and CREATE_BY = #{userId}
+        WHERE del_flag ='0'
         <if test ="null != pzMenu.restaurantId and ''!= pzMenu.restaurantId"> AND restaurant_id = #{pzMenu.restaurantId}</if>
         <if test ="null != pzMenu.menuName and ''!= pzMenu.menuName"> AND menu_name like concat('%',#{pzMenu.menuName},'%')</if>
         <if test ="null != pzMenu.menuDescription and ''!= pzMenu.menuDescription"> AND menu_description like concat('%',#{pzMenu.menuDescription},'%')</if>

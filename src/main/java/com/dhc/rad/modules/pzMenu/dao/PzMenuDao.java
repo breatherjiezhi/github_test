@@ -28,7 +28,7 @@ public interface PzMenuDao extends CrudDao<PzMenu> {
      */
     //Integer updateMenuStatus(PzMenu pzMenu);
 
-    List<PzMenu> findMenuList(@Param("pzMenu") PzMenu pzMenu, @Param("userId") String userId);
+    List<PzMenu> findMenuList(@Param("pzMenu") PzMenu pzMenu);
 
     /**
      * @Description: 菜单上架操作

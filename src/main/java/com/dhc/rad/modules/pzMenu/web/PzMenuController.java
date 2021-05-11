@@ -54,14 +54,14 @@ public class PzMenuController extends BaseController {
 
     @RequestMapping(value = {"list"})
     public String list(PzMenu pzMenu, HttpServletRequest request, HttpServletResponse response, Model model) {
-        List<PzMenu> pzMenuList = pzMenuService.findMenuList(pzMenu);
-        model.addAttribute("pzMenuList", pzMenuList);
         return "modules/pzMenu/pzMenuList";
     }
 
     @RequestMapping(value = {"searchPage"})
     @ResponseBody
     public Map<String, Object> searchPage(PzMenu pzMenu, HttpServletRequest request, HttpServletResponse response) {
+        String officeId = UserUtils.getUser().getOffice().getId();
+        pzMenu.setRestaurantId(officeId);
         Page<PzMenu> page = pzMenuService.searchPage(new Page<>(request, response), pzMenu);
 
         Map<String, Object> returnMap = new HashMap<>();
@@ -228,7 +228,7 @@ public class PzMenuController extends BaseController {
         //获取当前登录用户
         String userId = UserUtils.getUser().getId();
         //查询用户的角色英文名称
-        if (!UserUtils.getRoleFlag("admins")) {
+        if (!UserUtils.getRoleFlag("admins") || !UserUtils.getRoleFlag("admin")) {
             addMessageAjax(returnMap, "0", "越权操作，只有管理员才能查询此数据！");
             return returnMap;
         }

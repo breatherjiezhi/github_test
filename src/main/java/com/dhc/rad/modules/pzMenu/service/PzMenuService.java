@@ -33,9 +33,8 @@ public class PzMenuService extends CrudService<PzMenuDao,PzMenu> {
     private PzMenuFileDao pzMenuFileDao;
 
     public  Page<PzMenu> searchPage(Page<PzMenu> pzMenuPage, PzMenu pzMenu) {
-        String userId = UserUtils.getUser().getId();
         pzMenu.setPage(pzMenuPage);
-        List<PzMenu> list = pzMenuDao.findMenuList(pzMenu,userId);
+        List<PzMenu> list = pzMenuDao.findMenuList(pzMenu);
         pzMenuPage.setList(list);
         return pzMenuPage;
     }
@@ -81,8 +80,7 @@ public class PzMenuService extends CrudService<PzMenuDao,PzMenu> {
     }
 
     public List<PzMenu> findMenuList(PzMenu pzMenu) {
-        String userId = UserUtils.getUser().getId();
-        List<PzMenu> menuList =  pzMenuDao.findMenuList(pzMenu,userId);
+        List<PzMenu> menuList =  pzMenuDao.findMenuList(pzMenu);
         return menuList;
     }
 
@@ -131,7 +129,6 @@ public class PzMenuService extends CrudService<PzMenuDao,PzMenu> {
         return pzMenuDao.findListByRid(restaurantId);
     }
 
-    public PzMenu get(String id){return pzMenuDao.get(id);}
 
 
 

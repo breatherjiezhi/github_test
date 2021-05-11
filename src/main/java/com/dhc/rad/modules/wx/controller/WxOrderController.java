@@ -6,32 +6,26 @@ import com.dhc.rad.common.utils.StringUtils;
 import com.dhc.rad.common.utils.TimeUtils;
 import com.dhc.rad.common.web.BaseController;
 import com.dhc.rad.modbus.entity.func.Util;
-import com.dhc.rad.modules.holiday.entity.Holiday;
-import com.dhc.rad.modules.holiday.service.HolidayService;
 import com.dhc.rad.modules.pzMenu.entity.PzMenu;
 import com.dhc.rad.modules.pzMenu.service.PzMenuService;
 import com.dhc.rad.modules.pzOrder.entity.PzOrder;
 import com.dhc.rad.modules.pzOrder.service.PzOrderService;
 import com.dhc.rad.modules.pzScoreLog.entity.PzScoreLog;
-import com.dhc.rad.modules.pzScoreLog.service.PzScoreLogService;
 import com.dhc.rad.modules.pzUserScore.entity.PzUserScore;
 import com.dhc.rad.modules.pzUserScore.service.PzUserScoreService;
 import com.dhc.rad.modules.sys.entity.User;
 import com.dhc.rad.modules.sys.service.SystemService;
 import com.dhc.rad.modules.sys.utils.UserUtils;
+import com.dhc.rad.modules.wx.utils.RedissonUtils;
 import com.dhc.rad.modules.wx.service.WxOrderService;
-import org.redisson.Redisson;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
-import org.redisson.config.Config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
@@ -60,6 +54,8 @@ public class WxOrderController extends BaseController {
     @Autowired
     private PzUserScoreService pzUserScoreService;
 
+    private static final RedissonClient redissonClient = RedissonUtils.getRedissonClient();
+
 
     /**
      * @Description: 订餐功能
@@ -71,14 +67,14 @@ public class WxOrderController extends BaseController {
     @ResponseBody
     public Map<String, Object> orderMenu(@RequestParam("menuId") String menuId) {
 
-        // 1. 配置文件
+       /* // 1. 配置文件
         Config config = new Config();
         config.useSingleServer()
                 .setAddress(Global.getConfig("redis.address"))
                 .setPassword(Global.getConfig("redis.password"))
                 .setDatabase(0);
         //2. 构造RedissonClient
-        RedissonClient redissonClient = Redisson.create(config);
+        RedissonClient redissonClient = Redisson.create(config);*/
 
         //3. 设置锁定资源名称
         RLock lock = redissonClient.getLock("redlock");
@@ -140,7 +136,7 @@ public class WxOrderController extends BaseController {
             //如果不足，返回 重新充值
             int compareTo = remainIntegral.compareTo(BigDecimal.ZERO);
             if (compareTo < 0) {
-                addMessageAjax(returnMap, "0", "餐券已使用完毕，请充值");
+                addMessageAjax(returnMap, "0", "餐券不足，请充值");
                 return returnMap;
             }
             //餐厅套餐信息

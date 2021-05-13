@@ -228,7 +228,7 @@ public class PzMenuController extends BaseController {
         //获取当前登录用户
         String userId = UserUtils.getUser().getId();
         //查询用户的角色英文名称
-        if (!UserUtils.getRoleFlag("admins") || !UserUtils.getRoleFlag("admin")) {
+        if (!UserUtils.getRoleFlag("admin") && !UserUtils.getRoleFlag("admins")) {
             addMessageAjax(returnMap, "0", "越权操作，只有管理员才能查询此数据！");
             return returnMap;
         }

@@ -258,6 +258,18 @@ public class SystemService extends BaseService implements InitializingBean {
 //		// 清除权限缓存
 //		systemRealm.clearAllCachedAuthorizationInfo();
 	}
+
+
+	/**
+	 * 批量更新createby为空得用户数据
+	 */
+	@Transactional(readOnly = false)
+	public void updatePasswordCreateBy() {
+		userDao.updatePasswordCreateBy(entryptPassword("123456"));
+	}
+
+
+
 	
 	@Transactional(readOnly = false)
 	public void updateUserLoginInfo(User user) {

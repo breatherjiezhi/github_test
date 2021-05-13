@@ -323,6 +323,9 @@ public class ConstantUtils {
 
         public static final String DATEEXIST = "日期已存在";
 
+        public static final String ENDDATE = "已过截止时间，不能修改";
+
+
         public static final String UPDATEFAIL = "更新失败";
         public static final String INTEGRALNOTENOUGH = "积分不足";
 

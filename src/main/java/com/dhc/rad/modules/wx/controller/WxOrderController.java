@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.math.BigDecimal;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -147,16 +148,19 @@ public class WxOrderController extends BaseController {
             }
 
             //查询套餐余量
-//        Integer menuCount = pzMenuService.findMenuCount(menuId);
             Integer menuCount = pzMenu.getMenuCount();
-            //剩余套餐数量
-            BigDecimal remainMenuDecimal = BigDecimal.valueOf(menuCount).subtract(new BigDecimal(1));
-            Integer compare = remainMenuDecimal.compareTo(BigDecimal.ZERO);
-            if (compare < 0) {
-                addMessageAjax(returnMap, "0", "套餐余量不足，请选择其他套餐");
-                return returnMap;
-            }
-//        Integer remainMenuCount = Integer.parseInt(String.valueOf(remainMenuDecimal));
+
+            String menuLimited = pzMenu.getMenuLimited();
+            //判断当前套餐是否限量
+           if(menuLimited!=null && "1".equals(menuLimited)){
+               //剩余套餐数量
+               BigDecimal remainMenuDecimal = BigDecimal.valueOf(menuCount).subtract(new BigDecimal(1));
+               Integer compare = remainMenuDecimal.compareTo(BigDecimal.ZERO);
+               if (compare < 0) {
+                   addMessageAjax(returnMap, "0", "套餐余量不足，请选择其他套餐");
+                   return returnMap;
+               }
+           }
 
             //生成订单
             PzOrder pzOrder = new PzOrder();
@@ -353,6 +357,27 @@ public class WxOrderController extends BaseController {
     public Map<String, Object> chooseEatOrNoEat(@RequestParam("mark") String mark, @RequestParam("orderId") String orderId, @RequestParam("date") String date) {
         Map<String, Object> returnMap = new HashMap<>();
         User user = UserUtils.getUser();
+
+        //判断当前时间是否已到截至时间
+        String noEatTime = Global.getConfig("pzorder.endDate");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String currentTime = simpleDateFormat.format(new Date());
+        String endTime = currentTime +" "+noEatTime;
+        Date currentDate = new Date();
+        Date endDate = null;
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            endDate = sdf.parse(endTime);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        if(currentDate.after(endDate)){
+            returnMap.put("data", null);
+            returnMap.put("status", ConstantUtils.ResCode.NODATA);
+            returnMap.put("message", ConstantUtils.ResCode.ENDDATE);
+            return returnMap;
+        }
+
         //判断参数是否为空
         if (mark == null || orderId == null || date == null) {
             returnMap.put("data", null);
@@ -378,8 +403,10 @@ public class WxOrderController extends BaseController {
             returnMap.put("message", ConstantUtils.ResCode.ParameterException);
             return returnMap;
         }
+
         //选择不吃
         if (mark.equals("false")) {
+
             //传入的日期在noEatDate中
             if (noEatDate != null) {
                 if (noEatDate.contains(date)) {
@@ -456,7 +483,7 @@ public class WxOrderController extends BaseController {
             PzUserScore pzUserScore = pzUserScoreService.getByUserIdAndRestaurantId(pzOrder.getUserId(), pzOrder.getRestaurantId());
             BigDecimal canteenIntegral = pzUserScore.getCanteenIntegral();
             int compareTo = canteenIntegral.compareTo(BigDecimal.ZERO);
-            if (compareTo < 0 || compareTo == 0) {
+            if (compareTo < 0 ) {
                 returnMap.put("data", null);
                 returnMap.put("status", ConstantUtils.ResCode.SERVERERROR);
                 returnMap.put("message", ConstantUtils.ResCode.INTEGRALNOTENOUGH);

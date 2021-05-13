@@ -38,9 +38,9 @@ public class PzBoxCode extends DataEntity<PzBoxCode> {
     private String restaurantName;
 
     /**
-     * 服务单元名称
+     * 服务单元名称(箱子不与服务单元管理,禁用字段)
      */
-    private String serviceUnit;
+//    private String serviceUnit;
 
     /**
      * 投料点名称
@@ -87,13 +87,13 @@ public class PzBoxCode extends DataEntity<PzBoxCode> {
         this.restaurantName = restaurantName;
     }
 
-    public String getServiceUnit() {
-        return serviceUnit;
-    }
-
-    public void setServiceUnit(String serviceUnit) {
-        this.serviceUnit = serviceUnit;
-    }
+//    public String getServiceUnit() {
+//        return serviceUnit;
+//    }
+//
+//    public void setServiceUnit(String serviceUnit) {
+//        this.serviceUnit = serviceUnit;
+//    }
 
     public String getAreaName() {
         return areaName;

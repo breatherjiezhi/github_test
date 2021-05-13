@@ -13,8 +13,6 @@
         <result column="remarks" property="remarks"/>
         <result column="del_flag" property="delFlag"/>
         <result column="restaurant_name" property="restaurantName"/>
-        <result column="service_unit" property="serviceUnit"/>
-        <result column="area_name" property="areaName"/>
 
     </resultMap>
 
@@ -31,13 +29,9 @@
 
     <select id="get" resultMap="BaseResultMap">
         SELECT pbc.*,
-               so.`NAME`  AS 'SERVICE_UNIT',
-               sso.`NAME` AS 'RESTAURANT_NAME',
-               sa.`NAME`  AS 'AREA_NAME'
+               sso.`NAME` AS 'RESTAURANT_NAME'
         FROM pz_box_code pbc
-                 LEFT JOIN sys_office so ON pbc.SERVICE_UNIT_ID = so.ID
                  LEFT JOIN sys_office sso ON pbc.RESTAURANT_ID = sso.ID
-                 LEFT JOIN sys_area sa ON so.AREA_ID = sa.ID
         Where pbc.ID = #{id}
           and pbc.del_flag = '0'
     </select>
@@ -143,14 +137,10 @@
     <select id="findList" resultMap="BaseResultMap">
         SELECT
         pbc.*,
-        so.`NAME` AS 'SERVICE_UNIT',
-        sso.`NAME` AS 'RESTAURANT_NAME',
-        sa.`NAME` AS 'AREA_NAME'
+        sso.`NAME` AS 'RESTAURANT_NAME'
         FROM
         pz_box_code pbc
-        LEFT JOIN sys_office so ON pbc.SERVICE_UNIT_ID = so.ID
         LEFT JOIN sys_office sso ON pbc.RESTAURANT_ID = sso.ID
-        LEFT JOIN sys_area sa ON so.AREA_ID = sa.ID
         Where pbc.del_flag ='0'
         <if test="null != serviceUnitId and ''!= serviceUnitId">AND pbc.service_unit_id= #{serviceUnitId}</if>
         <if test="null != restaurantId and ''!= restaurantId">AND pbc.restaurant_id = #{restaurantId}</if>
@@ -173,13 +163,9 @@
     </select>
     <select id="findByBoxCode" resultMap="BaseResultMap">
         SELECT pbc.*,
-               so.`NAME`  AS 'SERVICE_UNIT',
-               sso.`NAME` AS 'RESTAURANT_NAME',
-               sa.`NAME`  AS 'AREA_NAME'
+               sso.`NAME` AS 'RESTAURANT_NAME'
         FROM pz_box_code pbc
-                 LEFT JOIN sys_office so ON pbc.SERVICE_UNIT_ID = so.ID
                  LEFT JOIN sys_office sso ON pbc.RESTAURANT_ID = sso.ID
-                 LEFT JOIN sys_area sa ON so.AREA_ID = sa.ID
         Where pbc.BOX_CODE = #{boxCode}
           and pbc.del_flag = '0'
     </select>

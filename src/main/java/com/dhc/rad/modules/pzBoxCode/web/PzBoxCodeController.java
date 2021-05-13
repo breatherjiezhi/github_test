@@ -39,9 +39,13 @@ public class PzBoxCodeController extends BaseController {
     @RequestMapping(value = {"searchPage"})
     @ResponseBody
     public Map<String,Object> searchPage(PzBoxCode pzBoxCode, HttpServletRequest request, HttpServletResponse response){
-
-        Page<PzBoxCode> page = pzBoxCodeService.findPage(new Page<>(request, response), pzBoxCode);
         Map<String,Object> returnMap = new HashMap<>();
+
+        if (!UserUtils.getRoleFlag("admin") && !UserUtils.getRoleFlag("admins")) {
+            pzBoxCode.setRestaurantId(UserUtils.getUser().getOffice().getId());
+        }
+        Page<PzBoxCode> page = pzBoxCodeService.findPage(new Page<>(request, response), pzBoxCode);
+
         returnMap.put("total", page.getTotalPage());
         returnMap.put("pageNo", page.getPageNo());
         returnMap.put("records", page.getCount());

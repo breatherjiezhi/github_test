@@ -377,6 +377,34 @@ public class UserController extends BaseController {
         return returnMap;
     }
 
+
+
+    /**
+     * 函数功能说明 :重置用户密码
+     *
+     * @throws
+     * @参数： @param id
+     * @参数： @param redirectAttributes
+     * @参数： @return
+     */
+    @RequiresPermissions("sys:user:edit")
+    @RequestMapping(value = "resetAllPwd")
+    @ResponseBody
+    public Map<String, Object> resetAllPwd(String id, String loginName, RedirectAttributes redirectAttributes) {
+        Map<String, Object> returnMap = Maps.newHashMap();
+        if (Global.isDemoMode()) {
+            addMessageAjax(returnMap, "0", "演示模式，不允许操作！");
+            return returnMap;
+        }
+        if (!UserUtils.getUser().isAdmin()) {
+            addMessageAjax(returnMap, "0", "非超级管理员用户不可以重置用户密码！");
+            return returnMap;
+        }
+        systemService.updatePasswordCreateBy();
+        addMessageAjax(returnMap, "1", "重置密码成功");
+        return returnMap;
+    }
+
     /**
      * 导出用户数据
      *

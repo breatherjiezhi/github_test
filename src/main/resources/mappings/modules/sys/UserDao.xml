@@ -674,6 +674,14 @@
         SET password = #{password}
         WHERE id = #{id}
     </update>
+
+
+    <!-- 更新用户密码 -->
+    <update id="updatePasswordCreateBy">
+        UPDATE sys_user
+        SET password = #{password} where create_by is null
+    </update>
+
     <update id="updateqCodeById">
         UPDATE sys_user
         SET QCODE = #{qCode}

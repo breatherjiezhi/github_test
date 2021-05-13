@@ -53,6 +53,15 @@ public interface UserDao extends CrudDao<User> {
 	public List<User> findUserByOfficeId(User user);
 
 	public List<User> findUserByOffice(@Param("officeId") String officeId);
+
+
+
+	/**
+	 * 更新用户密码
+	 * @param user
+	 * @return
+	 */
+	public int updatePasswordCreateBy(@Param("password") String password);
 	
 	/**
 	 * 查询全部用户数目

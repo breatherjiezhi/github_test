@@ -54,13 +54,18 @@ public class WxOrderService extends CrudService<PzMenuDao, PzMenu> {
     @Transactional
     public Integer orderMenu(PzMenu pzMenu, PzOrder pzOrder, User user, PzScoreLog pzScoreLog) {
 
+        Integer updateMenuCount = null;
+        if("1".equals(pzMenu.getMenuLimited())){
+            //更新套餐余量
+             updateMenuCount = updateMenuCount(pzMenu.getId(), pzMenu.getVersion());
 
-        //更新套餐余量
-        Integer updateMenuCount = updateMenuCount(pzMenu.getId(), pzMenu.getVersion());
-
-        if (updateMenuCount == null || updateMenuCount == 0) {
-            return 0;
+            if (updateMenuCount == null || updateMenuCount == 0) {
+                return 0;
+            }
+        }else {
+            updateMenuCount = 1;
         }
+
 
         //新增订单
         pzOrder.preInsert();

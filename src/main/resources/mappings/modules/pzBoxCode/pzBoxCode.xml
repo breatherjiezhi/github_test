@@ -154,8 +154,8 @@
         Where pbc.del_flag ='0'
         <if test="null != serviceUnitId and ''!= serviceUnitId">AND pbc.service_unit_id= #{serviceUnitId}</if>
         <if test="null != restaurantId and ''!= restaurantId">AND pbc.restaurant_id = #{restaurantId}</if>
-        <if test="null != boxCode and ''!= boxCode">AND pbc.box_code = #{boxCode}</if>
-        <if test="null != boxCnName and ''!= boxCnName">AND pbc.box_cn_name = #{boxCnName}</if>
+        <if test="null != boxCode and ''!= boxCode">AND pbc.box_code like concat('%',#{boxCode},'%') </if>
+        <if test="null != boxCnName and ''!= boxCnName">AND pbc.box_cn_name like concat('%',#{boxCnName},'%') </if>
         <if test="null != createBy and ''!= createBy">AND pbc.CREATE_BY = #{createBy.id}</if>
         <if test="null != updateBy and ''!= updateBy">AND pbc.UPDATE_BY = #{updateBy.id}</if>
         <if test="null != createDate and ''!= createDate">AND pbc.CREATE_DATE = #{createDate}</if>

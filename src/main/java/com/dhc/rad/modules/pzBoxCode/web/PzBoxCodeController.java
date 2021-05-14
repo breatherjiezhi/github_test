@@ -76,29 +76,19 @@ public class PzBoxCodeController extends BaseController {
 
         //判断箱子编码是否唯一
         String boxCode = pzBoxCode.getBoxCode();
-
-
         String restaurantId = pzBoxCode.getRestaurantId();
         if(StringUtils.isNotBlank(boxCode)&&StringUtils.isNotBlank(restaurantId) ){
+
             boxCode = String.format("%03d", Integer.parseInt(boxCode));
             pzBoxCode.setBoxCode(boxCode);
 
-            PzBoxCode pzFlag = null;
-            if(StringUtils.isNotBlank(pzBoxCode.getId())){
-                String id = pzBoxCode.getId();
-                pzFlag =  pzBoxCodeService.findByBoxCode(id,boxCode,restaurantId);
-            }else{
-                pzFlag =  pzBoxCodeService.findByBoxCode(null,boxCode,restaurantId);
-            }
+            PzBoxCode pzFlag =  pzBoxCodeService.findByBoxCode(pzBoxCode.getId(),boxCode,restaurantId);
+
             if(pzFlag!=null){
                 addMessageAjax(returnMap, "0", "箱子编码必须唯一，请重新填写");
                 return returnMap;
             }else{
-                Integer flag = 0;
-
-                if (ObjectUtils.isNotEmpty(pzBoxCode)) {
-                    flag =  pzBoxCodeService.saveOrUpdate(pzBoxCode);
-                }
+                Integer flag  =  pzBoxCodeService.saveOrUpdate(pzBoxCode);
                 if (flag > 0) {
                     addMessageAjax(returnMap, "1", "保存成功");
                     return returnMap;
@@ -109,8 +99,6 @@ public class PzBoxCodeController extends BaseController {
 
             }
         }else{
-
-
             addMessageAjax(returnMap, "0", "保存失败");
             return returnMap;
         }

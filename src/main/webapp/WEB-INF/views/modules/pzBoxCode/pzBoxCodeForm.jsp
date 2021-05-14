@@ -6,17 +6,17 @@
                    method="post" class="form-horizontal">
             <form:hidden path="id"/>
             <div class="form-group">
-                <label class="control-label col-xs-12 col-sm-3 no-padding-right" for="boxCode">箱子编码:</label>
+                <label class="control-label col-xs-12 col-sm-3 no-padding-right" for="boxCode">箱子编号:</label>
                 <div class="col-xs-12 col-sm-8">
-                    <form:input path="boxCode" htmlEscape="false" maxlength="64" class="input-xlarge required"/>
+                    <form:input path="boxCode" htmlEscape="false" maxlength="64" class="input-xlarge required" onkeyup="this.value=this.value.replace(/\D/g,'')"/>
                 </div>
             </div>
-            <div class="form-group">
-                <label class="control-label col-xs-12 col-sm-3 no-padding-right" for="boxCnName">箱子中文名称:</label>
-                <div class="col-xs-12 col-sm-8">
-                    <form:input path="boxCnName" htmlEscape="false" maxlength="64" class="input-xlarge required"/>
-                </div>
-            </div>
+            <%--<div class="form-group">--%>
+                <%--<label class="control-label col-xs-12 col-sm-3 no-padding-right" for="boxCnName">箱子中文名称:</label>--%>
+                <%--<div class="col-xs-12 col-sm-8">--%>
+                    <%--<form:input path="boxCnName" htmlEscape="false" maxlength="64" class="input-xlarge required"/>--%>
+                <%--</div>--%>
+            <%--</div>--%>
             <div class="form-group">
                 <label class="control-label col-xs-12 col-sm-3 no-padding-right" for="restaurantId">餐厅名称:</label>
                 <div class="col-xs-12 col-sm-8">
@@ -25,21 +25,21 @@
                     </form:select>
                 </div>
             </div>
-            <div class="form-group">
-                <label class="control-label col-xs-12 col-sm-3 no-padding-right" for="serviceUnitId">服务单元名称:</label>
-                <div class="col-xs-12 col-sm-8 input-group">
-                    <input readonly="" type="text" id="serviceUnit" name="serviceUnit" value="${pzBoxCode.serviceUnit}"
-                           class="input-xlarge required"/>
-                    <span class="input-group-btn">
-							<button type="button" id="selectOfficeMenu" class="btn btn-purple btn-sm">
-								<span class="ace-icon fa fa-search icon-on-right bigger-110"></span>
-								<span data-locale="Choose">选择</span>
-							</button>
-                        <input type="hidden" id="serviceUnitId" name="serviceUnitId"
-                               value="${pzBoxCode.serviceUnitId}"/>
-                </span>
-                </div>
-            </div>
+            <%--<div class="form-group">--%>
+                <%--<label class="control-label col-xs-12 col-sm-3 no-padding-right" for="serviceUnitId">服务单元名称:</label>--%>
+                <%--<div class="col-xs-12 col-sm-8 input-group">--%>
+                    <%--<input readonly="" type="text" id="serviceUnit" name="serviceUnit" value="${pzBoxCode.serviceUnit}"--%>
+                           <%--class="input-xlarge required"/>--%>
+                    <%--<span class="input-group-btn">--%>
+							<%--<button type="button" id="selectOfficeMenu" class="btn btn-purple btn-sm">--%>
+								<%--<span class="ace-icon fa fa-search icon-on-right bigger-110"></span>--%>
+								<%--<span data-locale="Choose">选择</span>--%>
+							<%--</button>--%>
+                        <%--<input type="hidden" id="serviceUnitId" name="serviceUnitId"--%>
+                               <%--value="${pzBoxCode.serviceUnitId}"/>--%>
+                <%--</span>--%>
+                <%--</div>--%>
+            <%--</div>--%>
         </form:form>
     </div>
 </div>
@@ -66,6 +66,8 @@
                 $("#restaurantId").trigger("chosen:updated");
                 $("#restaurantId").select2("val", "${pzBoxCode.restaurantId}");
             }
+
+
         })
 
     }

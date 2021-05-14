@@ -2,7 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.dhc.rad.modules.pzBoxCode.dao.PzBoxCodeDao">
     <resultMap id="BaseResultMap" type="com.dhc.rad.modules.pzBoxCode.entity.PzBoxCode">
-        <result column="service_unit_id" property="serviceUnitId"/>
         <result column="restaurant_id" property="restaurantId"/>
         <result column="box_code" property="boxCode"/>
         <result column="box_cn_name" property="boxCnName"/>
@@ -42,9 +41,7 @@
             <if test="null != id and ''!= id">
                 id,
             </if>
-            <if test="null != serviceUnitId and ''!= serviceUnitId">
-                service_unit_id,
-            </if>
+
             <if test="null != restaurantId and ''!= restaurantId">
                 restaurant_id,
             </if>
@@ -77,9 +74,7 @@
             <if test="null != id and ''!= id">
                 #{id},
             </if>
-            <if test="null != serviceUnitId and ''!= serviceUnitId">
-                #{serviceUnitId},
-            </if>
+
             <if test="null != restaurantId and ''!= restaurantId">
                 #{restaurantId},
             </if>
@@ -113,7 +108,6 @@
     <update id="update" parameterType="com.dhc.rad.modules.pzBoxCode.entity.PzBoxCode">
         UPDATE pz_box_code
         <set>
-            <if test="null != serviceUnitId and ''!= serviceUnitId">service_unit_id= #{serviceUnitId},</if>
             <if test="null != restaurantId and ''!= restaurantId">restaurant_id = #{restaurantId},</if>
             <if test="null != boxCode and ''!= boxCode">box_code = #{boxCode},</if>
             <if test="null != boxCnName and ''!= boxCnName">box_cn_name = #{boxCnName},</if>
@@ -127,13 +121,6 @@
     </update>
 
 
-    <select id="findCountByBoxCode" resultType="java.lang.Integer">
-        SELECT COUNT(1)
-        FROM pz_box_code
-        WHERE BOX_CODE = #{boxCode}
-          and del_flag = '0'
-    </select>
-
     <select id="findList" resultMap="BaseResultMap">
         SELECT
         pbc.*,
@@ -142,10 +129,8 @@
         pz_box_code pbc
         LEFT JOIN sys_office sso ON pbc.RESTAURANT_ID = sso.ID
         Where pbc.del_flag ='0'
-        <if test="null != serviceUnitId and ''!= serviceUnitId">AND pbc.service_unit_id= #{serviceUnitId}</if>
         <if test="null != restaurantId and ''!= restaurantId">AND pbc.restaurant_id = #{restaurantId}</if>
         <if test="null != boxCode and ''!= boxCode">AND pbc.box_code like concat('%',#{boxCode},'%') </if>
-        <if test="null != boxCnName and ''!= boxCnName">AND pbc.box_cn_name like concat('%',#{boxCnName},'%') </if>
         <if test="null != createBy and ''!= createBy">AND pbc.CREATE_BY = #{createBy.id}</if>
         <if test="null != updateBy and ''!= updateBy">AND pbc.UPDATE_BY = #{updateBy.id}</if>
         <if test="null != createDate and ''!= createDate">AND pbc.CREATE_DATE = #{createDate}</if>
@@ -161,12 +146,13 @@
         </choose>
 
     </select>
+
     <select id="findByBoxCode" resultMap="BaseResultMap">
-        SELECT pbc.*,
-               sso.`NAME` AS 'RESTAURANT_NAME'
+        SELECT pbc.*
         FROM pz_box_code pbc
-                 LEFT JOIN sys_office sso ON pbc.RESTAURANT_ID = sso.ID
-        Where pbc.BOX_CODE = #{boxCode}
+        Where pbc.BOX_CODE = #{boxCode} and pbc.restaurant_id=#{restaurantId}
+        <if test="null != id and ''!= id">AND pbc.id != #{id}</if>
           and pbc.del_flag = '0'
     </select>
+
 </mapper>

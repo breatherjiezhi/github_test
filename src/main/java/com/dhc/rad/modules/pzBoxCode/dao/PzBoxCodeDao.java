@@ -4,6 +4,7 @@ import com.dhc.rad.common.persistence.CrudDao;
 import com.dhc.rad.common.persistence.annotation.MyBatisDao;
 import com.dhc.rad.modules.pzBoxCode.entity.PzBoxCode;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 
@@ -21,7 +22,8 @@ public interface PzBoxCodeDao extends CrudDao<PzBoxCode> {
      */
     Integer deleteByIds(List<String> ids);
 
-    Integer findCountByBoxCode(@Param("boxCode") String boxCode);
 
-    PzBoxCode findByBoxCode(@Param("boxCode") String boxCode);
+    PzBoxCode findByBoxCode(@Param("id")String id,@Param("boxCode") String boxCode,@Param("restaurantId")String restaurantId);
+
+
 }

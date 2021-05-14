@@ -138,14 +138,12 @@
                 colNames: [
                     'id',
                     '<span data-locale="restaurantId">餐厅名称</span>',
-                    '<span data-locale="boxCode">箱子编码</span>',
-                    '<span data-locale="boxCnName">箱子中文名称</span>',
+                    '<span data-locale="boxCnName">箱子名称</span>',
                     '<span data-locale="view">操作</span>'
                 ],
                 colModel: [
                     {name: 'id', index: 'id', hidden: true},
                     {name: 'restaurantName', index: 'restaurant_id', sortable: false},
-                    {name: 'boxCode', index: 'box_code'},
                     {name: 'boxCnName', index: 'box_cn_name'},
                     {name: 'view', index: 'view' ,sortable: false}
                 ],

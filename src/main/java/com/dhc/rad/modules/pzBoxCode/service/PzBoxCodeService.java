@@ -43,12 +43,7 @@ public class PzBoxCodeService extends CrudService<PzBoxCodeDao, PzBoxCode> {
     }
 
     @Transactional(readOnly = false)
-    public Integer findCountByBoxCode(String boxCode) {
-        return pzBoxCodeDao.findCountByBoxCode(boxCode);
-    }
-
-    @Transactional(readOnly = false)
-    public PzBoxCode findByBoxCode(String boxCode) {
-        return pzBoxCodeDao.findByBoxCode(boxCode);
+    public PzBoxCode findByBoxCode(String id,String boxCode,String restaurantId) {
+        return pzBoxCodeDao.findByBoxCode(id,boxCode,restaurantId);
     }
 }

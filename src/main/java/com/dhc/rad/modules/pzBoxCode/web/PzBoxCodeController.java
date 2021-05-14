@@ -69,42 +69,51 @@ public class PzBoxCodeController extends BaseController {
     @ResponseBody
     public Map<String,Object> doSave(PzBoxCode pzBoxCode,HttpServletRequest request,HttpServletResponse response,Model model){
         Map<String,Object> returnMap = new HashMap<>();
-        Integer flag = 0;
+        if(pzBoxCode==null){
+            addMessageAjax(returnMap, "0", "保存失败");
+            return returnMap;
+        }
 
         //判断箱子编码是否唯一
         String boxCode = pzBoxCode.getBoxCode();
-        if(StringUtils.isNotBlank(pzBoxCode.getId())){
-            //不为空：修改
-            PzBoxCode code = pzBoxCodeService.get(pzBoxCode.getId());
-            String boxCodeNOUpdate = code.getBoxCode();
-            if(!pzBoxCode.getBoxCode().equals(boxCodeNOUpdate)){
-                Integer countByBoxCode = pzBoxCodeService.findCountByBoxCode(pzBoxCode.getBoxCode());
-                if(countByBoxCode >0){
-                    addMessageAjax(returnMap, "0", "箱子编码必须唯一，请重新填写");
-                    return returnMap;
-                }
-            }
-        }else {
-            //为空：新增
-            if(StringUtils.isNotBlank(boxCode)){
-                Integer boxCodeCount =  pzBoxCodeService.findCountByBoxCode(boxCode);
-                if(boxCodeCount >0){
-                    addMessageAjax(returnMap, "0", "箱子编码必须唯一，请重新填写");
-                    return returnMap;
-                }
-            }
-        }
 
 
-        if (ObjectUtils.isNotEmpty(pzBoxCode)) {
-            flag =  pzBoxCodeService.saveOrUpdate(pzBoxCode);
-        }
-        if (flag > 0) {
-            addMessageAjax(returnMap, "1", "保存成功");
-        } else {
+        String restaurantId = pzBoxCode.getRestaurantId();
+        if(StringUtils.isNotBlank(boxCode)&&StringUtils.isNotBlank(restaurantId) ){
+            boxCode = String.format("%03d", Integer.parseInt(boxCode));
+            pzBoxCode.setBoxCode(boxCode);
+
+            PzBoxCode pzFlag = null;
+            if(StringUtils.isNotBlank(pzBoxCode.getId())){
+                String id = pzBoxCode.getId();
+                pzFlag =  pzBoxCodeService.findByBoxCode(id,boxCode,restaurantId);
+            }else{
+                pzFlag =  pzBoxCodeService.findByBoxCode(null,boxCode,restaurantId);
+            }
+            if(pzFlag!=null){
+                addMessageAjax(returnMap, "0", "箱子编码必须唯一，请重新填写");
+                return returnMap;
+            }else{
+                Integer flag = 0;
+
+                if (ObjectUtils.isNotEmpty(pzBoxCode)) {
+                    flag =  pzBoxCodeService.saveOrUpdate(pzBoxCode);
+                }
+                if (flag > 0) {
+                    addMessageAjax(returnMap, "1", "保存成功");
+                    return returnMap;
+                } else {
+                    addMessageAjax(returnMap, "0", "保存失败");
+                    return returnMap;
+                }
+
+            }
+        }else{
+
+
             addMessageAjax(returnMap, "0", "保存失败");
+            return returnMap;
         }
-        return returnMap;
     }
 
     @RequestMapping(value = "deleteByIds", method= RequestMethod.POST)

@@ -72,7 +72,7 @@ public class PzBoxCode extends DataEntity<PzBoxCode> {
     }
 
     public String getBoxCnName() {
-        return boxCnName;
+        return restaurantName+""+boxCode;
     }
 
     public void setBoxCnName(String boxCnName) {

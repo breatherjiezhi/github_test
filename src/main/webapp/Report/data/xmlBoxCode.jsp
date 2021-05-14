@@ -16,11 +16,9 @@
     }
 
     StringBuffer RecordsetQuerySQL = new StringBuffer();
-    RecordsetQuerySQL.append("select pbc.BOX_CODE,pbc.BOX_CN_NAME,so.`NAME` as 'SERVICE_UNIT',sso.`NAME` as 'RESTAURANT_NAME',sa.`NAME` as 'AREA_NAME' ");
+    RecordsetQuerySQL.append("select pbc.ID as BOX_CODE,pbc.BOX_CN_NAME,sso.`NAME` as 'RESTAURANT_NAME'");
     RecordsetQuerySQL.append("from pz_box_code pbc  ");
-    RecordsetQuerySQL.append("left join sys_office so on pbc.SERVICE_UNIT_ID=so.ID ");
-    RecordsetQuerySQL.append("left join sys_office sso on pbc.RESTAURANT_ID=sso.ID ");
-    RecordsetQuerySQL.append("left join sys_area sa on so.AREA_ID=sa.ID WHERE ");
+    RecordsetQuerySQL.append("left join sys_office sso on pbc.RESTAURANT_ID=sso.ID WHERE");
     if(StringUtils.isNotBlank(temp)){
         RecordsetQuerySQL.append(" pbc.ID IN (");
         RecordsetQuerySQL.append(temp);

@@ -61,7 +61,8 @@ public class HolidayService extends CrudService<HolidayDao, Holiday> {
 
                 Holiday newHoliday = holidayDao.getByDate(hDate);
 
-                holiday.setHolidayType(holiday.getHolidayType().contains("节")?holiday.getHolidayType():holiday.getHolidayType()+"节");
+                holiday.setHolidayType((!holiday.getHolidayType().contains("节") && "周末".equals(holiday.getHolidayType()))?holiday.getHolidayType():holiday.getHolidayType()+"节");
+
                 if (ObjectUtils.isNotEmpty(newHoliday)) {
                     holiday.preUpdate();
                     holiday.setId(newHoliday.getId());

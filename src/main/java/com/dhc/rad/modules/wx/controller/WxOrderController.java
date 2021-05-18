@@ -68,17 +68,8 @@ public class WxOrderController extends BaseController {
     @ResponseBody
     public Map<String, Object> orderMenu(@RequestParam("menuId") String menuId) {
 
-       /* // 1. 配置文件
-        Config config = new Config();
-        config.useSingleServer()
-                .setAddress(Global.getConfig("redis.address"))
-                .setPassword(Global.getConfig("redis.password"))
-                .setDatabase(0);
-        //2. 构造RedissonClient
-        RedissonClient redissonClient = Redisson.create(config);*/
-
-        //3. 设置锁定资源名称
-        RLock lock = redissonClient.getLock("redlock");
+        //设置锁定资源名称
+        RLock lock = redissonClient.getLock("redLock");
 
         Map<String, Object> returnMap = new HashMap<>();
         User user = UserUtils.getUser();

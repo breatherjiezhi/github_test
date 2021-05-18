@@ -16,6 +16,7 @@ import com.dhc.rad.modules.sys.entity.Role;
 import com.dhc.rad.modules.sys.entity.User;
 import com.dhc.rad.modules.sys.service.SystemService;
 import com.dhc.rad.modules.sys.utils.UserUtils;
+import com.sun.xml.internal.bind.v2.TODO;
 import org.activiti.explorer.util.time.timeunit.WeekTimeUnit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -50,7 +51,7 @@ public class PzMenuController extends BaseController {
     @ModelAttribute
     public PzMenu get(@RequestParam(required = false) String id) {
         if (StringUtils.isNotBlank(id)) {
-            return pzMenuService.get(id);
+            return pzMenuService.getByid(id);
         } else {
 
             return new PzMenu();
@@ -300,89 +301,6 @@ public class PzMenuController extends BaseController {
         model.addAttribute("pzMenuSubmit", pzMenu);
         return "modules/pzMenu/pzMenuNoExamineForm";
     }
-
-//    /**
-//     * @Description: 菜单上架
-//     * @Param: pzMenu  request response
-//     * @return: Map<String   ,   Object>
-//     * @Date: 2021/4/20
-//     */
-//    @RequestMapping(value = "upPzMenu", method = RequestMethod.POST)
-//    @ResponseBody
-//    public Map<String, Object> upPzMenu(String ids, HttpServletRequest request, HttpServletResponse response) {
-//        Map<String, Object> returnMap = new HashMap<>();
-//        //判断所选的ids的菜单是否都是未上架
-//        List<String> idList = Arrays.asList(ids.split(","));
-//        for (String id : idList) {
-//            PzMenu pzMenu = pzMenuService.get(id);
-//            if (pzMenu != null) {
-//                Integer menuUp = pzMenu.getMenuUp();
-//                if (menuUp == Global.MENU_UP_ON_SALE) {
-//                    addMessageAjax(returnMap, "0", "选中的有已上架数据，请重新选择");
-//                    return returnMap;
-//                }
-//            }
-//        }
-//        //获取当前登录用户id
-//        String userId = UserUtils.getUser().getId();
-//        //查询用户的角色英文名称
-//        //判断当前登录用户是否为供应商 TODO:提交代码时，将admins改为 gcs
-//        if (!UserUtils.getRoleFlag("gcs")) {
-//            addMessageAjax(returnMap, "0", "越权操作，只有供应商具有操作的权限");
-//            return returnMap;
-//        }
-//        //菜单上架
-//        Integer flag = pzMenuService.upPzMenu(idList);
-//
-//        if (flag > 0) {
-//            addMessageAjax(returnMap, "1", "上架成功");
-//        } else {
-//            addMessageAjax(returnMap, "0", "上架失败");
-//        }
-//
-//        return returnMap;
-//    }
-//
-//    /**
-//     * @Description: 菜单下架
-//     * @Param: pzMenu  request response
-//     * @return: Map<String   ,   Object>
-//     * @Date: 2021/4/20
-//     */
-//    @RequestMapping(value = "downPzMenu", method = RequestMethod.POST)
-//    @ResponseBody
-//    public Map<String, Object> downPzMenu(String ids, HttpServletRequest request, HttpServletResponse response) {
-//        Map<String, Object> returnMap = new HashMap<>();
-//        //判断所选的ids的菜单是否都是上架
-//        List<String> idList = Arrays.asList(ids.split(","));
-//        for (String id : idList) {
-//            PzMenu pzMenu = pzMenuService.get(id);
-//            if (pzMenu != null) {
-//                Integer menuUp = pzMenu.getMenuUp();
-//                if (menuUp == Global.MENU_UP_NO_ON_SALE) {
-//                    addMessageAjax(returnMap, "0", "选中的有未上架数据，请重新选择");
-//                    return returnMap;
-//                }
-//            }
-//        }
-//        //获取当前登录用户id
-//        String userId = UserUtils.getUser().getId();
-//        //查询用户的角色英文名称
-//        //判断当前登录用户是否为供应商 TODO:提交代码时，将admins改为 gcs
-//        if (!UserUtils.getRoleFlag("gcs")) {
-//            addMessageAjax(returnMap, "0", "越权操作，只有供应商具有操作的权限");
-//            return returnMap;
-//        }
-//        //菜单下架
-//        Integer flag = pzMenuService.downPzMenu(idList);
-//
-//        if (flag > 0) {
-//            addMessageAjax(returnMap, "1", "下架成功");
-//        } else {
-//            addMessageAjax(returnMap, "0", "下架失败");
-//        }
-//        return returnMap;
-//    }
 
 
 }

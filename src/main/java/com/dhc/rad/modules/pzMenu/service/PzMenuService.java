@@ -26,7 +26,7 @@ import java.util.List;
  */
 @Service
 @Transactional(readOnly = true)
-public class PzMenuService extends CrudService<PzMenuDao,PzMenu> {
+public class PzMenuService extends CrudService<PzMenuDao, PzMenu> {
 
     @Autowired
     private PzMenuDao pzMenuDao;
@@ -34,10 +34,15 @@ public class PzMenuService extends CrudService<PzMenuDao,PzMenu> {
     @Autowired
     private PzMenuContentDao pzMenuContentDao;
 
-    @Autowired
-    private PzMenuFileDao pzMenuFileDao;
 
-    public  Page<PzMenu> searchPage(Page<PzMenu> pzMenuPage, PzMenu pzMenu) {
+    public PzMenu getByid(String id) {
+        PzMenu pzMenu = pzMenuDao.get(id);
+        pzMenu.setPzMenuContentList(pzMenuContentDao.findListByMenuId(pzMenu.getId()));
+        return pzMenu;
+    }
+
+
+    public Page<PzMenu> searchPage(Page<PzMenu> pzMenuPage, PzMenu pzMenu) {
         pzMenu.setPage(pzMenuPage);
         List<PzMenu> list = pzMenuDao.findList(pzMenu);
         for (PzMenu menu : list) {
@@ -48,10 +53,10 @@ public class PzMenuService extends CrudService<PzMenuDao,PzMenu> {
     }
 
     @Transactional(readOnly = false)
-    public Integer saveOrUpdate(PzMenu pzMenu,List<PzMenuContent> pzMenuContentList) {
-        if(ObjectUtils.isNotEmpty(pzMenu)){
+    public Integer saveOrUpdate(PzMenu pzMenu, List<PzMenuContent> pzMenuContentList) {
+        if (ObjectUtils.isNotEmpty(pzMenu)) {
             String id = pzMenu.getId();
-            if(StringUtils.isNotBlank(id)){
+            if (StringUtils.isNotBlank(id)) {
 
                 pzMenu.preUpdate();
                 //设置菜单状态为保存并修改
@@ -67,11 +72,11 @@ public class PzMenuService extends CrudService<PzMenuDao,PzMenu> {
                     pzMenuContentDao.insert(pzMenuContent);
                 }
                 return pzMenuDao.update(pzMenu);
-            }else{
+            } else {
                 //新增createBy updateBy createTime updateTime
                 pzMenu.preInsert();
                 //新增createBy updateBy createTime updateTime
-                Integer flag =  pzMenuDao.insert(pzMenu);
+                Integer flag = pzMenuDao.insert(pzMenu);
 
                 for (PzMenuContent pzMenuContent : pzMenuContentList) {
                     pzMenuContent.preInsert();
@@ -89,7 +94,7 @@ public class PzMenuService extends CrudService<PzMenuDao,PzMenu> {
     public Integer deleteByIds(List<String> ids) {
 
         //返回
-        return  pzMenuDao.deleteByIds(ids);
+        return pzMenuDao.deleteByIds(ids);
     }
 
     @Transactional(readOnly = false)
@@ -100,7 +105,7 @@ public class PzMenuService extends CrudService<PzMenuDao,PzMenu> {
     }
 
     public List<PzMenu> findMenuList(PzMenu pzMenu) {
-        List<PzMenu> menuList =  pzMenuDao.findList(pzMenu);
+        List<PzMenu> menuList = pzMenuDao.findList(pzMenu);
         return menuList;
     }
 
@@ -147,17 +152,17 @@ public class PzMenuService extends CrudService<PzMenuDao,PzMenu> {
     }
 
 
-    public List<PzMenu> findListByRid(String restaurantId){
+    public List<PzMenu> findListByRid(String restaurantId) {
         return pzMenuDao.findListByRid(restaurantId);
     }
 
 
-    public String menuToString(List<PzMenuContent>  pzMenuContentList){
+    public String menuToString(List<PzMenuContent> pzMenuContentList) {
         StringBuffer temp = new StringBuffer();
         for (PzMenuContent pzMenuContent : pzMenuContentList) {
-            if(StringUtils.isNotBlank(temp)){
+            if (StringUtils.isNotBlank(temp)) {
                 temp.append("\n").append(pzMenuContent.getEatDate()).append("(").append(pzMenuContent.getEatWeek()).append("):").append(pzMenuContent.getMenuDetail());
-            }else{
+            } else {
                 temp.append(pzMenuContent.getEatDate()).append("(").append(pzMenuContent.getEatWeek()).append("):").append(pzMenuContent.getMenuDetail());
             }
         }

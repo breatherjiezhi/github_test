@@ -209,7 +209,7 @@
                     $("#editDivId").html(object.responseText).dialog({
                         modal: true,
                         width: 600,
-                        height: 500,
+                        height: 720,
                         title: "<div class='widget-header widget-header-small widget-header-flat'><h4 class='smaller' style='line-height:2'><i class='ace-icon fa fa-th-large'></i>&nbsp;<span data-locale='PzMenuExamineInfo.'>菜单审核信息</span></h4></div>",
                         title_html: true,
                         buttons: [

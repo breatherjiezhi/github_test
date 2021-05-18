@@ -74,14 +74,14 @@
 			<div class="personInfo_title" style="height: 0.6rem">
 				<span data-locale="PersonalInformation">个人信息</span>
 			</div>
-			<div class="infoList">
+			<%--<div class="infoList">
 				<div class="info_label">
 					<span><i class="fa fa-user" style="color:#e18e42"></i> <span data-locale='UserName'>用户名</span>：</span>
 				</div>
 				<div class="info_content">
 					<span>${user.loginName}</span>
 				</div>
-			</div>
+			</div>--%>
 			<div class="infoList">
 				<div class="info_label">
 					<span><i class="fa fa-star" style="color:#fa5a5a"></i> <span data-locale='No'>工号</span>：</span>

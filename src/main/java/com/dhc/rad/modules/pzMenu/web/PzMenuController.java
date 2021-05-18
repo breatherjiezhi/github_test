@@ -34,7 +34,6 @@ import java.util.Map;
 @Controller
 @RequestMapping(value = "${adminPath}/pzMenu")
 public class PzMenuController extends BaseController {
-    //TODO:获取当前登录用户id与createById做判断 用于增删改查
 
     @Autowired
     private PzMenuService pzMenuService;
@@ -137,6 +136,12 @@ public class PzMenuController extends BaseController {
         return returnMap;
     }
 
+    /**
+     * @Description: 菜单新增成功后，需要将菜单提交，管理员进行审核
+     * @Param: pzMenu
+     * @return: Map<String, Object>
+     * @Date: 2021/5/14
+     */
     @RequestMapping(value = "submitPzMenu", method = RequestMethod.POST)
     @ResponseBody
     public Map<String, Object> submitPzMenu(PzMenu pzMenu, HttpServletRequest request, HttpServletResponse response) {
@@ -156,13 +161,18 @@ public class PzMenuController extends BaseController {
     /**
      * @Description: 审核菜单是否合格
      * @Param: pzMenu
-     * @return: Map<String,Object>
+     * @return: Map<String, Object>
      * @Date: 2021/4/21
      */
     @RequestMapping(value = "updateStatus", method = RequestMethod.POST)
     @ResponseBody
     public Map<String, Object> updateMenuStatus(PzMenu pzMenu, HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> returnMap = new HashMap<>();
+        //普通用户无权操作菜单
+        if (!(UserUtils.getRoleFlag("admin") || UserUtils.getRoleFlag("admins") || UserUtils.getRoleFlag("gcs"))) {
+            addMessageAjax(returnMap, "0", "越权操作，无权操作菜单！");
+            return returnMap;
+        }
         //获取当前登录用户的id
         Integer menuStatusAgo = null;
         PzMenu menu = null;
@@ -177,20 +187,20 @@ public class PzMenuController extends BaseController {
         User user = UserUtils.getUser();
         if (!user.getId().equals(pzMenu.getCreateBy().getId())) {
             //管理员审批菜单： 只有当菜单状态为待审核时，管理员才能操作
-            if (menuStatusAgo != null && UserUtils.getRoleFlag("admins") && menuStatusAgo != Global.MENU_STATUS_SUBMIT) {
-                addMessageAjax(returnMap, "0", "管理员无权修改此数据！");
-                return returnMap;
+            if (menuStatusAgo == Global.MENU_STATUS_SUBMIT) {
+                if (!(UserUtils.getRoleFlag("admin") || UserUtils.getRoleFlag("admins"))) {
+                    addMessageAjax(returnMap, "0", "越权操作，无权修改此数据！");
+                    return returnMap;
+                }
             }
             //供应商操作菜单：只有当菜单状态为非待审核（保存并修改  审核不通过）时，才能修改状态
-            if (menuStatusAgo != null && UserUtils.getRoleFlag("gcs") && (menuStatusAgo != Global.MENU_STATUS_SAVEANDUPDATE || menuStatusAgo != Global.MENU_STATUS_NOPASS)) {
-                addMessageAjax(returnMap, "0", "供应商无权修改此数据！");
-                return returnMap;
+            if (menuStatusAgo == Global.MENU_STATUS_SAVEANDUPDATE || menuStatusAgo == Global.MENU_STATUS_NOPASS) {
+                if (!UserUtils.getRoleFlag("gcs")) {
+                    addMessageAjax(returnMap, "0", "越权操作，无权修改此数据！");
+                    return returnMap;
+                }
             }
-            //普通用户无权操作菜单
-            if ((UserUtils.getRoleFlag("staff") || UserUtils.getRoleFlag("admin"))) {
-                addMessageAjax(returnMap, "0", "越权操作，普通用户或者系统管理员无权操作菜单！");
-                return returnMap;
-            }
+
         }
 
 
@@ -217,7 +227,7 @@ public class PzMenuController extends BaseController {
      * @param pzMenu
      * @param request
      * @param response
-     * @return Map<String   ,   Object>
+     * @return Map<String, Object>
      */
     @RequestMapping(value = {"findMenuListByNoExamine"})
     @ResponseBody
@@ -228,7 +238,7 @@ public class PzMenuController extends BaseController {
         //获取当前登录用户
         String userId = UserUtils.getUser().getId();
         //查询用户的角色英文名称
-        if (!UserUtils.getRoleFlag("admin") && !UserUtils.getRoleFlag("admins")) {
+        if (!(UserUtils.getRoleFlag("admin") || UserUtils.getRoleFlag("admins"))) {
             addMessageAjax(returnMap, "0", "越权操作，只有管理员才能查询此数据！");
             return returnMap;
         }
@@ -278,7 +288,7 @@ public class PzMenuController extends BaseController {
     /**
      * @Description: 菜单上架
      * @Param: pzMenu  request response
-     * @return: Map<String   ,   Object>
+     * @return: Map<String, Object>
      * @Date: 2021/4/20
      */
     @RequestMapping(value = "upPzMenu", method = RequestMethod.POST)
@@ -297,10 +307,8 @@ public class PzMenuController extends BaseController {
                 }
             }
         }
-        //获取当前登录用户id
-        String userId = UserUtils.getUser().getId();
         //查询用户的角色英文名称
-        //判断当前登录用户是否为供应商 TODO:提交代码时，将admins改为 gcs
+        //判断当前登录用户是否为供应商
         if (!UserUtils.getRoleFlag("gcs")) {
             addMessageAjax(returnMap, "0", "越权操作，只有供应商具有操作的权限");
             return returnMap;
@@ -320,7 +328,7 @@ public class PzMenuController extends BaseController {
     /**
      * @Description: 菜单下架
      * @Param: pzMenu  request response
-     * @return: Map<String   ,   Object>
+     * @return: Map<String, Object>
      * @Date: 2021/4/20
      */
     @RequestMapping(value = "downPzMenu", method = RequestMethod.POST)

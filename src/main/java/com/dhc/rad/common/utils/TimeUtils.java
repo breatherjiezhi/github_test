@@ -3,6 +3,7 @@
  */
 package com.dhc.rad.common.utils;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -459,6 +460,23 @@ public class TimeUtils {
 //        String currentDate = eatDateList.stream().collect(Collectors.joining(","));
 
         return dateList;
+    }
+
+
+
+    public static String getWeekDay(String date){
+        String[] weeks = {"周日","周一","周二","周三","周四","周五","周六"};
+        Calendar cal = Calendar.getInstance();
+        try {
+            cal.setTime(simpleDateFormat.parse(date));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        int week_index = cal.get(Calendar.DAY_OF_WEEK) - 1;
+        if(week_index<0){
+            week_index = 0;
+        }
+        return weeks[week_index];
     }
 
 }

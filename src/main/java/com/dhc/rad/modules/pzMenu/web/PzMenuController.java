@@ -4,15 +4,19 @@ import com.dhc.rad.common.config.Global;
 import com.dhc.rad.common.persistence.Page;
 import com.dhc.rad.common.utils.ObjectUtils;
 import com.dhc.rad.common.utils.StringUtils;
+import com.dhc.rad.common.utils.TimeUtils;
 import com.dhc.rad.common.web.BaseController;
 import com.dhc.rad.modbus.entity.func.Util;
 import com.dhc.rad.modules.holiday.entity.Holiday;
 import com.dhc.rad.modules.pzMenu.entity.PzMenu;
 import com.dhc.rad.modules.pzMenu.service.PzMenuService;
+import com.dhc.rad.modules.pzMenuContent.entity.PzMenuContent;
+import com.dhc.rad.modules.pzMenuContent.service.PzMenuContentService;
 import com.dhc.rad.modules.sys.entity.Role;
 import com.dhc.rad.modules.sys.entity.User;
 import com.dhc.rad.modules.sys.service.SystemService;
 import com.dhc.rad.modules.sys.utils.UserUtils;
+import org.activiti.explorer.util.time.timeunit.WeekTimeUnit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,10 +27,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author 10951
@@ -38,6 +39,10 @@ public class PzMenuController extends BaseController {
 
     @Autowired
     private PzMenuService pzMenuService;
+
+
+    @Autowired
+    private PzMenuContentService pzMenuContentService;
 
     @Autowired
     private SystemService systemService;
@@ -61,7 +66,11 @@ public class PzMenuController extends BaseController {
     @ResponseBody
     public Map<String, Object> searchPage(PzMenu pzMenu, HttpServletRequest request, HttpServletResponse response) {
         String officeId = UserUtils.getUser().getOffice().getId();
-        pzMenu.setRestaurantId(officeId);
+
+        if(!(UserUtils.getRoleFlag("admin") || UserUtils.getRoleFlag("admins"))){
+            pzMenu.setRestaurantId(officeId);
+        }
+
         Page<PzMenu> page = pzMenuService.searchPage(new Page<>(request, response), pzMenu);
 
         Map<String, Object> returnMap = new HashMap<>();
@@ -76,6 +85,23 @@ public class PzMenuController extends BaseController {
 
     @RequestMapping(value = "form")
     public String form(PzMenu pzMenu, Model model) {
+        List<PzMenuContent> pzMenuContentList = new ArrayList<PzMenuContent>();
+
+        if(pzMenu!=null&&StringUtils.isNotBlank(pzMenu.getId())){
+            pzMenuContentList =  pzMenuContentService.findListByMenuId(pzMenu.getId());
+        }else{
+            if(pzMenuContentList.size()==0){
+               List<String> list =  TimeUtils.getNextWeekEatDate();
+                for (String temp : list) {
+                    PzMenuContent pmc = new PzMenuContent();
+                    pmc.setEatDate(temp);
+                    pmc.setEatWeek(TimeUtils.getWeekDay(temp));
+                    pzMenuContentList.add(pmc);
+                }
+
+            }
+        }
+        pzMenu.setPzMenuContentList(pzMenuContentList);
         model.addAttribute("httpUrl", Util.getImgUrl());
         model.addAttribute("pzMenu", pzMenu);
         return "modules/pzMenu/pzMenuForm";
@@ -101,7 +127,7 @@ public class PzMenuController extends BaseController {
         }
 
         pzMenu.setRestaurantId(user.getOffice().getId());
-        flag = pzMenuService.saveOrUpdate(pzMenu);
+        flag = pzMenuService.saveOrUpdate(pzMenu,pzMenu.getPzMenuContentList());
 
 
         if (flag > 0) {
@@ -275,88 +301,88 @@ public class PzMenuController extends BaseController {
         return "modules/pzMenu/pzMenuNoExamineForm";
     }
 
-    /**
-     * @Description: 菜单上架
-     * @Param: pzMenu  request response
-     * @return: Map<String   ,   Object>
-     * @Date: 2021/4/20
-     */
-    @RequestMapping(value = "upPzMenu", method = RequestMethod.POST)
-    @ResponseBody
-    public Map<String, Object> upPzMenu(String ids, HttpServletRequest request, HttpServletResponse response) {
-        Map<String, Object> returnMap = new HashMap<>();
-        //判断所选的ids的菜单是否都是未上架
-        List<String> idList = Arrays.asList(ids.split(","));
-        for (String id : idList) {
-            PzMenu pzMenu = pzMenuService.get(id);
-            if (pzMenu != null) {
-                Integer menuUp = pzMenu.getMenuUp();
-                if (menuUp == Global.MENU_UP_ON_SALE) {
-                    addMessageAjax(returnMap, "0", "选中的有已上架数据，请重新选择");
-                    return returnMap;
-                }
-            }
-        }
-        //获取当前登录用户id
-        String userId = UserUtils.getUser().getId();
-        //查询用户的角色英文名称
-        //判断当前登录用户是否为供应商 TODO:提交代码时，将admins改为 gcs
-        if (!UserUtils.getRoleFlag("gcs")) {
-            addMessageAjax(returnMap, "0", "越权操作，只有供应商具有操作的权限");
-            return returnMap;
-        }
-        //菜单上架
-        Integer flag = pzMenuService.upPzMenu(idList);
-
-        if (flag > 0) {
-            addMessageAjax(returnMap, "1", "上架成功");
-        } else {
-            addMessageAjax(returnMap, "0", "上架失败");
-        }
-
-        return returnMap;
-    }
-
-    /**
-     * @Description: 菜单下架
-     * @Param: pzMenu  request response
-     * @return: Map<String   ,   Object>
-     * @Date: 2021/4/20
-     */
-    @RequestMapping(value = "downPzMenu", method = RequestMethod.POST)
-    @ResponseBody
-    public Map<String, Object> downPzMenu(String ids, HttpServletRequest request, HttpServletResponse response) {
-        Map<String, Object> returnMap = new HashMap<>();
-        //判断所选的ids的菜单是否都是上架
-        List<String> idList = Arrays.asList(ids.split(","));
-        for (String id : idList) {
-            PzMenu pzMenu = pzMenuService.get(id);
-            if (pzMenu != null) {
-                Integer menuUp = pzMenu.getMenuUp();
-                if (menuUp == Global.MENU_UP_NO_ON_SALE) {
-                    addMessageAjax(returnMap, "0", "选中的有未上架数据，请重新选择");
-                    return returnMap;
-                }
-            }
-        }
-        //获取当前登录用户id
-        String userId = UserUtils.getUser().getId();
-        //查询用户的角色英文名称
-        //判断当前登录用户是否为供应商 TODO:提交代码时，将admins改为 gcs
-        if (!UserUtils.getRoleFlag("gcs")) {
-            addMessageAjax(returnMap, "0", "越权操作，只有供应商具有操作的权限");
-            return returnMap;
-        }
-        //菜单下架
-        Integer flag = pzMenuService.downPzMenu(idList);
-
-        if (flag > 0) {
-            addMessageAjax(returnMap, "1", "下架成功");
-        } else {
-            addMessageAjax(returnMap, "0", "下架失败");
-        }
-        return returnMap;
-    }
+//    /**
+//     * @Description: 菜单上架
+//     * @Param: pzMenu  request response
+//     * @return: Map<String   ,   Object>
+//     * @Date: 2021/4/20
+//     */
+//    @RequestMapping(value = "upPzMenu", method = RequestMethod.POST)
+//    @ResponseBody
+//    public Map<String, Object> upPzMenu(String ids, HttpServletRequest request, HttpServletResponse response) {
+//        Map<String, Object> returnMap = new HashMap<>();
+//        //判断所选的ids的菜单是否都是未上架
+//        List<String> idList = Arrays.asList(ids.split(","));
+//        for (String id : idList) {
+//            PzMenu pzMenu = pzMenuService.get(id);
+//            if (pzMenu != null) {
+//                Integer menuUp = pzMenu.getMenuUp();
+//                if (menuUp == Global.MENU_UP_ON_SALE) {
+//                    addMessageAjax(returnMap, "0", "选中的有已上架数据，请重新选择");
+//                    return returnMap;
+//                }
+//            }
+//        }
+//        //获取当前登录用户id
+//        String userId = UserUtils.getUser().getId();
+//        //查询用户的角色英文名称
+//        //判断当前登录用户是否为供应商 TODO:提交代码时，将admins改为 gcs
+//        if (!UserUtils.getRoleFlag("gcs")) {
+//            addMessageAjax(returnMap, "0", "越权操作，只有供应商具有操作的权限");
+//            return returnMap;
+//        }
+//        //菜单上架
+//        Integer flag = pzMenuService.upPzMenu(idList);
+//
+//        if (flag > 0) {
+//            addMessageAjax(returnMap, "1", "上架成功");
+//        } else {
+//            addMessageAjax(returnMap, "0", "上架失败");
+//        }
+//
+//        return returnMap;
+//    }
+//
+//    /**
+//     * @Description: 菜单下架
+//     * @Param: pzMenu  request response
+//     * @return: Map<String   ,   Object>
+//     * @Date: 2021/4/20
+//     */
+//    @RequestMapping(value = "downPzMenu", method = RequestMethod.POST)
+//    @ResponseBody
+//    public Map<String, Object> downPzMenu(String ids, HttpServletRequest request, HttpServletResponse response) {
+//        Map<String, Object> returnMap = new HashMap<>();
+//        //判断所选的ids的菜单是否都是上架
+//        List<String> idList = Arrays.asList(ids.split(","));
+//        for (String id : idList) {
+//            PzMenu pzMenu = pzMenuService.get(id);
+//            if (pzMenu != null) {
+//                Integer menuUp = pzMenu.getMenuUp();
+//                if (menuUp == Global.MENU_UP_NO_ON_SALE) {
+//                    addMessageAjax(returnMap, "0", "选中的有未上架数据，请重新选择");
+//                    return returnMap;
+//                }
+//            }
+//        }
+//        //获取当前登录用户id
+//        String userId = UserUtils.getUser().getId();
+//        //查询用户的角色英文名称
+//        //判断当前登录用户是否为供应商 TODO:提交代码时，将admins改为 gcs
+//        if (!UserUtils.getRoleFlag("gcs")) {
+//            addMessageAjax(returnMap, "0", "越权操作，只有供应商具有操作的权限");
+//            return returnMap;
+//        }
+//        //菜单下架
+//        Integer flag = pzMenuService.downPzMenu(idList);
+//
+//        if (flag > 0) {
+//            addMessageAjax(returnMap, "1", "下架成功");
+//        } else {
+//            addMessageAjax(returnMap, "0", "下架失败");
+//        }
+//        return returnMap;
+//    }
 
 
 }

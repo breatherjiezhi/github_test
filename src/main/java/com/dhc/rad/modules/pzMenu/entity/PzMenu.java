@@ -1,6 +1,9 @@
 package com.dhc.rad.modules.pzMenu.entity;
 
 import com.dhc.rad.common.persistence.DataEntity;
+import com.dhc.rad.modules.pzMenuContent.entity.PzMenuContent;
+
+import java.util.List;
 
 /**
  * @author 10951
@@ -41,13 +44,10 @@ public class PzMenu extends DataEntity<PzMenu> {
      */
     private String menuType;
     /**
-     * 菜单状态 0保存可修改,1提交,2审核不通过,3审核通过
+     * 菜单状态 0保存可修改,1提交,2审核不通过,3审核通过并上架
      */
     private Integer menuStatus;
-    /**
-     * 菜单是否上架 0未上架 1上架 默认0
-     */
-    private Integer menuUp;
+
     /**
      * 审核原因
      */
@@ -60,6 +60,15 @@ public class PzMenu extends DataEntity<PzMenu> {
 
     //所属餐厅名称
     private String restaurantName;
+
+
+    //套餐详细列表
+    private List<PzMenuContent> pzMenuContentList;
+
+
+    //套餐详细信息
+    private  String  pzMenuContentString;
+
 
     // 版本号
     private int version;
@@ -128,13 +137,6 @@ public class PzMenu extends DataEntity<PzMenu> {
         this.menuStatus = menuStatus;
     }
 
-    public Integer getMenuUp() {
-        return menuUp;
-    }
-
-    public void setMenuUp(Integer menuUp) {
-        this.menuUp = menuUp;
-    }
 
     public String getExamineInfo() {
         return examineInfo;
@@ -161,6 +163,21 @@ public class PzMenu extends DataEntity<PzMenu> {
         this.restaurantId = restaurantId;
     }
 
+    public List<PzMenuContent> getPzMenuContentList() {
+        return pzMenuContentList;
+    }
+
+    public void setPzMenuContentList(List<PzMenuContent> pzMenuContentList) {
+        this.pzMenuContentList = pzMenuContentList;
+    }
+
+    public String getPzMenuContentString() {
+        return pzMenuContentString;
+    }
+
+    public void setPzMenuContentString(String pzMenuContentString) {
+        this.pzMenuContentString = pzMenuContentString;
+    }
 
     public int getVersion() {
         return version;

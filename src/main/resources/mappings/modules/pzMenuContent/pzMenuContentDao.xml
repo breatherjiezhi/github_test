@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dhc.rad.modules.pzMenuContent.dao.PzMenuContentDao">
+
+    <resultMap id="BaseResultMap" type="com.dhc.rad.modules.pzMenuContent.entity.PzMenuContent" >
+        <result column="id" property="id" />
+        <result column="menu_id" property="menuId" />
+        <result column="menu_detail" property="menuDetail" />
+        <result column="eat_date" property="eatDate" />
+        <result column="eat_week" property="eatWeek" />
+        <result column="create_by" property="createBy.id" />
+        <result column="update_by" property="updateBy.id" />
+        <result column="create_date" property="createDate" />
+        <result column="update_date" property="updateDate" />
+        <result column="remarks" property="remarks" />
+        <result column="del_flag" property="delFlag" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+                id,
+                menu_id,
+                menu_detail,
+                eat_date,
+                eat_week,
+                create_by,
+                update_by,
+                create_date,
+                update_date,
+                remarks,
+                del_flag
+    </sql>
+
+
+
+
+    <update id="deleteByIds">
+        UPDATE pz_menu_content
+        SET
+        del_flag = '1'
+        WHERE id in
+        <foreach collection="list" item="id" index="index"
+                 open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </update>
+
+
+    <delete id="deleteByMenuId" >
+        DELETE FROM pz_menu_content
+        WHERE menu_id = #{menuId}
+    </delete>
+
+
+
+    <insert id="insert"  parameterType="com.dhc.rad.modules.pzMenuContent.entity.PzMenuContent">
+        INSERT INTO pz_menu_content
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="null != id and '' != id">
+                id,
+            </if>
+            <if test="null != menuId and '' != menuId">
+                menu_id,
+            </if>
+            <if test="null != menuDetail and '' != menuDetail">
+                menu_detail,
+            </if>
+            <if test="null != eatDate and '' != eatDate">
+                eat_date,
+            </if>
+            <if test="null != eatWeek and '' != eatWeek">
+                eat_week,
+            </if>
+            <if test ="null != createBy and ''!= createBy">
+                create_by,
+            </if>
+            <if test ="null != updateBy and ''!= updateBy">
+                update_by,
+            </if>
+            <if test ="null != createDate and ''!= createDate">
+                create_date,
+            </if>
+            <if test ="null != updateDate and ''!= updateDate">
+                update_date,
+            </if>
+            <if test ="null != remarks and ''!= remarks">
+                remarks,
+            </if>
+            <if test ="null != delFlag and ''!= delFlag">
+                del_flag
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="null != id and '' != id">
+                #{id},
+            </if>
+            <if test="null != menuId and '' != menuId">
+                #{menuId},
+            </if>
+            <if test="null != menuDetail and '' != menuDetail">
+                #{menuDetail},
+            </if>
+            <if test="null != eatDate and '' != eatDate">
+                #{eatDate},
+            </if>
+            <if test="null != eatWeek and '' != eatWeek">
+                #{eatWeek},
+            </if>
+            <if test ="null != createBy and ''!= createBy">
+                #{createBy.id},
+            </if>
+            <if test ="null != updateBy and ''!= updateBy">
+                #{updateBy.id},
+            </if>
+            <if test ="null != createDate and ''!= createDate">
+                #{createDate},
+            </if>
+            <if test ="null != updateDate and ''!= updateDate">
+                #{updateDate},
+            </if>
+            <if test ="null != remarks and ''!= remarks">
+                #{remarks},
+            </if>
+            <if test ="null != delFlag and ''!= delFlag">
+                #{delFlag}
+            </if>
+        </trim>
+    </insert>
+
+    <delete id="delete" >
+        DELETE FROM pz_menu_content
+        WHERE id = #{id}
+    </delete>
+
+    <update id="update" parameterType="com.dhc.rad.modules.pzMenuContent.entity.PzMenuContent">
+        UPDATE pz_menu_content
+        <set>
+            <if test="null != menuId and '' != menuId">menu_id = #{menuId},</if>
+            <if test="null != menuDetail and '' != menuDetail">menu_detail = #{menuDetail},</if>
+            <if test="null != eatDate and '' != eatDate">eat_date = #{eatDate},</if>
+            <if test="null != eatWeek and '' != eatWeek">eat_week = #{eatWeek},</if>
+            <if test ="null != createBy and ''!= createBy">  CREATE_BY = #{createBy.id},</if>
+            <if test ="null != updateBy and ''!= updateBy">  UPDATE_BY = #{updateBy.id},</if>
+            <if test ="null != createDate and ''!= createDate">  CREATE_DATE = #{createDate},</if>
+            <if test ="null != updateDate and ''!= updateDate">  UPDATE_DATE = #{updateDate},</if>
+            <if test ="null != remarks and ''!= remarks">  remarks = #{remarks}</if>
+        </set>
+        WHERE id = #{id} and del_flag ='0'
+    </update>
+
+
+    <select id="findList" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM
+        pz_menu_content
+        WHERE del_flag ='0'
+        <if test="null != menuId and '' != menuId">menu_id = #{menuId},</if>
+        <if test="null != menuDetail and '' != menuDetail">menu_detail = #{menuDetail},</if>
+        <if test="null != eatDate and '' != eatDate">eat_date = #{eatDate},</if>
+        <if test="null != eatWeek and '' != eatWeek">eat_week = #{eatWeek},</if>
+        <if test ="null != createBy and ''!= createBy">  CREATE_BY = #{createBy.id},</if>
+        <if test ="null != updateBy and ''!= updateBy">  UPDATE_BY = #{updateBy.id},</if>
+        <if test ="null != createDate and ''!= createDate">  CREATE_DATE = #{createDate},</if>
+        <if test ="null != updateDate and ''!= updateDate">  UPDATE_DATE = #{updateDate},</if>
+        <if test ="null != remarks and ''!= remarks">  remarks = #{remarks}</if>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY  eat_date ASC
+            </otherwise>
+        </choose>
+
+    </select>
+
+
+
+    <select id="get" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM pz_menu_content
+        WHERE id = #{id} and del_flag ='0'
+    </select>
+
+    <select id="findListByMenuId" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM
+        pz_menu_content
+        WHERE del_flag ='0' and menu_id = #{menuId}  ORDER BY  eat_date ASC
+    </select>
+
+
+</mapper>

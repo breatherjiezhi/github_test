@@ -86,12 +86,8 @@
                     'id',
                     '<span data-locale="gcsName">供餐商名称</span>',
                     '<span data-locale="menuName">菜单名称</span>',
-                    '<span data-locale="menuDescription">菜单描述</span>',
-                    '<span data-locale="menuLimited">套餐是否限量</span>',
-                    '<span data-locale="menuCount">套餐余量</span>',
-                    '<span data-locale="menuType">套餐规格</span>',
+                    '<span data-locale="menuDetail">菜单明细</span>',
                     '<span data-locale="menuStatus">菜单状态</span>',
-                    '<span data-locale="menuUp">是否上架</span>',
                     '<span data-locale="examineInfo">审核原因</span>',
                     '<span data-locale="view">操作</span>'
                 ],
@@ -99,15 +95,10 @@
                     {name: 'id', index: 'id', hidden: true},
                     {name: 'gcsName', index: 'gcs_name'},
                     {name: 'menuName', index: 'menu_name'},
-                    {name: 'menuDescription', index: 'menu_description'},
-                    {name: 'menuLimited', index: 'menu_limited'},
-                    {name: 'menuCount', index: 'menu_count'},
-                    {name: 'menuType', index: 'menu_type'},
+                    {name: 'pzMenuContentString', sortable: false},
                     {name: 'menuStatus', index: 'menu_status'},
-                    {name: 'menuUp', index: 'menu_up'},
                     {name: 'examineInfo', index: 'examine_info'},
-                    {name: 'view', index: 'view' ,sortable: false}
-
+                    {name: 'view', index: 'view', sortable: false}
                 ],
                 viewrecords: true,
                 rowNum: 20,
@@ -134,11 +125,10 @@
                     for (var i = 0; i < ids.length; i++) {
                         var id = ids[i];
 
+
                         var rowData = $("#grid-table").getRowData(id);
-                        var menuLimited = getDictLabel(${fns:toJson(fns:getDictList("pz_menu_limited"))}, rowData.menuLimited);
-                        var menuType = getDictLabel(${fns:toJson(fns:getDictList("pz_menu_type"))}, rowData.menuType);
                         var menuStatus = getDictLabel(${fns:toJson(fns:getDictList("pz_menu_status"))}, rowData.menuStatus);
-                        var menuUp = getDictLabel(${fns:toJson(fns:getDictList("pz_menu_up"))}, rowData.menuUp);
+                        var menuName = getDictLabel(${fns:toJson(fns:getDictList("pz_menu_type_name"))}, rowData.menuName);
 
 
                         var  viewBtn = '<div class="action-buttons" style="white-space:normal">'+
@@ -146,10 +136,8 @@
                             '</div>';
 
                         $(grid_selector).jqGrid('setRowData', ids[i], {
-                            menuLimited: menuLimited,
-                            menuType: menuType,
                             menuStatus: menuStatus,
-                            menuUp: menuUp,
+                            menuName: menuName,
                             view: viewBtn
                         });
 

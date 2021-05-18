@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ include file="/WEB-INF/views/include/taglib.jsp" %>
 <title>套餐管理</title>
-<link href="${ctxStatic}/bootstrap-treeview/css/bootstrap-treeview.css" rel="stylesheet" type="text/css" />
+<link href="${ctxStatic}/bootstrap-treeview/css/bootstrap-treeview.css" rel="stylesheet" type="text/css"/>
 <div class="row">
     <div class="col-xs-12 col-sm-12">
         <div class="widget-box widget-compact">
@@ -44,43 +44,22 @@
                                 </div>
                             </div>
 
-                            <div class="col-xs-12 col-sm-4 no-padding">
-                                <div class="new-search clearfix">
-                                    <label class=" col-xs-12 col-sm-4" for="menuName"
-                                           data-locale="menuType">套餐规格</label>
-                                    <div class="col-xs-12 col-sm-8 no-padding">
-                                        <form:select path="menuType" class="chosen-select form-control width-100"
-                                                     data-placeholder="点击选择...">
-                                            <option value="">---请选择---</option>
-                                            <form:options items="${fns:getDictList('pz_menu_type')}" itemLabel="label"
-                                                          itemValue="value"
-                                                          htmlEscape="false"/>
-                                        </form:select>
-                                    </div>
-                                </div>
-                            </div>
+                                <%--<div class="col-xs-12 col-sm-4 no-padding">--%>
+                                <%--<div class="new-search clearfix">--%>
+                                <%--<label class=" col-xs-12 col-sm-4" for="menuName"--%>
+                                <%--data-locale="menuType">套餐规格</label>--%>
+                                <%--<div class="col-xs-12 col-sm-8 no-padding">--%>
+                                <%--<form:select path="menuType" class="chosen-select form-control width-100"--%>
+                                <%--data-placeholder="点击选择...">--%>
+                                <%--<option value="">---请选择---</option>--%>
+                                <%--<form:options items="${fns:getDictList('pz_menu_type')}" itemLabel="label"--%>
+                                <%--itemValue="value"--%>
+                                <%--htmlEscape="false"/>--%>
+                                <%--</form:select>--%>
+                                <%--</div>--%>
+                                <%--</div>--%>
+                                <%--</div>--%>
                         </div>
-
-                        <div class="form-group">
-
-
-                            <div class="col-xs-12 col-sm-4 no-padding">
-                                <div class="new-search clearfix">
-                                    <label class=" col-xs-12 col-sm-4" for="menuName"
-                                           data-locale="menuUp">是否上架</label>
-                                    <div class="col-xs-12 col-sm-8 no-padding">
-                                        <form:select path="menuUp" class="chosen-select form-control width-100"
-                                                     data-placeholder="点击选择...">
-                                            <option value="">---请选择---</option>
-                                            <form:options items="${fns:getDictList('pz_menu_up')}" itemLabel="label"
-                                                          itemValue="value"
-                                                          htmlEscape="false"/>
-                                        </form:select>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
 
                         <div class="form-group">
                             <div class="col-xs-12 col-sm-4">
@@ -114,51 +93,9 @@
 </div>
 <script type="text/javascript">
 
-
-    function findMenuStatus(obj) {
-        $.ajax({
-            url: "${ctx}/sys/dict/treeData",
-            type: "post",
-            data: {'type': 'pz_menu_status'}, //发送数据   v dd   jhgf
-            success: function (data) {
-                var list = data.relayCarTypeList;
-                var htmlT = "<option value=''>请选择......</option>";
-                for (var i = 0; i < list.length; i++) {
-                    htmlT += "<option value=" + list[i].carType + ">" + list[i].carType + "</option>";
-                }
-                $(".menuStatus").html(htmlT);
-                $(".menuStatus").trigger("chosen:updated");
-            }
-        })
-    };
-
-    function findRelayEnglish(obj) {
-
-        var proStyle = $(".proStyle").val();
-        debugger
-        //设置维修方案下拉框
-        //alert("processId"+processId)
-        $.ajax({
-            url: "${ctx}/relay/report/findRelayEnglish",
-            type: "post",
-            data: {'proStyle': proStyle}, //发送数据   v dd   jhgf
-            success: function (data) {
-                var list = data.relayEnglishList;
-                var htmlT = "<option value=''>请选择......</option>";
-                for (var i = 0; i < list.length; i++) {
-                    htmlT += "<option value=" + list[i] + ">" + list[i] + "</option>";
-                }
-                $(".relayEnglish").html(htmlT);
-                $(".relayEnglish").trigger("chosen:updated");
-            }
-        })
-    }
-
     var scripts = [null, '${ctxStatic}/assets/js/fuelux/fuelux.spinner.js', '${ctxStatic}/assets/js/date-time/bootstrap-datepicker.js', '${ctxStatic}/assets/js/date-time/bootstrap-datepicker.zh-CN.min.js', null];
     $('.page-content-area').ace_ajax('loadScripts', scripts, function () {
         jQuery(function ($) {
-
-
 
 
             var select2 = $('.select2');
@@ -226,27 +163,21 @@
                 },
                 colNames: [
                     'id',
+                    '<span data-locale="gcsName">供餐商名称</span>',
                     '<span data-locale="menuName">菜单名称</span>',
-                    '<span data-locale="menuDescription">菜单描述</span>',
-                    '<span data-locale="menuLimited">套餐是否限量</span>',
-                    '<span data-locale="menuCount">套餐余量</span>',
-                    '<span data-locale="menuType">套餐规格</span>',
+                    '<span data-locale="menuDetail">菜单明细</span>',
                     '<span data-locale="menuStatus">菜单状态</span>',
-                    '<span data-locale="menuUp">是否上架</span>',
                     '<span data-locale="examineInfo">审核原因</span>',
                     '<span data-locale="view">操作</span>'
                 ],
                 colModel: [
                     {name: 'id', index: 'id', hidden: true},
+                    {name: 'gcsName', index: 'gcs_name'},
                     {name: 'menuName', index: 'menu_name'},
-                    {name: 'menuDescription', index: 'menu_description'},
-                    {name: 'menuLimited', index: 'menu_limited'},
-                    {name: 'menuCount', index: 'menu_count'},
-                    {name: 'menuType', index: 'menu_type'},
+                    {name: 'pzMenuContentString', sortable: false},
                     {name: 'menuStatus', index: 'menu_status'},
-                    {name: 'menuUp', index: 'menu_up'},
                     {name: 'examineInfo', index: 'examine_info'},
-                    {name: 'view', index: 'view' ,sortable: false}
+                    {name: 'view', index: 'view', sortable: false}
                 ],
                 viewrecords: true,
                 rowNum: 20,
@@ -269,83 +200,55 @@
                         var id = ids[i];
 
                         var rowData = $("#grid-table").getRowData(id);
-                        var menuLimited = getDictLabel(${fns:toJson(fns:getDictList("pz_menu_limited"))}, rowData.menuLimited);
-                        var menuType = getDictLabel(${fns:toJson(fns:getDictList("pz_menu_type"))}, rowData.menuType);
                         var menuStatus = getDictLabel(${fns:toJson(fns:getDictList("pz_menu_status"))}, rowData.menuStatus);
-                        var menuUp = getDictLabel(${fns:toJson(fns:getDictList("pz_menu_up"))}, rowData.menuUp);
+                        var menuName = getDictLabel(${fns:toJson(fns:getDictList("pz_menu_type_name"))}, rowData.menuName);
 
 
                         var viewBtn = '';
 
-                        if( rowData.menuStatus=='0'){
-                            viewBtn = '<div class="action-buttons" style="white-space:normal">'+
-                            '<a data-action="edit" data-id="'+rowData.id+'" href="javascript:void(0);" class="tooltip-success green" data-rel="tooltip" title="编辑"  style="border-color:#69aa46 "><i class="ace-icon fa fa-pencil bigger-130"></i></a>'+
-                            '<a data-action="submit" data-id="'+rowData.id+'" href="javascript:void(0);" class="tooltip-success green" data-rel="tooltip" title="提交" style="border-color:#69aa46"><i class="ace-icon fa fa-check bigger-130"></i></a>'+
-                            '</div>';
-                        }else if( rowData.menuStatus=='2'){
-                            viewBtn = '<div class="action-buttons" style="white-space:normal">'+
-                                '<a data-action="edit" data-id="'+rowData.id+'" href="javascript:void(0);" class="tooltip-success green" data-rel="tooltip" title="编辑"  style="border-color:#69aa46 "><i class="ace-icon fa fa-pencil bigger-130"></i></a>'+
+                        if (rowData.menuStatus == '0') {
+                            viewBtn = '<div class="action-buttons" style="white-space:normal">' +
+                                '<a data-action="edit" data-id="' + rowData.id + '" href="javascript:void(0);" class="tooltip-success green" data-rel="tooltip" title="编辑"  style="border-color:#69aa46 "><i class="ace-icon fa fa-pencil bigger-130"></i></a>' +
+                                '<a data-action="submit" data-id="' + rowData.id + '" href="javascript:void(0);" class="tooltip-success green" data-rel="tooltip" title="提交" style="border-color:#69aa46"><i class="ace-icon fa fa-check bigger-130"></i></a>' +
                                 '</div>';
-                        }else if( rowData.menuStatus=='3'){
-                            if(rowData.menuUp=='0'){
-                                viewBtn = '<div class="action-buttons" style="white-space:normal">'+
-                                    '<a data-action="edit" data-id="'+rowData.id+'" href="javascript:void(0);" class="tooltip-success green" data-rel="tooltip" title="编辑"  style="border-color:#69aa46 "><i class="ace-icon fa fa-pencil bigger-130"></i></a>'+
-                                    '<a data-action="upShelf" data-id="'+rowData.id+'" href="javascript:void(0);" class="tooltip-success green" data-rel="tooltip" title="上架"  style="border-color:#69aa46 "><i class="ace-icon fa fa-level-up bigger-130"></i></a>'+
-                                    '</div>';
-                            }else{
-                                viewBtn = '<div class="action-buttons" style="white-space:normal">'+
-                                    '<a data-action="downShelf" data-id="'+rowData.id+'" href="javascript:void(0);" class="tooltip-success green" data-rel="tooltip" title="下架"  style="border-color:#69aa46 "><i class="ace-icon fa fa-level-down bigger-130"></i></a>'+
-                                    '</div>';
-                            }
+                        } else if (rowData.menuStatus == '2') {
+                            viewBtn = '<div class="action-buttons" style="white-space:normal">' +
+                                '<a data-action="edit" data-id="' + rowData.id + '" href="javascript:void(0);" class="tooltip-success green" data-rel="tooltip" title="编辑"  style="border-color:#69aa46 "><i class="ace-icon fa fa-pencil bigger-130"></i></a>' +
+                                '</div>';
+                        } else if (rowData.menuStatus == '3') {
+                            viewBtn = '<div class="action-buttons" style="white-space:normal">' +
+                                '<a data-action="edit" data-id="' + rowData.id + '" href="javascript:void(0);" class="tooltip-success green" data-rel="tooltip" title="编辑"  style="border-color:#69aa46 "><i class="ace-icon fa fa-pencil bigger-130"></i></a>' +
+                                '</div>';
                         }
-
-
-
                         $(grid_selector).jqGrid('setRowData', ids[i], {
-                            menuLimited: menuLimited,
-                            menuType: menuType,
                             menuStatus: menuStatus,
-                            menuUp: menuUp,
+                            menuName: menuName,
                             view: viewBtn
                         });
                     }
 
 
                     //删除按钮
-                    $(grid_selector).find('a[data-action=delete]').on('click', function(event) {
+                    $(grid_selector).find('a[data-action=delete]').on('click', function (event) {
                         $(grid_selector).jqGrid('resetSelection');
                         var id = $(this).attr('data-id');
                         doDelete(id);
                     });
 
                     //编辑
-                    $(grid_selector).find('a[data-action=edit]').on('click', function(event) {
+                    $(grid_selector).find('a[data-action=edit]').on('click', function (event) {
                         $(grid_selector).jqGrid('resetSelection');
                         var id = $(this).attr('data-id');
                         _edita(id);
                     });
 
                     //提交审核
-                    $(grid_selector).find('a[data-action=submit]').on('click', function(event) {
+                    $(grid_selector).find('a[data-action=submit]').on('click', function (event) {
                         $(grid_selector).jqGrid('resetSelection');
                         var id = $(this).attr('data-id');
                         submitMenu(id);
                     });
 
-
-                    //上架
-                    $(grid_selector).find('a[data-action=upShelf]').on('click', function(event) {
-                        $(grid_selector).jqGrid('resetSelection');
-                        var id = $(this).attr('data-id');
-                        upShelf(id);
-                    });
-
-                    //下架
-                    $(grid_selector).find('a[data-action=downShelf]').on('click', function(event) {
-                        $(grid_selector).jqGrid('resetSelection');
-                        var id = $(this).attr('data-id');
-                        downShelf(id);
-                    });
                 }
             });
 
@@ -499,8 +402,6 @@
             }
 
 
-
-
             function openDialogEdit() {
                 var selectedIds = $(grid_selector).jqGrid("getGridParam", "selarrrow");
                 if (selectedIds.length > 1) {
@@ -513,41 +414,14 @@
                     _edita(selectedIds[0]);
                 }
             }
-           function upShelf(id){
-               //信息确认插件
-               $.msg_confirm.Init({
-                   'msg': '要上架当前所选的套餐吗？',//这个参数可选，默认值：'这是信息提示！'
-                   'confirm_fn': function () {
-                       var ids = id+"";
-                       var params = {"id":id,"menuUp":"1"};
-                       $.post("${ctx}/pzMenu/updateStatus", params, function (result) {
-                           if (result.messageStatus == "1") {
-                               $.msg_show.Init({
-                                   'msg': result.message,
-                                   'type': 'success'
-                               });
-                           } else if (result.messageStatus == "0") {
-                               $.msg_show.Init({
-                                   'msg': result.message,
-                                   'type': 'error'
-                               });
-                           }
-                           $(grid_selector).trigger("reloadGrid");
-                       });
-                   },//这个参数可选，默认值：function(){} 空的方法体
-                   'cancel_fn': function () {
-                       $(grid_selector).jqGrid('resetSelection');
-                   }//这个参数可选，默认值：function(){} 空的方法体
-               });
-           }
 
-            function downShelf(id){
+            function upShelf(id) {
                 //信息确认插件
                 $.msg_confirm.Init({
-                    'msg': '要下架当前所选的套餐吗？',//这个参数可选，默认值：'这是信息提示！'
+                    'msg': '要上架当前所选的套餐吗？',//这个参数可选，默认值：'这是信息提示！'
                     'confirm_fn': function () {
-                        var ids = id+"";
-                        var params = {"id":id,"menuUp":"0"};
+                        var ids = id + "";
+                        var params = {"id": id, "menuUp": "1"};
                         $.post("${ctx}/pzMenu/updateStatus", params, function (result) {
                             if (result.messageStatus == "1") {
                                 $.msg_show.Init({
@@ -568,13 +442,42 @@
                     }//这个参数可选，默认值：function(){} 空的方法体
                 });
             }
+
+            function downShelf(id) {
+                //信息确认插件
+                $.msg_confirm.Init({
+                    'msg': '要下架当前所选的套餐吗？',//这个参数可选，默认值：'这是信息提示！'
+                    'confirm_fn': function () {
+                        var ids = id + "";
+                        var params = {"id": id, "menuUp": "0"};
+                        $.post("${ctx}/pzMenu/updateStatus", params, function (result) {
+                            if (result.messageStatus == "1") {
+                                $.msg_show.Init({
+                                    'msg': result.message,
+                                    'type': 'success'
+                                });
+                            } else if (result.messageStatus == "0") {
+                                $.msg_show.Init({
+                                    'msg': result.message,
+                                    'type': 'error'
+                                });
+                            }
+                            $(grid_selector).trigger("reloadGrid");
+                        });
+                    },//这个参数可选，默认值：function(){} 空的方法体
+                    'cancel_fn': function () {
+                        $(grid_selector).jqGrid('resetSelection');
+                    }//这个参数可选，默认值：function(){} 空的方法体
+                });
+            }
+
             function submitMenu(id) {
                 //信息确认插件
                 $.msg_confirm.Init({
                     'msg': '要提交审核当前所选的记录吗？',//这个参数可选，默认值：'这是信息提示！'
                     'confirm_fn': function () {
-                        var ids = id+"";
-                        var params = {"id":id,"menuStatus":"1"};
+                        var ids = id + "";
+                        var params = {"id": id, "menuStatus": "1"};
                         $.post("${ctx}/pzMenu/updateStatus", params, function (result) {
                             if (result.messageStatus == "1") {
                                 $.msg_show.Init({
@@ -595,7 +498,6 @@
                     }//这个参数可选，默认值：function(){} 空的方法体
                 });
             }
-
 
 
             function doDelete(id) {
@@ -603,8 +505,8 @@
                 $.msg_confirm.Init({
                     'msg': '要删除当前所选的记录吗？',//这个参数可选，默认值：'这是信息提示！'
                     'confirm_fn': function () {
-                        var ids = id+"";
-                        var params = {"ids":ids};
+                        var ids = id + "";
+                        var params = {"ids": ids};
                         $.post("${ctx}/pzMenu/deleteByIds", params, function (result) {
                             if (result.messageStatus == "1") {
                                 $.msg_show.Init({
@@ -625,8 +527,6 @@
                     }//这个参数可选，默认值：function(){} 空的方法体
                 });
             }
-
-
 
 
             //search list by condition

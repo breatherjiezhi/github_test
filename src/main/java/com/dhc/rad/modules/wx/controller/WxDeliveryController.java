@@ -46,76 +46,76 @@ public class WxDeliveryController {
      * @return: Map<String ,   Object>
      * @Date: 2021/5/7
      */
-    @RequestMapping(value = "saveByBoxCode", method = RequestMethod.POST)
-    @ResponseBody
-    public Map<String, Object> saveByBoxCode(@RequestParam("boxCode") String boxCode) {
-        Map<String, Object> returnMap = new HashMap<>();
-        //判断boxCode是否为空
-        if (StringUtils.isEmpty(boxCode)) {
-            returnMap.put("data", null);
-            returnMap.put("status", ConstantUtils.ResCode.PARMERROR);
-            returnMap.put("message", ConstantUtils.ResCode.ParameterException);
-            return returnMap;
-        }
-        //判断当前用户是否具有配送权限
-        if (!UserUtils.getRoleFlag("delivery")) {
-            returnMap.put("data", null);
-            returnMap.put("status", ConstantUtils.ResCode.PASSLIMITS);
-            returnMap.put("message", ConstantUtils.ResCode.PASSLIMITSMSG);
-            return returnMap;
-        }
-        Integer countByBoxCode = pzBoxCodeService.findCountByBoxCode(boxCode);
-        if (countByBoxCode == 0) {
-            returnMap.put("data", null);
-            returnMap.put("status", ConstantUtils.ResCode.PARMERROR);
-            returnMap.put("message", ConstantUtils.ResCode.ParameterException);
-            return returnMap;
-        }
-
-        //根据boxCode查询相关信息
-        PzBoxCode pzBoxCode = pzBoxCodeService.findByBoxCode(boxCode);
-        String restaurantId = pzBoxCode.getRestaurantId();
-        String serviceUnitId = pzBoxCode.getServiceUnitId();
-        String boxId = pzBoxCode.getId();
-        //判断该用户是否在对应的餐厅下
-        Office office = UserUtils.getUser().getOffice();
-        String officeId = office.getId();
-        if (!officeId.equals(restaurantId)) {
-            returnMap.put("data", null);
-            returnMap.put("status", ConstantUtils.ResCode.PASSLIMITS);
-            returnMap.put("message", ConstantUtils.ResCode.PASSLIMITSMSG);
-            return returnMap;
-        }
-
-
-        //存储配送信息
-        PzDelivery pzDelivery = new PzDelivery();
-        //餐厅id
-        pzDelivery.setRestaurantId(restaurantId);
-        //服务单元id
-        pzDelivery.setServiceUnitId(serviceUnitId);
-        pzDelivery.setBoxId(boxId);
-
-        //配送日期
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        String nowDate = sdf.format(new Date());
-        pzDelivery.setEatDate(nowDate);
-
-        //存储配送信息
-        Integer flag = pzDeliveryService.saveOrUpdateDelivery(pzDelivery);
-
-        if (flag > 0) {
-            returnMap.put("data", null);
-            returnMap.put("status", ConstantUtils.ResCode.SUCCESS);
-            returnMap.put("message", ConstantUtils.ResCode.SUCCESSMSG);
-        } else {
-            returnMap.put("data", null);
-            returnMap.put("status", ConstantUtils.ResCode.SERVERERROR);
-            returnMap.put("message", ConstantUtils.ResCode.UPDATEFAIL);
-        }
-
-        return returnMap;
-    }
+//    @RequestMapping(value = "saveByBoxCode", method = RequestMethod.POST)
+//    @ResponseBody
+//    public Map<String, Object> saveByBoxCode(@RequestParam("boxCode") String boxCode) {
+//        Map<String, Object> returnMap = new HashMap<>();
+//        //判断boxCode是否为空
+//        if (StringUtils.isEmpty(boxCode)) {
+//            returnMap.put("data", null);
+//            returnMap.put("status", ConstantUtils.ResCode.PARMERROR);
+//            returnMap.put("message", ConstantUtils.ResCode.ParameterException);
+//            return returnMap;
+//        }
+//        //判断当前用户是否具有配送权限
+//        if (!UserUtils.getRoleFlag("delivery")) {
+//            returnMap.put("data", null);
+//            returnMap.put("status", ConstantUtils.ResCode.PASSLIMITS);
+//            returnMap.put("message", ConstantUtils.ResCode.PASSLIMITSMSG);
+//            return returnMap;
+//        }
+//        Integer countByBoxCode = pzBoxCodeService.findCountByBoxCode(boxCode);
+//        if (countByBoxCode == 0) {
+//            returnMap.put("data", null);
+//            returnMap.put("status", ConstantUtils.ResCode.PARMERROR);
+//            returnMap.put("message", ConstantUtils.ResCode.ParameterException);
+//            return returnMap;
+//        }
+//
+//        //根据boxCode查询相关信息
+//        PzBoxCode pzBoxCode = pzBoxCodeService.findByBoxCode(boxCode);
+//        String restaurantId = pzBoxCode.getRestaurantId();
+//        String serviceUnitId = pzBoxCode.getServiceUnitId();
+//        String boxId = pzBoxCode.getId();
+//        //判断该用户是否在对应的餐厅下
+//        Office office = UserUtils.getUser().getOffice();
+//        String officeId = office.getId();
+//        if (!officeId.equals(restaurantId)) {
+//            returnMap.put("data", null);
+//            returnMap.put("status", ConstantUtils.ResCode.PASSLIMITS);
+//            returnMap.put("message", ConstantUtils.ResCode.PASSLIMITSMSG);
+//            return returnMap;
+//        }
+//
+//
+//        //存储配送信息
+//        PzDelivery pzDelivery = new PzDelivery();
+//        //餐厅id
+//        pzDelivery.setRestaurantId(restaurantId);
+//        //服务单元id
+//        pzDelivery.setServiceUnitId(serviceUnitId);
+//        pzDelivery.setBoxId(boxId);
+//
+//        //配送日期
+//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+//        String nowDate = sdf.format(new Date());
+//        pzDelivery.setEatDate(nowDate);
+//
+//        //存储配送信息
+//        Integer flag = pzDeliveryService.saveOrUpdateDelivery(pzDelivery);
+//
+//        if (flag > 0) {
+//            returnMap.put("data", null);
+//            returnMap.put("status", ConstantUtils.ResCode.SUCCESS);
+//            returnMap.put("message", ConstantUtils.ResCode.SUCCESSMSG);
+//        } else {
+//            returnMap.put("data", null);
+//            returnMap.put("status", ConstantUtils.ResCode.SERVERERROR);
+//            returnMap.put("message", ConstantUtils.ResCode.UPDATEFAIL);
+//        }
+//
+//        return returnMap;
+//    }
 
 
     @RequestMapping(value = "getOrderInfo", method = RequestMethod.POST)

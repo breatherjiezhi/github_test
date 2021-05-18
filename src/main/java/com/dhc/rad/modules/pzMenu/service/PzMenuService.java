@@ -7,6 +7,8 @@ import com.dhc.rad.common.utils.ObjectUtils;
 import com.dhc.rad.common.utils.StringUtils;
 import com.dhc.rad.modules.pzMenu.dao.PzMenuDao;
 import com.dhc.rad.modules.pzMenu.entity.PzMenu;
+import com.dhc.rad.modules.pzMenuContent.dao.PzMenuContentDao;
+import com.dhc.rad.modules.pzMenuContent.entity.PzMenuContent;
 import com.dhc.rad.modules.pzMenuFile.dao.PzMenuFileDao;
 import com.dhc.rad.modules.pzMenuFile.entity.PzMenuFile;
 import com.dhc.rad.modules.pzMenuFile.service.PzMenuFileService;
@@ -30,17 +32,23 @@ public class PzMenuService extends CrudService<PzMenuDao,PzMenu> {
     private PzMenuDao pzMenuDao;
 
     @Autowired
+    private PzMenuContentDao pzMenuContentDao;
+
+    @Autowired
     private PzMenuFileDao pzMenuFileDao;
 
     public  Page<PzMenu> searchPage(Page<PzMenu> pzMenuPage, PzMenu pzMenu) {
         pzMenu.setPage(pzMenuPage);
-        List<PzMenu> list = pzMenuDao.findMenuList(pzMenu);
+        List<PzMenu> list = pzMenuDao.findList(pzMenu);
+        for (PzMenu menu : list) {
+            menu.setPzMenuContentString(menuToString(pzMenuContentDao.findListByMenuId(menu.getId())));
+        }
         pzMenuPage.setList(list);
         return pzMenuPage;
     }
 
     @Transactional(readOnly = false)
-    public Integer saveOrUpdate(PzMenu pzMenu) {
+    public Integer saveOrUpdate(PzMenu pzMenu,List<PzMenuContent> pzMenuContentList) {
         if(ObjectUtils.isNotEmpty(pzMenu)){
             String id = pzMenu.getId();
             if(StringUtils.isNotBlank(id)){
@@ -49,16 +57,28 @@ public class PzMenuService extends CrudService<PzMenuDao,PzMenu> {
                 //设置菜单状态为保存并修改
 
                 pzMenu.setExamineInfo("");
-                pzMenu.setMenuUp(Global.MENU_UP_NO_ON_SALE);
                 pzMenu.setMenuStatus(Global.MENU_STATUS_SAVEANDUPDATE);
 
+
+                pzMenuContentDao.deleteByMenuId(id);
+                for (PzMenuContent pzMenuContent : pzMenuContentList) {
+                    pzMenuContent.preInsert();
+                    pzMenuContent.setMenuId(id);
+                    pzMenuContentDao.insert(pzMenuContent);
+                }
                 return pzMenuDao.update(pzMenu);
             }else{
-
                 //新增createBy updateBy createTime updateTime
                 pzMenu.preInsert();
                 //新增createBy updateBy createTime updateTime
-                return  pzMenuDao.insert(pzMenu);
+                Integer flag =  pzMenuDao.insert(pzMenu);
+
+                for (PzMenuContent pzMenuContent : pzMenuContentList) {
+                    pzMenuContent.preInsert();
+                    pzMenuContent.setMenuId(pzMenu.getId());
+                    pzMenuContentDao.insert(pzMenuContent);
+                }
+                return flag;
             }
         }
         return 0;
@@ -80,7 +100,7 @@ public class PzMenuService extends CrudService<PzMenuDao,PzMenu> {
     }
 
     public List<PzMenu> findMenuList(PzMenu pzMenu) {
-        List<PzMenu> menuList =  pzMenuDao.findMenuList(pzMenu);
+        List<PzMenu> menuList =  pzMenuDao.findList(pzMenu);
         return menuList;
     }
 
@@ -99,7 +119,9 @@ public class PzMenuService extends CrudService<PzMenuDao,PzMenu> {
         //查询审核状态为待审核的数据信息
         pzMenu.setMenuStatus(Global.MENU_STATUS_SUBMIT);
         List<PzMenu> list = pzMenuDao.findList(pzMenu);
-
+        for (PzMenu menu : list) {
+            menu.setPzMenuContentString(menuToString(pzMenuContentDao.findListByMenuId(menu.getId())));
+        }
         return pzMenuPage.setList(list);
     }
 
@@ -130,6 +152,16 @@ public class PzMenuService extends CrudService<PzMenuDao,PzMenu> {
     }
 
 
-
+    public String menuToString(List<PzMenuContent>  pzMenuContentList){
+        StringBuffer temp = new StringBuffer();
+        for (PzMenuContent pzMenuContent : pzMenuContentList) {
+            if(StringUtils.isNotBlank(temp)){
+                temp.append("\n").append(pzMenuContent.getEatDate()).append("(").append(pzMenuContent.getEatWeek()).append("):").append(pzMenuContent.getMenuDetail());
+            }else{
+                temp.append(pzMenuContent.getEatDate()).append("(").append(pzMenuContent.getEatWeek()).append("):").append(pzMenuContent.getMenuDetail());
+            }
+        }
+        return temp.toString();
+    }
 
 }

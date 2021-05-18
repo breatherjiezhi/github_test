@@ -20,15 +20,6 @@ public interface PzMenuDao extends CrudDao<PzMenu> {
      */
     Integer deleteByIds(List<String> ids);
 
-    /**
-     * 修改菜单状态
-     *
-     * @param pzMenu
-     * @return Integer
-     */
-    //Integer updateMenuStatus(PzMenu pzMenu);
-
-    List<PzMenu> findMenuList(@Param("pzMenu") PzMenu pzMenu);
 
     /**
      * @Description: 菜单上架操作

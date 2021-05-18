@@ -37,18 +37,29 @@ public class PzDeliveryService extends CrudService<PzDeliveryDao, PzDelivery> {
     }
 
     @Transactional(readOnly = false)
-    public Integer saveOrUpdateDelivery(PzDelivery pzDelivery) {
-        if(pzDelivery!=null){
-            if(pzDeliveryDao.getDelivery(pzDelivery)!=null){
-                pzDelivery.preUpdate();
-                return pzDeliveryDao.updateDelivery(pzDelivery);
+    public Integer saveOrUpdateDelivery(List<PzDelivery> pzDeliveryList) {
+        Integer result = 0;
+        for (PzDelivery pzDelivery : pzDeliveryList) {
+            if(pzDelivery!=null){
+                if(pzDeliveryDao.getDelivery(pzDelivery)!=null){
+                    pzDelivery.preUpdate();
+                    Integer updateDelivery = pzDeliveryDao.updateDelivery(pzDelivery);
+                    if(updateDelivery > 0){
+                        result ++;
+                    }
+                }else{
+                    pzDelivery.preInsert();
+                    int insert = pzDeliveryDao.insert(pzDelivery);
+                    if(insert > 0){
+                        result ++;
+                    }
+                }
             }else{
-                pzDelivery.preInsert();
-                return pzDeliveryDao.insert(pzDelivery);
+                return 0;
             }
-        }else{
-            return 0;
         }
+
+        return result;
 
     }
 

@@ -320,6 +320,7 @@ public class ConstantUtils {
         public static final String ParameterException = "参数为空或者参数异常";
 
         public static final String INFONOEXIST = "信息不存在";
+        public static final String INFOEXIST = "信息已存在";
 
         public static final String DATEEXIST = "日期已存在";
 

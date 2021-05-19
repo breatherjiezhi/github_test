@@ -190,6 +190,7 @@ public class PzMenuController extends BaseController {
     @ResponseBody
     public Map<String, Object> updateMenuStatus(PzMenu pzMenu, HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> returnMap = new HashMap<>();
+        PzMenu newPzMenu = new PzMenu();
         //获取当前登录用户的id
         Integer menuStatusAgo = null;
         PzMenu menu = null;
@@ -220,9 +221,11 @@ public class PzMenuController extends BaseController {
             }
         }
 
-
+        newPzMenu.setId(pzMenu.getId());
+        newPzMenu.setExamineInfo(pzMenu.getExamineInfo());
+        newPzMenu.setMenuStatus(pzMenu.getMenuStatus());
         //修改菜单状态
-        Integer flag = pzMenuService.updateMenuStatus(pzMenu);
+        Integer flag = pzMenuService.updateMenuStatus(newPzMenu);
 
         if (flag > 0) {
             addMessageAjax(returnMap, "1", "状态修改成功");

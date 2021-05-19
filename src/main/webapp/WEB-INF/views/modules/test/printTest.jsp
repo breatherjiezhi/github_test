@@ -115,6 +115,7 @@
             printAreaInfo += "</div></table>";
            // printAreaInfo += "<div>${orderStatisticStatus.index + 1}</div>";
             printAreaInfo += "<div class='dotted'/>";
+            printAreaInfo += "</div>";
             $("#printArea").append(printAreaInfo);
             var qrCodeId = "qrCode" + count;
             // var qrcode = new QRCode(qrCodeId);

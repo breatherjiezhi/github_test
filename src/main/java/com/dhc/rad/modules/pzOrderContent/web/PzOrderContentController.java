@@ -1,11 +1,11 @@
-package com.dhc.rad.modules.pzOrderMenuContent.web;
+package com.dhc.rad.modules.pzOrderContent.web;
 
 import com.dhc.rad.common.persistence.Page;
 import com.dhc.rad.common.utils.ObjectUtils;
 import com.dhc.rad.common.utils.StringUtils;
 import com.dhc.rad.common.web.BaseController;
-import com.dhc.rad.modules.pzOrderMenuContent.entity.PzOrderMenuContent;
-import com.dhc.rad.modules.pzOrderMenuContent.service.PzOrderMenuContentService;
+import com.dhc.rad.modules.pzOrderContent.entity.PzOrderContent;
+import com.dhc.rad.modules.pzOrderContent.service.PzOrderContentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,29 +19,29 @@ import java.util.Map;
 
 @Controller
 @RequestMapping(value = "${adminPath}/pzOrderContent")
-public class PzOrderMenuContentController extends BaseController {
+public class PzOrderContentController extends BaseController {
 
    @Autowired
-   private PzOrderMenuContentService pzOrderMenuContentService;
+   private PzOrderContentService pzOrderContentService;
 
     @ModelAttribute
-    public PzOrderMenuContent get(@RequestParam(required = false)String id){
+    public PzOrderContent get(@RequestParam(required = false)String id){
         if(StringUtils.isNotBlank(id)){
-            return pzOrderMenuContentService.get(id);
+            return pzOrderContentService.get(id);
         }else {
-            return new PzOrderMenuContent();
+            return new PzOrderContent();
         }
     }
 
     @RequestMapping(value = {"list"})
-    public String list(PzOrderMenuContent pzOrderMenuContent, HttpServletRequest request, HttpServletResponse response, Model model){
-        return "modules/pzOrderMenuContent/pzOrderMenuContentList";
+    public String list(PzOrderContent PzOrderContent, HttpServletRequest request, HttpServletResponse response, Model model){
+        return "modules/PzOrderContent/PzOrderContentList";
     }
 
     @ResponseBody
-    public Map<String,Object> searchPage(PzOrderMenuContent pzOrderMenuContent, HttpServletRequest request, HttpServletResponse response){
+    public Map<String,Object> searchPage(PzOrderContent PzOrderContent, HttpServletRequest request, HttpServletResponse response){
 
-        Page<PzOrderMenuContent> page = pzOrderMenuContentService.findPage(new Page<>(request, response), pzOrderMenuContent);
+        Page<PzOrderContent> page = pzOrderContentService.findPage(new Page<>(request, response), PzOrderContent);
         Map<String,Object> returnMap = new HashMap<>();
         returnMap.put("total", page.getTotalPage());
         returnMap.put("pageNo", page.getPageNo());
@@ -51,19 +51,19 @@ public class PzOrderMenuContentController extends BaseController {
     }
 
     @RequestMapping(value = "form")
-    public String form(PzOrderMenuContent pzOrderMenuContent,Model model){
-        model.addAttribute("pzOrderMenuContent", pzOrderMenuContent);
-        return "modules/pzOrderMenuContent/pzOrderMenuContentForm";
+    public String form(PzOrderContent PzOrderContent,Model model){
+        model.addAttribute("PzOrderContent", PzOrderContent);
+        return "modules/PzOrderContent/PzOrderContentForm";
     }
 
     @RequestMapping(value = {"doSave"})
     @ResponseBody
-    public Map<String,Object> doSave(PzOrderMenuContent pzOrderMenuContent,HttpServletRequest request,HttpServletResponse response,Model model){
+    public Map<String,Object> doSave(PzOrderContent PzOrderContent,HttpServletRequest request,HttpServletResponse response,Model model){
         Map<String,Object> returnMap = new HashMap<>();
         Integer flag = 0;
 
-        if (ObjectUtils.isNotEmpty(pzOrderMenuContent)) {
-            flag =  pzOrderMenuContentService.saveOrUpdate(pzOrderMenuContent);
+        if (ObjectUtils.isNotEmpty(PzOrderContent)) {
+            flag =  pzOrderContentService.saveOrUpdate(PzOrderContent);
         }
         if (flag > 0) {
             addMessageAjax(returnMap, "1", "保存成功");
@@ -77,7 +77,7 @@ public class PzOrderMenuContentController extends BaseController {
     @ResponseBody
     public Map<String,Object> deleteByIds(String ids, HttpServletRequest request, HttpServletResponse response, Model model){
         Map<String,Object> returnMap = new HashMap<>();
-        Integer flag = pzOrderMenuContentService.deleteByIds(Arrays.asList(ids.split(",")));
+        Integer flag = pzOrderContentService.deleteByIds(Arrays.asList(ids.split(",")));
 
         if (flag > 0) {
             addMessageAjax(returnMap, "1", "删除成功");

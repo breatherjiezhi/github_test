@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.dhc.rad.modules.pzOrderMenuContent.dao.PzOrderMenuContentDao">
-    <resultMap id="BaseResultMap" type="com.dhc.rad.modules.pzOrderMenuContent.entity.PzOrderMenuContent">
+<mapper namespace="com.dhc.rad.modules.pzOrderContent.dao.PzOrderContentDao">
+    <resultMap id="BaseResultMap" type="com.dhc.rad.modules.pzOrderContent.entity.PzOrderContent">
         <result column="order_id" property="orderId"/>
         <result column="content_id" property="contentId"/>
         <result column="create_by" property="createBy.id"/>
@@ -13,7 +13,7 @@
     </resultMap>
 
     <update id="deleteByIds">
-        UPDATE pz_order_menu_content
+        UPDATE pz_order_content
         SET
         del_flag = '1'
         WHERE id in
@@ -33,13 +33,13 @@
                a.update_date,
                a.remarks,
                a.del_flag
-        FROM pz_order_menu_content a
+        FROM pz_order_content a
         WHERE a.ID = #{id}
           and a.del_flag = '0'
     </select>
 
-    <insert id="insert" parameterType="com.dhc.rad.modules.pzOrderMenuContent.entity.PzOrderMenuContent">
-        INSERT INTO pz_order_menu_content
+    <insert id="insert" parameterType="com.dhc.rad.modules.pzOrderContent.entity.PzOrderContent">
+        INSERT INTO pz_order_content
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="null != id and ''!= id">
                 id,
@@ -101,8 +101,8 @@
         </trim>
     </insert>
 
-    <update id="update" parameterType="com.dhc.rad.modules.pzOrderMenuContent.entity.PzOrderMenuContent">
-        UPDATE pz_order_menu_content
+    <update id="update" parameterType="com.dhc.rad.modules.pzOrderContent.entity.PzOrderContent">
+        UPDATE pz_order_content
         <set>
             <if test="null != orderId and ''!= orderId">order_id= #{orderId},</if>
             <if test="null != contentId and ''!= contentId">content_id= #{contentId},</if>
@@ -127,7 +127,7 @@
         remarks,
         del_flag
         FROM
-        pz_order_menu_content
+        pz_order_content
         WHERE del_flag ='0'
         <if test="null != orderId and ''!= orderId">AND order_id = #{orderId}</if>
         <if test="null != contentId and ''!= contentId">AND content_id = #{contentId}</if>

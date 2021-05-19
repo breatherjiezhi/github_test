@@ -1,8 +1,8 @@
-package com.dhc.rad.modules.pzOrderMenuContent.entity;
+package com.dhc.rad.modules.pzOrderContent.entity;
 
 import com.dhc.rad.common.persistence.DataEntity;
 
-public class PzOrderMenuContent extends DataEntity<PzOrderMenuContent> {
+public class PzOrderContent extends DataEntity<PzOrderContent> {
 
     /**
      * 订单id

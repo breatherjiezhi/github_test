@@ -1,12 +1,12 @@
-package com.dhc.rad.modules.pzOrderMenuContent.dao;
+package com.dhc.rad.modules.pzOrderContent.dao;
 
 import com.dhc.rad.common.persistence.CrudDao;
 import com.dhc.rad.common.persistence.annotation.MyBatisDao;
-import com.dhc.rad.modules.pzOrderMenuContent.entity.PzOrderMenuContent;
+import com.dhc.rad.modules.pzOrderContent.entity.PzOrderContent;
 
 import java.util.List;
 @MyBatisDao
-public interface PzOrderMenuContentDao extends CrudDao<PzOrderMenuContent> {
+public interface PzOrderContentDao extends CrudDao<PzOrderContent> {
 
     /**
      * 批量删除(逻辑删除)

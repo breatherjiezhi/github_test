@@ -1,10 +1,10 @@
-package com.dhc.rad.modules.pzOrderMenuContent.service;
+package com.dhc.rad.modules.pzOrderContent.service;
 
 import com.dhc.rad.common.service.CrudService;
 import com.dhc.rad.common.utils.ObjectUtils;
 import com.dhc.rad.common.utils.StringUtils;
-import com.dhc.rad.modules.pzOrderMenuContent.dao.PzOrderMenuContentDao;
-import com.dhc.rad.modules.pzOrderMenuContent.entity.PzOrderMenuContent;
+import com.dhc.rad.modules.pzOrderContent.dao.PzOrderContentDao;
+import com.dhc.rad.modules.pzOrderContent.entity.PzOrderContent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,25 +13,25 @@ import java.util.List;
 
 @Service
 @Transactional(readOnly = true)
-public class PzOrderMenuContentService extends CrudService<PzOrderMenuContentDao, PzOrderMenuContent> {
+public class PzOrderContentService extends CrudService<PzOrderContentDao, PzOrderContent> {
 
     @Autowired
-    private PzOrderMenuContentDao pzOrderMenuContentDao;
+    private PzOrderContentDao pzOrderContentDao;
 
     @Transactional(readOnly = false)
     public Integer deleteByIds(List<String> ids) {
-        return  pzOrderMenuContentDao.deleteByIds(ids);
+        return  pzOrderContentDao.deleteByIds(ids);
     }
 
     @Transactional(readOnly = false)
-    public Integer saveOrUpdate(PzOrderMenuContent pzOrderMenuContent) {
+    public Integer saveOrUpdate(PzOrderContent pzOrderMenuContent) {
         if(ObjectUtils.isNotEmpty(pzOrderMenuContent)){
             if(StringUtils.isNotBlank(pzOrderMenuContent.getId())){
                 pzOrderMenuContent.preUpdate();
-                return pzOrderMenuContentDao.update(pzOrderMenuContent);
+                return pzOrderContentDao.update(pzOrderMenuContent);
             }else{
                 pzOrderMenuContent.preInsert();
-                return pzOrderMenuContentDao.insert(pzOrderMenuContent);
+                return pzOrderContentDao.insert(pzOrderMenuContent);
             }
         }
         return 0;

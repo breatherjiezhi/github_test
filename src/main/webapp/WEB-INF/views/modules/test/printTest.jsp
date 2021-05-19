@@ -112,7 +112,7 @@
             printAreaInfo += "<div  class='tab1'><table>";
             printAreaInfo += "<tr><th>序号</th><th style=''>姓名</th><th colspan='2'>套餐类别</th></tr>";
             printAreaInfo += orderDetailArea;
-            printAreaInfo += "</div></table>";
+            printAreaInfo += "</table></div>";
            // printAreaInfo += "<div>${orderStatisticStatus.index + 1}</div>";
             printAreaInfo += "<div class='dotted'/>";
             printAreaInfo += "</div>";

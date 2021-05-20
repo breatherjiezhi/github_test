@@ -70,6 +70,16 @@ public class PzMenu extends DataEntity<PzMenu> {
     private  String  pzMenuContentString;
 
 
+    private String eatDate;
+
+    public String getEatDate() {
+        return eatDate;
+    }
+
+    public void setEatDate(String eatDate) {
+        this.eatDate = eatDate;
+    }
+
     // 版本号
     private int version;
 

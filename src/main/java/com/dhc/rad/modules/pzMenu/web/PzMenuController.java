@@ -17,6 +17,7 @@ import com.dhc.rad.modules.sys.entity.User;
 import com.dhc.rad.modules.sys.service.SystemService;
 import com.dhc.rad.modules.sys.utils.UserUtils;
 import com.sun.xml.internal.bind.v2.TODO;
+import jodd.time.TimeUtil;
 import org.activiti.explorer.util.time.timeunit.WeekTimeUnit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -28,7 +29,9 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
+import java.sql.Time;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author 10951
@@ -127,8 +130,15 @@ public class PzMenuController extends BaseController {
             }
         }
 
+        List<PzMenuContent> list =  pzMenu.getPzMenuContentList();
+        String eatDate = "";
+        for (PzMenuContent pzMenuContent : list) {
+            eatDate+=pzMenuContent.getEatDate()+",";
+        }
+
+        pzMenu.setEatDate(eatDate);
         pzMenu.setRestaurantId(user.getOffice().getId());
-        flag = pzMenuService.saveOrUpdate(pzMenu,pzMenu.getPzMenuContentList());
+        flag = pzMenuService.saveOrUpdate(pzMenu,list);
 
 
         if (flag > 0) {

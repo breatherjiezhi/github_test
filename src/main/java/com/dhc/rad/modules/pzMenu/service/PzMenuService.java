@@ -52,6 +52,19 @@ public class PzMenuService extends CrudService<PzMenuDao, PzMenu> {
         return pzMenuPage;
     }
 
+    /**
+     * 无分页查询已通过审核的菜单
+     * @param pzMenu
+     * @return
+     */
+    public List<PzMenu> search(PzMenu pzMenu) {
+        List<PzMenu> list = pzMenuDao.findList(pzMenu);
+        for (PzMenu menu : list) {
+            menu.setPzMenuContentString(menuToString(pzMenuContentDao.findListByMenuId(menu.getId())));
+        }
+        return list;
+    }
+
     @Transactional(readOnly = false)
     public Integer saveOrUpdate(PzMenu pzMenu, List<PzMenuContent> pzMenuContentList) {
         if (ObjectUtils.isNotEmpty(pzMenu)) {
@@ -60,16 +73,12 @@ public class PzMenuService extends CrudService<PzMenuDao, PzMenu> {
 
                 pzMenu.preUpdate();
                 //设置菜单状态为保存并修改
-
                 pzMenu.setExamineInfo("");
                 pzMenu.setMenuStatus(Global.MENU_STATUS_SAVEANDUPDATE);
 
-
-                pzMenuContentDao.deleteByMenuId(id);
                 for (PzMenuContent pzMenuContent : pzMenuContentList) {
-                    pzMenuContent.preInsert();
-                    pzMenuContent.setMenuId(id);
-                    pzMenuContentDao.insert(pzMenuContent);
+                    pzMenuContent.preUpdate();
+                    pzMenuContentDao.update(pzMenuContent);
                 }
                 return pzMenuDao.update(pzMenu);
             } else {
@@ -130,16 +139,16 @@ public class PzMenuService extends CrudService<PzMenuDao, PzMenu> {
         return pzMenuPage.setList(list);
     }
 
-    @Transactional(readOnly = false)
-    public Integer upPzMenu(List<String> idList) {
-
-        return pzMenuDao.upPzMenu(idList);
-    }
-
-    @Transactional(readOnly = false)
-    public Integer downPzMenu(List<String> ids) {
-        return pzMenuDao.downPzMenu(ids);
-    }
+//    @Transactional(readOnly = false)
+//    public Integer upPzMenu(List<String> idList) {
+//
+//        return pzMenuDao.upPzMenu(idList);
+//    }
+//
+//    @Transactional(readOnly = false)
+//    public Integer downPzMenu(List<String> ids) {
+//        return pzMenuDao.downPzMenu(ids);
+//    }
 
     @Transactional(readOnly = false)
     public Integer findMenuCount(String menuId) {
@@ -152,8 +161,12 @@ public class PzMenuService extends CrudService<PzMenuDao, PzMenu> {
     }
 
 
-    public List<PzMenu> findListByRid(String restaurantId) {
-        return pzMenuDao.findListByRid(restaurantId);
+    public List<PzMenu> findListByRid(String restaurantId,String eatDate) {
+        List<PzMenu> list = pzMenuDao.findListByRid(restaurantId,eatDate);
+        for (PzMenu menu : list) {
+            menu.setPzMenuContentString(menuToString(pzMenuContentDao.findListByMenuId(menu.getId())));
+        }
+        return list;
     }
 
 

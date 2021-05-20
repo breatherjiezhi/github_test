@@ -21,29 +21,13 @@ public interface PzMenuDao extends CrudDao<PzMenu> {
     Integer deleteByIds(List<String> ids);
 
 
-    /**
-     * @Description: 菜单上架操作
-     * @Param: idList
-     * @return: Integer
-     * @Date: 2021/4/20
-     */
-    Integer upPzMenu(List<String> ids);
-
-    /**
-     * @Description: 菜单下架
-     * @Param: ids
-     * @return: Integer
-     * @Date: 2021/4/20
-     */
-    Integer downPzMenu(List<String> ids);
-
     Integer findMenuCount(@Param("id") String id);
 
     Integer findVersion(@Param("id") String id);
 
     Integer updateMenuCount(PzMenu pzMenu);
 
-    List<PzMenu> findListByRid(@Param("restaurantId")String restaurantId);
+    List<PzMenu> findListByRid(@Param("restaurantId")String restaurantId,@Param("eatDate")String eatDate);
 
     //Integer submitPzMenu(PzMenu pzMenu);
 }

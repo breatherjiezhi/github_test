@@ -50,9 +50,9 @@ public class WxMenuController {
     public Map<String, Object>  findMenuByRid(String rid, HttpServletRequest request, HttpServletResponse response, Model model) {
 
         //获取当前时间本周吃饭时间集合 用于查询本周订单
-        List<String> currentWeekDateList = TimeUtils.getCurrentWeekEatDate();
+        List<String> nextWeekEatDateList = TimeUtils.getNextWeekEatDate();
         //时间用逗号","进行拼接
-        String eatDate = currentWeekDateList.stream().collect(Collectors.joining(",")) + ",";
+        String eatDate = nextWeekEatDateList.stream().collect(Collectors.joining(",")) + ",";
         List<PzMenu> menuList = pzMenuService.findListByRid(rid,eatDate);
         Map<String, Object> returnMap = new HashMap<>();
         returnMap.put("data", menuList);
@@ -68,9 +68,9 @@ public class WxMenuController {
         List<Office> officeList = officeService.findRestaurantOffice();
 
         //获取当前时间下周吃饭时间集合
-        List<String> currentWeekDateList = TimeUtils.getNextWeekEatDate();
+        List<String> nextWeekEatDateList = TimeUtils.getNextWeekEatDate();
         //时间用逗号","进行拼接
-        String eatDate = currentWeekDateList.stream().collect(Collectors.joining(",")) + ",";
+        String eatDate = nextWeekEatDateList.stream().collect(Collectors.joining(",")) + ",";
 
 
         List<Map<String,Object>> dataList = new ArrayList<>();

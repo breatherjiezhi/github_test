@@ -64,12 +64,15 @@ public class WxMenuController {
 
 
         List<Map<String,Object>> dataList = new ArrayList<>();
+
+        //菜单接口需求id;
+        int id = 1;
         for (String eDate : nextWeekEatDateList) {
             Map<String,Object> map = new HashMap<>();
+            map.put("id","id"+id);
             map.put("eadDate",eDate);
             map.put("eadWeek",TimeUtils.getWeekDay(eDate));
             List<Map<String,Object>> listMap = new ArrayList<>();
-
             for (PzMenu pzMenu : menuList) {
                 List<PzMenuContent> list = pzMenu.getPzMenuContentList();
                 Map<String,Object> menuContentMap = new HashMap<>();
@@ -85,6 +88,7 @@ public class WxMenuController {
             }
             map.put("category",listMap);
             dataList.add(map);
+            id++;
         }
 
         returnMap.put("data", dataList);

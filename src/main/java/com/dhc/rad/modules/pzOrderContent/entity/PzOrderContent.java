@@ -14,6 +14,20 @@ public class PzOrderContent extends DataEntity<PzOrderContent> {
      */
     private String contentId;
 
+    /**
+     *
+     * 吃不吃标识 0：不吃 1：吃
+     */
+    private Integer eatFlag;
+
+    public Integer getEatFlag() {
+        return eatFlag;
+    }
+
+    public void setEatFlag(Integer eatFlag) {
+        this.eatFlag = eatFlag;
+    }
+
     public String getOrderId() {
         return orderId;
     }

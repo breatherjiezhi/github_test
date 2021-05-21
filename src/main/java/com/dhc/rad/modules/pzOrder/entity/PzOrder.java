@@ -18,11 +18,6 @@ public class PzOrder extends DataEntity<PzOrder> {
     private String userId;
 
     /**
-     *菜单名称
-     */
-    private String menuId;
-
-    /**
      *服务单元编号
      */
     private String serviceUnitId;
@@ -98,14 +93,6 @@ public class PzOrder extends DataEntity<PzOrder> {
 
     public void setUserId(String userId) {
         this.userId = userId;
-    }
-
-    public String getMenuId() {
-        return menuId;
-    }
-
-    public void setMenuId(String menuId) {
-        this.menuId = menuId;
     }
 
     public String getMenuType() {

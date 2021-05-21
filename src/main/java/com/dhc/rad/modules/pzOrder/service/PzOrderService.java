@@ -30,7 +30,6 @@ public class PzOrderService extends CrudService<PzOrderDao, PzOrder> {
     public Integer saveOrder(String userId, String menuId) {
         PzOrder pzOrder = new PzOrder();
         pzOrder.setUserId(userId);
-        pzOrder.setMenuId(menuId);
         pzOrder.preInsert();
         return pzOrderDao.insert(pzOrder);
     }

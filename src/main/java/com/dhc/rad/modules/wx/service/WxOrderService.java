@@ -5,6 +5,8 @@ import com.dhc.rad.modules.pzMenu.dao.PzMenuDao;
 import com.dhc.rad.modules.pzMenu.entity.PzMenu;
 import com.dhc.rad.modules.pzOrder.dao.PzOrderDao;
 import com.dhc.rad.modules.pzOrder.entity.PzOrder;
+import com.dhc.rad.modules.pzOrderContent.dao.PzOrderContentDao;
+import com.dhc.rad.modules.pzOrderContent.entity.PzOrderContent;
 import com.dhc.rad.modules.pzScoreLog.dao.PzScoreLogDao;
 import com.dhc.rad.modules.pzScoreLog.entity.PzScoreLog;
 import com.dhc.rad.modules.pzUserScore.dao.PzUserScoreDao;
@@ -14,6 +16,9 @@ import com.dhc.rad.modules.sys.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author 10951
@@ -37,6 +42,9 @@ public class WxOrderService extends CrudService<PzMenuDao, PzMenu> {
     @Autowired
     private PzUserScoreDao pzUserScoreDao;
 
+    @Autowired
+    private PzOrderContentDao pzOrderContentDao;
+
     @Transactional(readOnly = false)
     public Integer updateMenuCount(String id, int version) {
         PzMenu pzMenu = new PzMenu();
@@ -52,7 +60,7 @@ public class WxOrderService extends CrudService<PzMenuDao, PzMenu> {
      * @Date: 2021/4/28
      */
     @Transactional
-    public Integer orderMenu(PzMenu pzMenu, PzOrder pzOrder, User user, PzScoreLog pzScoreLog) {
+    public Integer orderMenu(PzMenu pzMenu, PzOrder pzOrder, List<String> contentIds, User user, PzScoreLog pzScoreLog) {
 
         Integer updateMenuCount = null;
         if("1".equals(pzMenu.getMenuLimited())){
@@ -79,12 +87,24 @@ public class WxOrderService extends CrudService<PzMenuDao, PzMenu> {
         pzScoreLog.preInsert();
         int logInsert = pzScoreLogDao.insert(pzScoreLog);
 
+        Integer result = 0;
+        for (String contentId : contentIds) {
+            PzOrderContent pzOrderContent = new PzOrderContent();
+            pzOrderContent.setContentId(contentId);
+            pzOrderContent.setOrderId(pzOrder.getId());
+            pzOrderContent.preInsert();
+            int insert = pzOrderContentDao.insert(pzOrderContent);
+            if(insert > 0){
+                result ++;
+            }
+        }
+
         //返回
-        return (updateMenuCount > 0 && insertOrder > 0 && updateIntegral > 0 && logInsert > 0) ? 1 : 0;
+        return (result.equals(contentIds.size()) && updateMenuCount > 0 && insertOrder > 0 && updateIntegral > 0 && logInsert > 0) ? 1 : 0;
     }
 
     @Transactional
-    public Integer saveOrUpdate(PzOrder pzOrder, PzScoreLog pzScoreLog, PzUserScore pzUserScore) {
+    public Integer saveOrUpdate(PzOrder pzOrder, PzScoreLog pzScoreLog, PzUserScore pzUserScore, PzOrderContent pzOrderContent) {
         //新增/更新个人餐厅积分信息
         Integer updateUserScore = null;
         if (pzUserScore.getId() == null) {
@@ -101,11 +121,15 @@ public class WxOrderService extends CrudService<PzMenuDao, PzMenu> {
         pzScoreLog.preInsert();
         Integer insert = pzScoreLogDao.insert(pzScoreLog);
 
-        return (updateUserScore > 0 && update > 0 && insert > 0) ? 1 : 0;
+        //修改pz_order_content信息
+        pzOrderContent.preUpdate();
+        Integer updateOrderContent = pzOrderContentDao.update(pzOrderContent);
+
+        return (updateUserScore > 0 && update > 0 && insert > 0 && updateOrderContent > 0) ? 1 : 0;
     }
 
     @Transactional
-    public Integer updateData(PzUserScore pzUserScore, PzScoreLog pzScoreLog, PzOrder pzOrder) {
+    public Integer updateData(PzUserScore pzUserScore, PzScoreLog pzScoreLog, PzOrder pzOrder, PzOrderContent pzOrderContent) {
         //更新pzUserScore
         pzUserScore.preUpdate();
         Integer updateUserScore = pzUserScoreDao.updateUserScore(pzUserScore);
@@ -115,6 +139,13 @@ public class WxOrderService extends CrudService<PzMenuDao, PzMenu> {
         //更新pzOrder
         pzOrder.preUpdate();
         int updateOrder = pzOrderDao.update(pzOrder);
-        return (updateUserScore > 0 && insertLog > 0 && updateOrder > 0) ? 1 : 0;
+        //更新pzOrderContent
+        pzOrderContent.preUpdate();
+        int updateOrderContent = pzOrderContentDao.update(pzOrderContent);
+        return (updateUserScore > 0 && insertLog > 0 && updateOrder > 0 && updateOrderContent >0) ? 1 : 0;
+    }
+
+    public List<Map<String, Object>> findListByOrderId(String orderId) {
+        return pzOrderContentDao.findListByOrderId(orderId);
     }
 }

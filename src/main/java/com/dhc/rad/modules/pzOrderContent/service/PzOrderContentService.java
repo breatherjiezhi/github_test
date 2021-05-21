@@ -36,4 +36,9 @@ public class PzOrderContentService extends CrudService<PzOrderContentDao, PzOrde
         }
         return 0;
     }
+
+    @Transactional(readOnly = false)
+    public PzOrderContent getByContentIdAndCreateBy(String contentId, String userId) {
+        return pzOrderContentDao.getByContentIdAndCreateBy(contentId,userId);
+    }
 }

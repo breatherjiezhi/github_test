@@ -4,6 +4,7 @@
     <resultMap id="BaseResultMap" type="com.dhc.rad.modules.pzOrderContent.entity.PzOrderContent">
         <result column="order_id" property="orderId"/>
         <result column="content_id" property="contentId"/>
+        <result column="eat_flag" property="eatFlag"/>
         <result column="create_by" property="createBy.id"/>
         <result column="update_by" property="updateBy.id"/>
         <result column="create_date" property="createDate"/>
@@ -27,6 +28,7 @@
         SELECT a.ID,
                a.order_id,
                a.content_id,
+               a.eat_flag,
                a.create_by,
                a.update_by,
                a.create_date,
@@ -44,12 +46,14 @@
             <if test="null != id and ''!= id">
                 id,
             </if>
-
             <if test="null != orderId and ''!= orderId">
                 order_id,
             </if>
             <if test="null != contentId and ''!= contentId">
                 content_id,
+            </if>
+            <if test="null != eatFlag and ''!= eatFlag">
+                eat_flag,
             </if>
             <if test="null != createBy and ''!= createBy">
                 create_by,
@@ -79,6 +83,9 @@
             </if>
             <if test="null != contentId and ''!= contentId">
                 #{contentId},
+            </if>
+            <if test="null != eatFlag and ''!= eatFlag">
+                #{eatFlag},
             </if>
             <if test="null != createBy and ''!= createBy">
                 #{createBy.id},
@@ -110,6 +117,7 @@
             <if test="null != updateBy and ''!= updateBy">UPDATE_BY = #{updateBy.id},</if>
             <if test="null != createDate and ''!= createDate">CREATE_DATE = #{createDate},</if>
             <if test="null != updateDate and ''!= updateDate">UPDATE_DATE = #{updateDate},</if>
+            <if test="null != eatFlag">eat_flag= #{eatFlag},</if>
             <if test="null != remarks and ''!= remarks">remarks = #{remarks}</if>
         </set>
         WHERE id = #{id} and del_flag ='0'
@@ -120,6 +128,7 @@
         ID,
         order_id,
         content_id,
+        eat_flag,
         create_by,
         update_by,
         create_date,
@@ -131,6 +140,7 @@
         WHERE del_flag ='0'
         <if test="null != orderId and ''!= orderId">AND order_id = #{orderId}</if>
         <if test="null != contentId and ''!= contentId">AND content_id = #{contentId}</if>
+        <if test="null != eatFlag and ''!= eatFlag">AND eat_flag = #{eatFlag}</if>
         <if test="null != createBy and ''!= createBy">AND CREATE_BY = #{createBy.id}</if>
         <if test="null != updateBy and ''!= updateBy">AND UPDATE_BY = #{updateBy.id}</if>
         <if test="null != createDate and ''!= createDate">AND CREATE_DATE = #{createDate}</if>
@@ -145,6 +155,37 @@
             </otherwise>
         </choose>
 
+    </select>
+    <select id="getByContentIdAndCreateBy" resultMap="BaseResultMap">
+         SELECT a.ID,
+               a.order_id,
+               a.content_id,
+               a.eat_flag,
+               a.create_by,
+               a.update_by,
+               a.create_date,
+               a.update_date,
+               a.remarks,
+               a.del_flag
+        FROM pz_order_content a
+        WHERE a.content_id = #{contentId} and a.create_by = #{userId}
+          and a.del_flag = '0'
+    </select>
+    <select id="findListByOrderId" resultType="java.util.Map">
+    SELECT
+	poc.CONTENT_ID as contentId,
+	poc.EAT_FLAG as eatFlag,
+	pm.MENU_IMG_URL AS imgUrl,
+	pm.MENU_NAME AS menuName,
+	pmc.MENU_DETAIL as menuDetail,
+	pmc.EAT_DATE as eatDate,
+	pmc.EAT_WEEK as eatWeek
+FROM
+	pz_order_content poc
+	LEFT JOIN pz_menu_content pmc ON pmc.ID = poc.CONTENT_ID
+	LEFT JOIN pz_menu pm ON pm.ID = pmc.MENU_ID
+WHERE
+	poc.ORDER_ID = #{orderId} ORDER BY pmc.EAT_DATE
     </select>
 
 

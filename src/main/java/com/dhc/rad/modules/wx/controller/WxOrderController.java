@@ -82,24 +82,6 @@ public class WxOrderController extends BaseController {
         //TODO：判断是否点同一家餐厅
         Map<String, Object> returnMap = new HashMap<>();
 
-        //判断contentIdStr是否为空
-        if (StringUtils.isBlank(contentIdStr)) {
-            addMessageAjax(returnMap, "0", "请至少选择一天套餐");
-            return returnMap;
-        }
-        //去除头尾为空
-        contentIdStr = contentIdStr.trim();
-        //根据contentId查询菜单明细是否为空
-        List<String> contentIds = Arrays.asList(contentIdStr.split(","));
-        contentIds =  contentIds.stream().distinct().collect(toList());
-        for (String contentId : contentIds) {
-            PzMenuContent pzMenuContent = pzMenuContentService.get(contentId);
-            if (pzMenuContent == null) {
-                addMessageAjax(returnMap, "0", "查询不到套餐信息，请重新核对");
-                return returnMap;
-            }
-        }
-
         //设置锁定资源名称
         RLock lock = redissonClient.getLock("redLock");
 
@@ -108,6 +90,23 @@ public class WxOrderController extends BaseController {
 
         try {
             lock.lock();
+            //判断contentIdStr是否为空
+            if (StringUtils.isBlank(contentIdStr)) {
+                addMessageAjax(returnMap, "0", "请至少选择一天套餐");
+                return returnMap;
+            }
+            //去除头尾为空
+            contentIdStr = contentIdStr.trim();
+            //根据contentId查询菜单明细是否为空
+            List<String> contentIds = Arrays.asList(contentIdStr.split(","));
+            contentIds =  contentIds.stream().distinct().collect(toList());
+            for (String contentId : contentIds) {
+                PzMenuContent pzMenuContent = pzMenuContentService.get(contentId);
+                if (pzMenuContent == null) {
+                    addMessageAjax(returnMap, "0", "查询不到套餐信息，请重新核对");
+                    return returnMap;
+                }
+            }
             //获取当前时间下一周吃饭时间集合
             List<String> nextWeekDateList = TimeUtils.getNextWeekEatDate();
 
@@ -170,7 +169,7 @@ public class WxOrderController extends BaseController {
                     BigDecimal remainMenuDecimal = BigDecimal.valueOf(menuCount).subtract(new BigDecimal(1));
                     Integer compare = remainMenuDecimal.compareTo(BigDecimal.ZERO);
                     if (compare < 0) {
-                        addMessageAjax(returnMap, "0", "套餐余量不足，请选择其他套餐");
+                        addMessageAjax(returnMap, "0", pzMenu.getMenuName()+"套餐余量不足，请选择其他套餐");
                         return returnMap;
                     }
                 }

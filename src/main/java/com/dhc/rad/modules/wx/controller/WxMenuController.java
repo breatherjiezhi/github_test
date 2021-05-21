@@ -45,6 +45,14 @@ public class WxMenuController {
     @RequestMapping(value = {"findMenuByRid"}, method = RequestMethod.POST)
     @ResponseBody
     public Map<String, Object> findMenuByRid(String rid, HttpServletRequest request, HttpServletResponse response, Model model) {
+        Map<String, Object> returnMap = new HashMap<>();
+
+        if(StringUtils.isBlank(rid)){
+            returnMap.put("data", null);
+            returnMap.put("status", ConstantUtils.ResCode.NODATA);
+            returnMap.put("message", ConstantUtils.ResCode.ParameterException);
+            return returnMap;
+        }
 
         //获取当前时间本周吃饭时间集合 用于查询本周订单
         List<String> nextWeekEatDateList = TimeUtils.getNextWeekEatDate();
@@ -78,7 +86,7 @@ public class WxMenuController {
             map.put("category",listMap);
             dataList.add(map);
         }
-        Map<String, Object> returnMap = new HashMap<>();
+
         returnMap.put("data", dataList);
         returnMap.put("status", ConstantUtils.ResCode.SUCCESS);
         returnMap.put("message", ConstantUtils.ResCode.SUCCESSMSG);

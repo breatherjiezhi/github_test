@@ -324,7 +324,7 @@
         pz_menu m
         WHERE m.del_flag ='0' and m.menu_status=3 AND m.eat_date = #{eatDate}
         <if test ="null != restaurantId and ''!= restaurantId"> AND m.restaurant_id = #{restaurantId}</if>
-        ORDER BY  m.create_date DESC
+        ORDER BY  m.menu_name ASC
     </select>
 
 

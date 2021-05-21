@@ -9,6 +9,7 @@ import com.dhc.rad.modbus.entity.func.Util;
 import com.dhc.rad.modules.holiday.service.HolidayService;
 import com.dhc.rad.modules.pzMenu.entity.PzMenu;
 import com.dhc.rad.modules.pzMenu.service.PzMenuService;
+import com.dhc.rad.modules.pzMenuContent.entity.PzMenuContent;
 import com.dhc.rad.modules.sys.entity.Office;
 import com.dhc.rad.modules.sys.service.OfficeService;
 import com.dhc.rad.modules.sys.utils.UserUtils;
@@ -23,10 +24,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Controller
@@ -44,27 +42,53 @@ public class WxMenuController {
     private HolidayService holidayService;
 
 
-
-    @RequestMapping(value = {"findMenuByRid"},method = RequestMethod.POST)
+    @RequestMapping(value = {"findMenuByRid"}, method = RequestMethod.POST)
     @ResponseBody
-    public Map<String, Object>  findMenuByRid(String rid, HttpServletRequest request, HttpServletResponse response, Model model) {
+    public Map<String, Object> findMenuByRid(String rid, HttpServletRequest request, HttpServletResponse response, Model model) {
 
         //获取当前时间本周吃饭时间集合 用于查询本周订单
         List<String> nextWeekEatDateList = TimeUtils.getNextWeekEatDate();
         //时间用逗号","进行拼接
         String eatDate = nextWeekEatDateList.stream().collect(Collectors.joining(",")) + ",";
-        List<PzMenu> menuList = pzMenuService.findListByRid(rid,eatDate);
+
+        List<PzMenu> menuList = pzMenuService.findListByRid(rid, eatDate);
+
+
+
+        List<Map<String,Object>> dataList = new ArrayList<>();
+        for (String eDate : nextWeekEatDateList) {
+            Map<String,Object> map = new HashMap<>();
+            map.put("eadDate",eDate);
+            map.put("eadWeek",TimeUtils.getWeekDay(eDate));
+            List<Map<String,Object>> listMap = new ArrayList<>();
+
+            for (PzMenu pzMenu : menuList) {
+                List<PzMenuContent> list = pzMenu.getPzMenuContentList();
+                Map<String,Object> menuContentMap = new HashMap<>();
+                for (PzMenuContent pzMenuContent : list) {
+                    if(eDate.equals(pzMenuContent.getEatDate())){
+                        menuContentMap.put("menuContentId",pzMenuContent.getId());
+                        menuContentMap.put("menuName", pzMenu.getMenuName()+"套餐");
+                        menuContentMap.put("menuDetail",pzMenuContent.getMenuDetail());
+                        menuContentMap.put("menuImg",Util.getImgUrl() + pzMenu.getMenuImgUrl());
+                        listMap.add(menuContentMap);
+                    }
+                }
+            }
+            map.put("category",listMap);
+            dataList.add(map);
+        }
         Map<String, Object> returnMap = new HashMap<>();
-        returnMap.put("data", menuList);
+        returnMap.put("data", dataList);
         returnMap.put("status", ConstantUtils.ResCode.SUCCESS);
         returnMap.put("message", ConstantUtils.ResCode.SUCCESSMSG);
         return returnMap;
     }
 
 
-    @RequestMapping(value = {"findRestaurant"},method = RequestMethod.POST)
+    @RequestMapping(value = {"findRestaurant"}, method = RequestMethod.POST)
     @ResponseBody
-    public Map<String, Object>  findRestaurant(HttpServletRequest request, HttpServletResponse response, Model model) {
+    public Map<String, Object> findRestaurant(HttpServletRequest request, HttpServletResponse response, Model model) {
         List<Office> officeList = officeService.findRestaurantOffice();
 
         //获取当前时间下周吃饭时间集合
@@ -73,23 +97,23 @@ public class WxMenuController {
         String eatDate = nextWeekEatDateList.stream().collect(Collectors.joining(",")) + ",";
 
 
-        List<Map<String,Object>> dataList = new ArrayList<>();
+        List<Map<String, Object>> dataList = new ArrayList<>();
 
         for (Office office : officeList) {
-            Map<String,Object> map = new HashMap<>();
-            map.put("restaurantId",office.getId());
-            map.put("restaurantName",office.getName());
-            List<PzMenu> menuList = pzMenuService.findListByRid(office.getId(),eatDate);
+            Map<String, Object> map = new HashMap<>();
+            map.put("restaurantId", office.getId());
+            map.put("restaurantName", office.getName());
+            List<PzMenu> menuList = pzMenuService.findListByRid(office.getId(), eatDate);
             StringBuffer temp = new StringBuffer();
             for (PzMenu pzMenu : menuList) {
-                if(StringUtils.isNotBlank(temp)){
-                    temp.append("\n\n").append(pzMenu.getMenuName()+"套餐:"+pzMenu.getPzMenuContentString());
-                }else{
-                    temp.append(pzMenu.getMenuName()+"套餐:"+pzMenu.getPzMenuContentString());
+                if (StringUtils.isNotBlank(temp)) {
+                    temp.append("\n\n").append(pzMenu.getMenuName() + "套餐:" + pzMenu.getPzMenuContentString());
+                } else {
+                    temp.append(pzMenu.getMenuName() + "套餐:" + pzMenu.getPzMenuContentString());
                 }
 
             }
-            map.put("menuDetail",temp);
+            map.put("menuDetail", temp);
             dataList.add(map);
         }
 

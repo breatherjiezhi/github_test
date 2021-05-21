@@ -164,7 +164,7 @@ public class PzMenuService extends CrudService<PzMenuDao, PzMenu> {
     public List<PzMenu> findListByRid(String restaurantId,String eatDate) {
         List<PzMenu> list = pzMenuDao.findListByRid(restaurantId,eatDate);
         for (PzMenu menu : list) {
-            menu.setPzMenuContentString(menuToString(pzMenuContentDao.findListByMenuId(menu.getId())));
+            menu.setPzMenuContentList(pzMenuContentDao.findListByMenuId(menu.getId()));
         }
         return list;
     }

@@ -3,7 +3,6 @@
 <mapper namespace="com.dhc.rad.modules.pzOrder.dao.PzOrderDao">
     <resultMap id="BaseResultMap" type="com.dhc.rad.modules.pzOrder.entity.PzOrder">
         <result column="user_id" property="userId"/>
-        <result column="menu_id" property="menuId"/>
         <result column="service_unit_id" property="serviceUnitId"/>
         <result column="restaurant_id" property="restaurantId"/>
         <result column="menu_type" property="menuType"/>
@@ -32,7 +31,6 @@
     <select id="get" resultMap="BaseResultMap">
         SELECT a.ID,
                a.user_id,
-               a.menu_id,
                a.service_unit_id,
                a.restaurant_id,
                a.menu_type,
@@ -59,9 +57,6 @@
 
             <if test="null != userId and ''!= userId">
                 user_id,
-            </if>
-            <if test="null != menuId and ''!= menuId">
-                menu_id,
             </if>
             <if test="null != serviceUnitId and ''!= serviceUnitId">
                 service_unit_id,
@@ -107,9 +102,6 @@
             <if test="null != userId and ''!= userId">
                 #{userId},
             </if>
-            <if test="null != menuId and ''!= menuId">
-                #{menuId},
-            </if>
             <if test="null != serviceUnitId and ''!= serviceUnitId">
                 #{serviceUnitId},
             </if>
@@ -153,7 +145,6 @@
         UPDATE pz_order
         <set>
             <if test="null != userId and ''!= userId">user_id= #{userId},</if>
-            <if test="null != menuId and ''!= menuId">menu_id= #{menuId},</if>
             <if test="null != serviceUnitId and ''!= serviceUnitId">service_unit_id= #{serviceUnitId},</if>
             <if test="null != restaurantId and ''!= restaurantId">restaurant_id = #{restaurantId},</if>
             <if test="null != menuType and ''!= menuType">menu_type = #{menuType},</if>
@@ -173,7 +164,6 @@
         SELECT
         ID,
         user_id,
-        menu_id,
         service_unit_id,
         restaurant_id,
         menu_type,
@@ -190,11 +180,10 @@
         pz_order
         WHERE del_flag ='0'
         <if test="null != userId and ''!= userId">AND user_id = #{userId}</if>
-        <if test="null != menuId and ''!= menuId">AND menu_id = #{menuId}</if>
         <if test="null != serviceUnitId and ''!= serviceUnitId">AND service_unit_id= #{serviceUnitId}</if>
         <if test="null != restaurantId and ''!= restaurantId">AND restaurant_id = #{restaurantId}</if>
         <if test="null != menuType and ''!= menuType">AND menu_type = #{menuType}</if>
-        <if test="null != eatDate">AND eat_date = #{eatDate}</if>
+        <if test="null != eatDate">AND eat_date =#{eatDate}</if>
         <if test="null != noEatDate">AND no_eat_date = #{noEatDate}</if>
         <if test="null != menuIntegral and ''!= menuIntegral">AND menu_integral = #{menuIntegral}</if>
         <if test="null != createBy and ''!= createBy">AND CREATE_BY = #{createBy.id}</if>

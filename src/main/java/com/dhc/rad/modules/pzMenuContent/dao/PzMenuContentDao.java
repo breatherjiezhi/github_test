@@ -23,4 +23,6 @@ public interface PzMenuContentDao extends CrudDao<PzMenuContent> {
     Integer deleteByMenuId(@Param("menuId")String menuId);
 
     List<PzMenuContent> findListByMenuId(@Param("menuId")String menuId);
+
+    PzMenuContent getByIdAndCreateBy(@Param("contentId") String contentId, @Param("userId") String userId);
 }

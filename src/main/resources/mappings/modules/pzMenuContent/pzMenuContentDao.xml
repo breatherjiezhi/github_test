@@ -188,6 +188,11 @@
         pz_menu_content
         WHERE del_flag ='0' and menu_id = #{menuId}  ORDER BY  eat_date ASC
     </select>
+    <select id="getByIdAndCreateBy" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM pz_menu_content
+        WHERE id = #{contentId} and CREATE_BY = #{userId} and del_flag ='0'
+    </select>
 
 
 

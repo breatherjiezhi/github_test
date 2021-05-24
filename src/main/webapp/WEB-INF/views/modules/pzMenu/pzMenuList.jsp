@@ -215,11 +215,12 @@
                             viewBtn = '<div class="action-buttons" style="white-space:normal">' +
                                 '<a data-action="edit" data-id="' + rowData.id + '" href="javascript:void(0);" class="tooltip-success green" data-rel="tooltip" title="编辑"  style="border-color:#69aa46 "><i class="ace-icon fa fa-pencil bigger-130"></i></a>' +
                                 '</div>';
-                        } else if (rowData.menuStatus == '3') {
-                            viewBtn = '<div class="action-buttons" style="white-space:normal">' +
-                                '<a data-action="edit" data-id="' + rowData.id + '" href="javascript:void(0);" class="tooltip-success green" data-rel="tooltip" title="编辑"  style="border-color:#69aa46 "><i class="ace-icon fa fa-pencil bigger-130"></i></a>' +
-                                '</div>';
                         }
+                        // else if (rowData.menuStatus == '3') {
+                        //     viewBtn = '<div class="action-buttons" style="white-space:normal">' +
+                        //         '<a data-action="edit" data-id="' + rowData.id + '" href="javascript:void(0);" class="tooltip-success green" data-rel="tooltip" title="编辑"  style="border-color:#69aa46 "><i class="ace-icon fa fa-pencil bigger-130"></i></a>' +
+                        //         '</div>';
+                        // }
                         $(grid_selector).jqGrid('setRowData', ids[i], {
                             menuStatus: menuStatus,
                             menuName: menuName,

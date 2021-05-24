@@ -200,6 +200,10 @@ public class PzMenuController extends BaseController {
     @ResponseBody
     public Map<String, Object> updateMenuStatus(PzMenu pzMenu, HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> returnMap = new HashMap<>();
+        if(!UserUtils.getRoleFlag("admins") && !UserUtils.getRoleFlag("admin") && !UserUtils.getRoleFlag("gcs")){
+            addMessageAjax(returnMap, "0", "无权修改此数据！");
+            return returnMap;
+        }
         PzMenu newPzMenu = new PzMenu();
         //获取当前登录用户的id
         Integer menuStatusAgo = null;
@@ -215,20 +219,21 @@ public class PzMenuController extends BaseController {
         User user = UserUtils.getUser();
         if (!user.getId().equals(pzMenu.getCreateBy().getId())) {
             //管理员审批菜单： 只有当菜单状态为待审核时，管理员才能操作
-            if (menuStatusAgo != null && UserUtils.getRoleFlag("admins") && menuStatusAgo != Global.MENU_STATUS_SUBMIT) {
-                addMessageAjax(returnMap, "0", "管理员无权修改此数据！");
-                return returnMap;
+            if(menuStatusAgo!=null &&  menuStatusAgo == Global.MENU_STATUS_SUBMIT){
+                if( !UserUtils.getRoleFlag("admins") && !UserUtils.getRoleFlag("admin")){
+                    addMessageAjax(returnMap, "0", "非管理员无权修改此数据！");
+                    return returnMap;
+                }
             }
+
             //供应商操作菜单：只有当菜单状态为非待审核（保存并修改  审核不通过）时，才能修改状态
-            if (menuStatusAgo != null && UserUtils.getRoleFlag("gcs") && (menuStatusAgo != Global.MENU_STATUS_SAVEANDUPDATE || menuStatusAgo != Global.MENU_STATUS_NOPASS)) {
-                addMessageAjax(returnMap, "0", "供应商无权修改此数据！");
-                return returnMap;
+            if(menuStatusAgo != null && (menuStatusAgo == Global.MENU_STATUS_SAVEANDUPDATE || menuStatusAgo == Global.MENU_STATUS_NOPASS)){
+                if(!UserUtils.getRoleFlag("gcs")){
+                    addMessageAjax(returnMap, "0", "非供应商无权修改此数据！");
+                    return returnMap;
+                }
             }
-            //普通用户无权操作菜单
-            if ((UserUtils.getRoleFlag("staff") || UserUtils.getRoleFlag("admin"))) {
-                addMessageAjax(returnMap, "0", "越权操作，普通用户或者系统管理员无权操作菜单！");
-                return returnMap;
-            }
+
         }
 
         newPzMenu.setId(pzMenu.getId());

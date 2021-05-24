@@ -260,7 +260,7 @@ public class WxOrderController extends BaseController {
             } else {
                 temp.put("noEatDate", "");
             }
-            //TODO:
+            //根据orderId查询pz_order_content表数据，A B C套餐 imgUrl(pz_menu)  pz_order_content表（contentId,eatFlag ) pz_menu_content(menuDetail,eatWeek,eatDate)
             List<Map<String,Object>> mapList  =  wxOrderService.findListByOrderId(pzOrder.getId());
             List<String> orderContentEatDateList = new ArrayList<>();
             if(mapList.size() != 5){
@@ -347,7 +347,7 @@ public class WxOrderController extends BaseController {
                 eatDateList.add(tempList);
             }
             temp.put("eatDateList", eatDateList);
-            //TODO:根据orderId查询pz_order_content表数据，A B C套餐 imgUrl(pz_menu)  pz_order_content表（contentId,eatFlag ) pz_menu_content(menuDetail,eatWeek,eatDate)
+            //根据orderId查询pz_order_content表数据，A B C套餐 imgUrl(pz_menu)  pz_order_content表（contentId,eatFlag ) pz_menu_content(menuDetail,eatWeek,eatDate)
           List<Map<String,Object>> mapList  =  wxOrderService.findListByOrderId(pzOrder.getId());
           List<String> orderContentEatDateList = new ArrayList<>();
             if(mapList.size() != 5){

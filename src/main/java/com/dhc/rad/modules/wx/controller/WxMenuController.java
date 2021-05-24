@@ -82,6 +82,7 @@ public class WxMenuController {
                         menuContentMap.put("menuName", pzMenu.getMenuName()+"套餐");
                         menuContentMap.put("menuDetail",pzMenuContent.getMenuDetail());
                         menuContentMap.put("menuImg",Util.getImgUrl() + pzMenu.getMenuImgUrl());
+                        menuContentMap.put("num",0);  //后续限量改为显示限量数值
                         listMap.add(menuContentMap);
                     }
                 }

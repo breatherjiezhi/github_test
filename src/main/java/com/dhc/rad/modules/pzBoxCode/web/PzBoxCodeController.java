@@ -59,6 +59,11 @@ public class PzBoxCodeController extends BaseController {
         }else{
             model.addAttribute("pzBoxCode", new PzBoxCode());
         }
+        if(UserUtils.getRoleFlag("gcs")){
+            model.addAttribute("officeId", UserUtils.getUser().getOffice().getId());
+        }else{
+            model.addAttribute("officeId", "");
+        }
 
         return "modules/pzBoxCode/pzBoxCodeForm";
     }
@@ -69,6 +74,12 @@ public class PzBoxCodeController extends BaseController {
         Map<String,Object> returnMap = new HashMap<>();
         if(pzBoxCode==null){
             addMessageAjax(returnMap, "0", "保存失败");
+            return returnMap;
+        }
+        //判断当前用户是否和传入的restaurantId是否为同一家
+        String officeId = UserUtils.getUser().getOffice().getId();
+        if(!pzBoxCode.getRestaurantId().equals(officeId)){
+            addMessageAjax(returnMap, "0", "选择其他餐厅信息无效，请重新选择");
             return returnMap;
         }
 

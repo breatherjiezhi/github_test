@@ -64,7 +64,14 @@
                 }
                 $("#restaurantId").html(htmlT1);
                 $("#restaurantId").trigger("chosen:updated");
-                $("#restaurantId").select2("val", "${pzBoxCode.restaurantId}");
+
+                var officeId =  "${officeId}";
+                if(officeId!=""){
+                    $("#restaurantId").select2("val", officeId);
+                }else{
+                    $("#restaurantId").select2("val", "${pzBoxCode.restaurantId}");
+                }
+
             }
 
 

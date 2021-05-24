@@ -4,14 +4,12 @@
     <resultMap id="BaseResultMap" type="com.dhc.rad.modules.pzBoxCode.entity.PzBoxCode">
         <result column="restaurant_id" property="restaurantId"/>
         <result column="box_code" property="boxCode"/>
-        <result column="box_cn_name" property="boxCnName"/>
         <result column="create_by" property="createBy.id"/>
         <result column="update_by" property="updateBy.id"/>
         <result column="create_date" property="createDate"/>
         <result column="update_date" property="updateDate"/>
         <result column="remarks" property="remarks"/>
         <result column="del_flag" property="delFlag"/>
-        <result column="restaurant_name" property="restaurantName"/>
 
     </resultMap>
 
@@ -41,15 +39,11 @@
             <if test="null != id and ''!= id">
                 id,
             </if>
-
             <if test="null != restaurantId and ''!= restaurantId">
                 restaurant_id,
             </if>
             <if test="null != boxCode and ''!= boxCode">
                 box_code,
-            </if>
-            <if test="null != boxCnName and ''!= boxCnName">
-                box_cn_name,
             </if>
             <if test="null != createBy and ''!= createBy">
                 create_by,
@@ -81,9 +75,6 @@
             <if test="null != boxCode and ''!= boxCode">
                 #{boxCode},
             </if>
-            <if test="null != boxCnName and ''!= boxCnName">
-                #{boxCnName},
-            </if>
             <if test="null != createBy and ''!= createBy">
                 #{createBy.id},
             </if>
@@ -110,7 +101,6 @@
         <set>
             <if test="null != restaurantId and ''!= restaurantId">restaurant_id = #{restaurantId},</if>
             <if test="null != boxCode and ''!= boxCode">box_code = #{boxCode},</if>
-            <if test="null != boxCnName and ''!= boxCnName">box_cn_name = #{boxCnName},</if>
             <if test="null != createBy and ''!= createBy">CREATE_BY = #{createBy.id},</if>
             <if test="null != updateBy and ''!= updateBy">UPDATE_BY = #{updateBy.id},</if>
             <if test="null != createDate and ''!= createDate">CREATE_DATE = #{createDate},</if>

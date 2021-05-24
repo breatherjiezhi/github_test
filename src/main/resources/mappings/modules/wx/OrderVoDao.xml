@@ -23,7 +23,7 @@ SELECT
 	sso.`NAME` AS 'RESTAURANT_NAME',
 		sa.AREA_LOCATION,
 	po.NO_EAT_DATE,
-		pbc.BOX_CN_NAME as 'BOX_NAME',
+		CONCAT(sso.`NAME`,pbc.BOX_CODE) as 'BOX_CN_NAME',
 		IF(pd.ID&lt;&gt;'NULL',1,0) AS 'DELIVERY_FLAG'
 		FROM
 	pz_order po

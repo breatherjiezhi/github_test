@@ -32,7 +32,5 @@ public class PzMenuContentService extends CrudService<PzMenuContentDao, PzMenuCo
         return pzMenuContentDao.findListByMenuId(menuId);
     }
 
-    public PzMenuContent getByIdAndCreateBy(String contentId, String userId) {
-        return pzMenuContentDao.getByIdAndCreateBy(contentId,userId);
-    }
+
 }

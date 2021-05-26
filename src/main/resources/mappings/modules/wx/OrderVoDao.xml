@@ -16,26 +16,30 @@
 
 <select id="findServiceUnitOrder" resultMap="BaseResultMap">
 SELECT
-	su.`NO` as 'USER_NO',
-	su.`NAME` AS 'USER_NAME' ,
-	pm.MENU_NAME,
+	su.`NO` AS 'USER_NO',
+	su.`NAME` AS 'USER_NAME',
+	pmc.MENU_DETAIL AS 'MENU_NAME',
 	so.`NAME` AS 'SERVICE_UNIT',
 	sso.`NAME` AS 'RESTAURANT_NAME',
-		sa.AREA_LOCATION,
+	sa.AREA_LOCATION,
 	po.NO_EAT_DATE,
-		CONCAT(sso.`NAME`,pbc.BOX_CODE) as 'BOX_CN_NAME',
-		IF(pd.ID&lt;&gt;'NULL',1,0) AS 'DELIVERY_FLAG'
-		FROM
+	CONCAT( sso.`NAME`, pbc.BOX_CODE ) AS 'BOX_CN_NAME',
+IF
+	( pd.ID &lt;&gt; 'NULL', 1, 0 ) AS 'DELIVERY_FLAG'
+FROM
 	pz_order po
-	LEFT JOIN pz_menu pm ON po.menu_id = pm.id
+	LEFT JOIN pz_order_content poc ON poc.ORDER_ID = po.id
+	LEFT JOIN pz_menu_content pmc ON poc.CONTENT_ID = pmc.id
 	LEFT JOIN sys_office so ON po.SERVICE_UNIT_ID = so.id
-	LEFT JOIN sys_area sa on so.AREA_ID=sa.id
+	LEFT JOIN sys_area sa ON so.AREA_ID = sa.id
 	LEFT JOIN sys_office sso ON po.RESTAURANT_ID = sso.id
 	LEFT JOIN sys_user su ON po.user_id = su.id
-	LEFT JOIN pz_delivery pd ON po.RESTAURANT_ID = pd.RESTAURANT_ID and po.SERVICE_UNIT_ID=pd.SERVICE_UNIT_ID and pd.EAT_DATE=#{eatDate}
-	LEFT JOIN pz_box_code pbc on pbc.id = pd.box_id
+	LEFT JOIN pz_delivery pd ON po.RESTAURANT_ID = pd.RESTAURANT_ID
+	AND po.SERVICE_UNIT_ID = pd.SERVICE_UNIT_ID
+	AND pd.EAT_DATE = #{eatDate}
+	LEFT JOIN pz_box_code pbc ON pbc.id = pd.box_id
 WHERE
-	po.EAT_DATE =  #{eatDates} AND po.SERVICE_UNIT_ID= #{officeId} ORDER  BY DELIVERY_FLAG DESC
+	po.EAT_DATE = #{eatDates} AND po.SERVICE_UNIT_ID= #{officeId} ORDER  BY DELIVERY_FLAG DESC
 
     </select>
 

@@ -73,7 +73,7 @@ public class WxOrderController extends BaseController {
     /**
      * @Description: 订餐功能
      * @Param: menuId：套餐id
-     * @return: Map<String       ,               Object>
+     * @return: Map<String               ,                               Object>
      * @Date: 2021/5/6
      */
     @RequestMapping(value = "orderMenu", method = RequestMethod.POST)
@@ -99,7 +99,7 @@ public class WxOrderController extends BaseController {
             contentIdStr = contentIdStr.trim();
             //根据contentId查询菜单明细是否为空
             List<String> contentIds = Arrays.asList(contentIdStr.split(","));
-            contentIds =  contentIds.stream().distinct().collect(toList());
+            contentIds = contentIds.stream().distinct().collect(toList());
             for (String contentId : contentIds) {
                 PzMenuContent pzMenuContent = pzMenuContentService.get(contentId);
                 if (pzMenuContent == null) {
@@ -169,7 +169,7 @@ public class WxOrderController extends BaseController {
                     BigDecimal remainMenuDecimal = BigDecimal.valueOf(menuCount).subtract(new BigDecimal(1));
                     Integer compare = remainMenuDecimal.compareTo(BigDecimal.ZERO);
                     if (compare < 0) {
-                        addMessageAjax(returnMap, "0", pzMenu.getMenuName()+"套餐余量不足，请选择其他套餐");
+                        addMessageAjax(returnMap, "0", pzMenu.getMenuName() + "套餐余量不足，请选择其他套餐");
                         return returnMap;
                     }
                 }
@@ -226,7 +226,7 @@ public class WxOrderController extends BaseController {
     /**
      * @Description: 查询当前用户下一周的订餐信息
      * @Param: null
-     * @return: Map<String       ,               Object>
+     * @return: Map<String               ,                               Object>
      * @Date: 2021/4/29
      */
     @RequestMapping(value = "findOrderNextWeek", method = RequestMethod.POST)
@@ -246,43 +246,54 @@ public class WxOrderController extends BaseController {
             Map<String, Object> temp = new HashMap<>();
             PzOrder pzOrder = list.get(0);
             temp.put("orderId", pzOrder.getId());
-            String eatDate = pzOrder.getEatDate();
-            if (eatDate != null) {
-                eatDate = eatDate.substring(0, eatDate.length() - 1);
-                temp.put("eatDate", eatDate);
-            } else {
-                temp.put("eatDate", "");
-            }
-            String noEatDate = pzOrder.getNoEatDate();
-            if (noEatDate != null) {
-                noEatDate = noEatDate.substring(0, noEatDate.length() - 1);
-                temp.put("noEatDate", noEatDate);
-            } else {
-                temp.put("noEatDate", "");
-            }
+//            String eatDate = pzOrder.getEatDate();
+//            if (StringUtils.isNotBlank(eatDate)) {
+//                eatDate = eatDate.substring(0, eatDate.length() - 1);
+//                temp.put("eatDate", eatDate);
+//            } else {
+//                temp.put("eatDate", "");
+//            }
+//            String noEatDate = pzOrder.getNoEatDate();
+//            if (StringUtils.isNotBlank(noEatDate)) {
+//                noEatDate = noEatDate.substring(0, noEatDate.length() - 1);
+//                temp.put("noEatDate", noEatDate);
+//            } else {
+//                temp.put("noEatDate", "");
+//            }
             //根据orderId查询pz_order_content表数据，A B C套餐 imgUrl(pz_menu)  pz_order_content表（contentId,eatFlag ) pz_menu_content(menuDetail,eatWeek,eatDate)
-            List<Map<String,Object>> mapList  =  wxOrderService.findListByOrderId(pzOrder.getId());
-            List<String> orderContentEatDateList = new ArrayList<>();
-            if(mapList.size() != 5){
-                for (Map<String, Object> map : mapList) {
-                    String nextEatDate = (String) map.get("eatDate");
-                    orderContentEatDateList.add(nextEatDate);
+            List<Map<String, Object>> mapList = wxOrderService.findListByOrderId(pzOrder.getId());
+            for (Map<String, Object> map : mapList) {
+//                String eatDate = map.get("eatDate").toString().trim();
+                String eatFlag = map.get("eatFlag").toString().trim();
+                if ("0".equals(eatFlag)) {
+                    map.put("eatFlagName", "已取消");
+                } else {
+                    map.put("eatFlagName", "已预定");
                 }
-                List<String> reduceList = nextWeekEatDateList.stream().filter(item -> !orderContentEatDateList.contains(item)).collect(toList());
-                for (String nextEatDate : reduceList) {
-                    Map<String,Object> noEatDateMap = new HashMap<>();
-                    noEatDateMap.put("imgUrl","");
-                    noEatDateMap.put("contentId","");
-                    noEatDateMap.put("menuName","");
-                    noEatDateMap.put("menuDetail","");
-                    noEatDateMap.put("eatFlag","0");
-                    noEatDateMap.put("eatDate",nextEatDate);
-                    String eatWeek = TimeUtils.getWeekDay(nextEatDate);
-                    noEatDateMap.put("eatWeek",eatWeek);
-                    mapList.add(noEatDateMap);
-                }
+                map.put("checkFlag", true);
+
             }
-            temp.put("mapList",mapList);
+//            List<String> orderContentEatDateList = new ArrayList<>();
+//            if(mapList.size() != 5){
+//                for (Map<String, Object> map : mapList) {
+//                    String nextEatDate = (String) map.get("eatDate");
+//                    orderContentEatDateList.add(nextEatDate);
+//                }
+//                List<String> reduceList = nextWeekEatDateList.stream().filter(item -> !orderContentEatDateList.contains(item)).collect(toList());
+//                for (String nextEatDate : reduceList) {
+//                    Map<String,Object> noEatDateMap = new HashMap<>();
+//                    noEatDateMap.put("imgUrl","");
+//                    noEatDateMap.put("contentId","");
+//                    noEatDateMap.put("menuName","");
+//                    noEatDateMap.put("menuDetail","");
+//                    noEatDateMap.put("eatFlag","0");
+//                    noEatDateMap.put("eatDate",nextEatDate);
+//                    String eatWeek = TimeUtils.getWeekDay(nextEatDate);
+//                    noEatDateMap.put("eatWeek",eatWeek);
+//                    mapList.add(noEatDateMap);
+//                }
+//            }
+            temp.put("mapList", mapList);
             returnMap.put("data", temp);
             returnMap.put("status", ConstantUtils.ResCode.SUCCESS);
             returnMap.put("message", ConstantUtils.ResCode.SUCCESSMSG);
@@ -299,7 +310,7 @@ public class WxOrderController extends BaseController {
     /**
      * @Description: 查询当前用户当前周的订餐信息
      * @Param: null
-     * @return: Map<String       ,               Object>
+     * @return: Map<String               ,                               Object>
      * @Date: 2021/4/29
      */
     @RequestMapping(value = "findOrderCurrentWeek", method = RequestMethod.POST)
@@ -323,53 +334,72 @@ public class WxOrderController extends BaseController {
 
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             String nowDate = sdf.format(new Date());
-            List<Map<String, Object>> eatDateList = new ArrayList<>();
+//            List<Map<String, Object>> eatDateList = new ArrayList<>();
+//
+//            String[] eatDateTemp = pzOrder.getEatDate() == null ? new String[0] : pzOrder.getEatDate().split(",");
+//            String noEatDate = pzOrder.getNoEatDate() == null ? "" : pzOrder.getNoEatDate();
+//            for (int i = 0; i < eatDateTemp.length; i++) {
+//                Map<String, Object> tempList = new HashMap<String, Object>();
+//                if (StringUtils.isNotBlank(eatDateTemp[i])) {
+//                    tempList.put("eatDate", eatDateTemp[i]);
+//                    //当前日期是否可吃
+//                    if (noEatDate.indexOf(eatDateTemp[i]) >= 0) {
+//                        tempList.put("eatFlag", false);
+//                    } else {
+//                        tempList.put("eatFlag", true);
+//                    }
+//                    //yes为可选 no为不可选
+//                    if (nowDate.compareTo(eatDateTemp[i]) <= 0) {
+//                        tempList.put("checkFlag", false);
+//                    } else {
+//                        tempList.put("checkFlag", true);
+//                    }
+//                }
+//                eatDateList.add(tempList);
+//            }
+//            temp.put("eatDateList", eatDateList);
 
-            String[] eatDateTemp = pzOrder.getEatDate() == null ? new String[0] : pzOrder.getEatDate().split(",");
-            String noEatDate = pzOrder.getNoEatDate() == null ? "" : pzOrder.getNoEatDate();
-            for (int i = 0; i < eatDateTemp.length; i++) {
-                Map<String, Object> tempList = new HashMap<String, Object>();
-                if (StringUtils.isNotBlank(eatDateTemp[i])) {
-                    tempList.put("eatDate", eatDateTemp[i]);
-                    //当前日期是否可吃
-                    if (noEatDate.indexOf(eatDateTemp[i]) >= 0) {
-                        tempList.put("eatFlag", false);
-                    } else {
-                        tempList.put("eatFlag", true);
-                    }
-                    //yes为可选 no为不可选
-                    if (nowDate.compareTo(eatDateTemp[i]) <= 0) {
-                        tempList.put("checkFlag", false);
-                    } else {
-                        tempList.put("checkFlag", true);
-                    }
-                }
-                eatDateList.add(tempList);
-            }
-            temp.put("eatDateList", eatDateList);
+
             //根据orderId查询pz_order_content表数据，A B C套餐 imgUrl(pz_menu)  pz_order_content表（contentId,eatFlag ) pz_menu_content(menuDetail,eatWeek,eatDate)
-          List<Map<String,Object>> mapList  =  wxOrderService.findListByOrderId(pzOrder.getId());
-          List<String> orderContentEatDateList = new ArrayList<>();
-            if(mapList.size() != 5){
-                for (Map<String, Object> map : mapList) {
-                    String eatDate = (String) map.get("eatDate");
-                    orderContentEatDateList.add(eatDate);
-                }
-                List<String> reduceList = currentWeekEatDateList.stream().filter(item -> !orderContentEatDateList.contains(item)).collect(toList());
-                for (String eatDate : reduceList) {
-                    Map<String,Object> noEatDateMap = new HashMap<>();
-                    noEatDateMap.put("imgUrl","");
-                    noEatDateMap.put("contentId","");
-                    noEatDateMap.put("menuName","");
-                    noEatDateMap.put("menuDetail","");
-                    noEatDateMap.put("eatFlag","0");
-                    noEatDateMap.put("eatDate",eatDate);
-                    String eatWeek = TimeUtils.getWeekDay(eatDate);
-                    noEatDateMap.put("eatWeek",eatWeek);
-                    mapList.add(noEatDateMap);
+            List<Map<String, Object>> mapList = wxOrderService.findListByOrderId(pzOrder.getId());
+            for (Map<String, Object> map : mapList) {
+                String eatDate = map.get("eatDate").toString().trim();
+                if (nowDate.compareTo(eatDate) < 0) {
+                    String eatFlag = map.get("eatFlag").toString().trim();
+                    if ("0".equals(eatFlag)) {
+                        map.put("eatFlagName", "已取消");
+                    } else {
+                        map.put("eatFlagName", "已预定");
+                    }
+                    map.put("checkFlag", true);
+                } else {
+                    map.put("eatFlag", "3");
+                    map.put("eatFlagName", "已结束");
+                    map.put("checkFlag", false);
                 }
             }
-            temp.put("mapList",mapList);
+//          List<String> orderContentEatDateList = new ArrayList<>();
+//            if(mapList.size() != currentWeekEatDateList.size()){
+//                for (Map<String, Object> map : mapList) {
+//                    String eatDate = (String) map.get("eatDate");
+//                    orderContentEatDateList.add(eatDate);
+//                }
+//                List<String> reduceList = currentWeekEatDateList.stream().filter(item -> !orderContentEatDateList.contains(item)).collect(toList());
+//                for (String eatDate : reduceList) {
+//                    Map<String,Object> noEatDateMap = new HashMap<>();
+//                    noEatDateMap.put("imgUrl","");
+//                    noEatDateMap.put("contentId","");
+//                    noEatDateMap.put("menuName","");
+//                    noEatDateMap.put("menuDetail","");
+//                    noEatDateMap.put("eatFlag","0");
+//                    noEatDateMap.put("eatName","未预定");
+//                    noEatDateMap.put("eatDate",eatDate);
+//                    String eatWeek = TimeUtils.getWeekDay(eatDate);
+//                    noEatDateMap.put("eatWeek",eatWeek);
+//                    mapList.add(noEatDateMap);
+//                }
+//            }
+            temp.put("mapList", mapList);
             returnMap.put("data", temp);
             returnMap.put("status", ConstantUtils.ResCode.SUCCESS);
             returnMap.put("message", ConstantUtils.ResCode.SUCCESSMSG);
@@ -385,7 +415,7 @@ public class WxOrderController extends BaseController {
     /**
      * @Description: 吃/不吃
      * @Param: mark:吃/不吃的标志 orderId:订单id date:日期
-     * @return: Map<String       ,               Object>
+     * @return: Map<String               ,                               Object>
      * @Date: 2021/4/30
      */
     @RequestMapping(value = "chooseEatOrNoEat", method = RequestMethod.POST)
@@ -401,7 +431,7 @@ public class WxOrderController extends BaseController {
         }
         User user = UserUtils.getUser();
         //根据contentId查询eatDate
-        PzMenuContent pzMenuContent =  pzMenuContentService.getByIdAndCreateBy(contentId,UserUtils.getUser().getId());
+        PzMenuContent pzMenuContent = pzMenuContentService.get(contentId);
         String date = pzMenuContent.getEatDate();
 
         //判断当前时间是否已到截至时间
@@ -575,7 +605,7 @@ public class WxOrderController extends BaseController {
                 returnMap.put("message", ConstantUtils.ResCode.UPDATEFAIL);
             }
 
-        }else {
+        } else {
             returnMap.put("data", null);
             returnMap.put("status", ConstantUtils.ResCode.PARMERROR);
             returnMap.put("message", ConstantUtils.ResCode.ParameterException);

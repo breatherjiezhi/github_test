@@ -87,6 +87,7 @@ public class WxOrderService extends CrudService<PzMenuDao, PzMenu> {
         pzScoreLog.preInsert();
         int logInsert = pzScoreLogDao.insert(pzScoreLog);
 
+        //TODO:批量新增（后续）
         Integer result = 0;
         for (String contentId : contentIds) {
             PzOrderContent pzOrderContent = new PzOrderContent();
@@ -98,6 +99,7 @@ public class WxOrderService extends CrudService<PzMenuDao, PzMenu> {
                 result ++;
             }
         }
+
 
         //返回
         return (result.equals(contentIds.size()) && updateMenuCount > 0 && insertOrder > 0 && updateIntegral > 0 && logInsert > 0) ? 1 : 0;

@@ -870,5 +870,25 @@ public class UserController extends BaseController {
         return resultMap;
     }
 
+    /**
+     * 个人充值
+     */
+    @RequestMapping(value = "personalRecharge", method = RequestMethod.POST)
+    @ResponseBody
+    public Map<String, Object> personalRecharge(User user, RedirectAttributes redirectAttributes) {
+        Map<String,Object> returnMap = new HashMap<>();
+        if(StringUtils.isEmpty(user.getLoginName())){
+            addMessageAjax(returnMap, "0", "用户登录名不能为空");
+            return returnMap;
+        }
+       Integer flag =  systemService.personalRecharge(user);
+        if (flag > 0) {
+            addMessageAjax(returnMap, "1", "充值成功");
+        } else {
+            addMessageAjax(returnMap, "0", "充值失败");
+        }
+        return returnMap;
+    }
+
 
 }

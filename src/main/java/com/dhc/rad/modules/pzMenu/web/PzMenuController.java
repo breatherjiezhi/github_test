@@ -141,14 +141,16 @@ public class PzMenuController extends BaseController {
         for (PzMenuContent pzMenuContent : list) {
             eatDate+=pzMenuContent.getEatDate()+",";
         }
-        //防止同一个菜单重复提交
-        PzMenu condition = new PzMenu();
-        condition.setMenuName(pzMenu.getMenuName());
-        condition.setEatDate(eatDate);
-        List<PzMenu> menuList = pzMenuService.findList(condition);
-        if(menuList.size() >0){
-            addMessageAjax(returnMap, "0", "下周菜单已添加");
-            return returnMap;
+        //新增：防止同一个菜单重复提交
+        if(StringUtils.isEmpty(pzMenuId)){
+            PzMenu condition = new PzMenu();
+            condition.setMenuName(pzMenu.getMenuName());
+            condition.setEatDate(eatDate);
+            List<PzMenu> menuList = pzMenuService.findList(condition);
+            if(menuList.size() >0){
+                addMessageAjax(returnMap, "0", "下周菜单已添加");
+                return returnMap;
+            }
         }
 
 

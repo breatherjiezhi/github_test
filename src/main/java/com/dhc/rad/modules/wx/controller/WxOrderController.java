@@ -401,7 +401,7 @@ public class WxOrderController extends BaseController {
         }
         User user = UserUtils.getUser();
         //根据contentId查询eatDate
-        PzMenuContent pzMenuContent =  pzMenuContentService.getByIdAndCreateBy(contentId,UserUtils.getUser().getId());
+        PzMenuContent pzMenuContent =  pzMenuContentService.get(contentId);
         String date = pzMenuContent.getEatDate();
 
         //判断当前时间是否已到截至时间

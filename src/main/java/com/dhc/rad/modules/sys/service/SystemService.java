@@ -766,4 +766,10 @@ public class SystemService extends BaseService implements InitializingBean {
 		user.preUpdate();
 		return userDao.userRecharge(user);
 	}
+
+	@Transactional(readOnly = false)
+	public Integer personalRecharge(User user) {
+		user.preUpdate();
+		return userDao.userRecharge(user);
+	}
 }

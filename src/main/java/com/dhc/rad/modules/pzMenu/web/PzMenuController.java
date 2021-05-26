@@ -12,6 +12,7 @@ import com.dhc.rad.modules.pzMenu.entity.PzMenu;
 import com.dhc.rad.modules.pzMenu.service.PzMenuService;
 import com.dhc.rad.modules.pzMenuContent.entity.PzMenuContent;
 import com.dhc.rad.modules.pzMenuContent.service.PzMenuContentService;
+import com.dhc.rad.modules.pzOrder.entity.PzOrder;
 import com.dhc.rad.modules.sys.entity.Role;
 import com.dhc.rad.modules.sys.entity.User;
 import com.dhc.rad.modules.sys.service.SystemService;
@@ -118,6 +119,11 @@ public class PzMenuController extends BaseController {
         Integer flag = 0;
         User user = UserUtils.getUser();
 
+        if(StringUtils.isEmpty(pzMenu.getMenuName())){
+            addMessageAjax(returnMap, "0", pzMenu.getMenuName()+"不能为空！！！");
+            return returnMap;
+        }
+
         //修改：判断当前用户是否与创建用户一致
         String pzMenuId = pzMenu.getId();
         if (StringUtils.isNotBlank(pzMenuId)) {
@@ -135,6 +141,16 @@ public class PzMenuController extends BaseController {
         for (PzMenuContent pzMenuContent : list) {
             eatDate+=pzMenuContent.getEatDate()+",";
         }
+        //防止同一个菜单重复提交
+        PzMenu condition = new PzMenu();
+        condition.setMenuName(pzMenu.getMenuName());
+        condition.setEatDate(eatDate);
+        List<PzMenu> menuList = pzMenuService.findList(condition);
+        if(menuList.size() >0){
+            addMessageAjax(returnMap, "0", "下周菜单已添加");
+            return returnMap;
+        }
+
 
         pzMenu.setEatDate(eatDate);
         pzMenu.setRestaurantId(user.getOffice().getId());

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dhc.rad.modules.pzCensus.dao.PzCensusDao">
+    <resultMap id="BaseResultMap" type="com.dhc.rad.modules.pzCensus.entity.PzCensus">
+        <result column="eat_date" property="eatDate"/>
+        <result column="eat_week" property="eatWeek"/>
+        <result column="restaurant_id" property="restaurantId"/>
+        <result column="restaurant_name" property="restaurantName"/>
+        <result column="service_unit_id" property="serviceUnitId"/>
+        <result column="service_unit_name" property="serviceUnitName"/>
+        <result column="count_a" property="countA"/>
+        <result column="count_b" property="countB"/>
+        <result column="count_c" property="countC"/>
+    </resultMap>
+
+
+    <sql id="Base_Column_List">
+               eat_date,
+               eat_week,
+               restaurant_id,
+               restaurant_name,
+               service_unit_id,
+               service_unit_name,
+               count_a,
+               count_b,
+               count_c
+    </sql>
+
+
+    <select id="findList" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM
+        pz_census
+        where 1=1
+        <if test="null != eatDate and ''!= eatDate">AND eat_date = #{eatDate}</if>
+        <if test="null != eatWeek and ''!= eatWeek">AND eat_week = #{eatWeek}</if>
+        <if test="null != restaurantId and ''!= restaurantId">AND restaurant_id = #{restaurantId}</if>
+        <if test="null != restaurantName and ''!= restaurantName">AND restaurant_name like concat('%',#{restaurantName},'%')</if>
+        <if test="null != serviceUnitId and ''!= serviceUnitId">AND service_unit_id = #{serviceUnitId}</if>
+        <if test="null != serviceUnitName and ''!= serviceUnitName">AND service_unit_name like concat('%',#{serviceUnitName},'%')</if>
+        <if test="null != beginDate and ''!= beginDate">AND eat_date &gt;= #{beginDate}</if>
+        <if test="null != endDate and ''!= endDate">AND eat_date &lt;= #{endDate}</if>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY SERVICE_UNIT_ID DESC,EAT_DATE ASC
+            </otherwise>
+        </choose>
+    </select>
+
+
+    <select id="findCensusList"  resultMap="BaseResultMap">
+    SELECT
+	EAT_DATE,
+	EAT_WEEK,
+	RESTAURANT_ID,
+	RESTAURANT_NAME,
+	SUM( COUNT_A ) AS COUNT_A,
+	SUM( COUNT_B ) AS COUNT_B,
+	SUM( COUNT_C ) AS COUNT_C
+    FROM
+	pz_census
+    WHERE 1=1
+        <if test="null != eatDate and ''!= eatDate">AND eat_date = #{eatDate}</if>
+        <if test="null != restaurantId and ''!= restaurantId">AND restaurant_id = #{restaurantId}</if>
+        <if test="null != restaurantName and ''!= restaurantName">AND restaurant_name like concat('%',#{restaurantName},'%')</if>
+        <if test="null != beginDate and ''!= beginDate">AND eat_date &gt;= #{beginDate}</if>
+        <if test="null != endDate and ''!= endDate">AND eat_date &lt;= #{endDate}</if>
+    GROUP BY
+	RESTAURANT_ID,
+	RESTAURANT_NAME,
+	EAT_DATE,
+	EAT_WEEK
+    ORDER BY EAT_DATE
+</select>
+
+
+</mapper>

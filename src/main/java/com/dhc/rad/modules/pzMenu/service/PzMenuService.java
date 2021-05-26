@@ -38,6 +38,7 @@ public class PzMenuService extends CrudService<PzMenuDao, PzMenu> {
     public PzMenu getByid(String id) {
         PzMenu pzMenu = pzMenuDao.get(id);
         pzMenu.setPzMenuContentList(pzMenuContentDao.findListByMenuId(pzMenu.getId()));
+        pzMenu.setPzMenuContentString(menuToString(pzMenuContentDao.findListByMenuId(pzMenu.getId())));
         return pzMenu;
     }
 
@@ -47,6 +48,7 @@ public class PzMenuService extends CrudService<PzMenuDao, PzMenu> {
         List<PzMenu> list = pzMenuDao.findList(pzMenu);
         for (PzMenu menu : list) {
             menu.setPzMenuContentString(menuToString(pzMenuContentDao.findListByMenuId(menu.getId())));
+            menu.setPzMenuContentList(pzMenuContentDao.findListByMenuId(menu.getId()));
         }
         pzMenuPage.setList(list);
         return pzMenuPage;
@@ -61,6 +63,7 @@ public class PzMenuService extends CrudService<PzMenuDao, PzMenu> {
         List<PzMenu> list = pzMenuDao.findList(pzMenu);
         for (PzMenu menu : list) {
             menu.setPzMenuContentString(menuToString(pzMenuContentDao.findListByMenuId(menu.getId())));
+            menu.setPzMenuContentList(pzMenuContentDao.findListByMenuId(menu.getId()));
         }
         return list;
     }
@@ -135,6 +138,7 @@ public class PzMenuService extends CrudService<PzMenuDao, PzMenu> {
         List<PzMenu> list = pzMenuDao.findList(pzMenu);
         for (PzMenu menu : list) {
             menu.setPzMenuContentString(menuToString(pzMenuContentDao.findListByMenuId(menu.getId())));
+            menu.setPzMenuContentList(pzMenuContentDao.findListByMenuId(menu.getId()));
         }
         return pzMenuPage.setList(list);
     }
@@ -164,6 +168,7 @@ public class PzMenuService extends CrudService<PzMenuDao, PzMenu> {
     public List<PzMenu> findListByRid(String restaurantId,String eatDate) {
         List<PzMenu> list = pzMenuDao.findListByRid(restaurantId,eatDate);
         for (PzMenu menu : list) {
+            menu.setPzMenuContentString(menuToString(pzMenuContentDao.findListByMenuId(menu.getId())));
             menu.setPzMenuContentList(pzMenuContentDao.findListByMenuId(menu.getId()));
         }
         return list;

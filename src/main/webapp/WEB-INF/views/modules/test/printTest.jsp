@@ -83,9 +83,7 @@
 </div>
 <script type="text/javascript">
     var scripts = [null, '${ctxStatic}/assets/js/fuelux/fuelux.spinner.js', '${ctxStatic}/assets/js/date-time/bootstrap-datepicker.js', '${ctxStatic}/assets/js/date-time/bootstrap-datepicker.zh-CN.min.js',
-        '${ctxStatic}/bootstrap-treeview/js/bootstrap-treeview.js', '${ctxStatic}/bootstrap-treeview/js/bootstrap-treeview.js', '${ctxStatic}/jquery/jquery-1.8.3.js',
-        '${ctxStatic}/jquery/jqueryPrint/jquery.jqprint-0.3.js', '${ctxStatic}/jquery/jqueryPrint/jquery-migrate-1.2.1.min.js.js', '${ctxStatic}/qrcode/qrcode.js',
-        '${ctxStatic}/lodop/LodopFuncs.js', null];
+        '${ctxStatic}/bootstrap-treeview/js/bootstrap-treeview.js', '${ctxStatic}/jquery/jquery-1.8.3.js', '${ctxStatic}/qrcode/qrcode.js', '${ctxStatic}/lodop/LodopFuncs.js', null];
     $('.page-content-area').ace_ajax('loadScripts', scripts, function () {
         var count = 0;
         <c:forEach items="${orderStatisticlist}" var="orderStatisticMap" varStatus="orderStatisticStatus">

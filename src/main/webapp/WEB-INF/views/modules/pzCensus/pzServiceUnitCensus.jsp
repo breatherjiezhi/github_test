@@ -2,6 +2,22 @@
 <%@ include file="/WEB-INF/views/include/taglib.jsp" %>
 <title>套餐统计</title>
 <link href="${ctxStatic}/bootstrap-treeview/css/bootstrap-treeview.css" rel="stylesheet" type="text/css"/>
+<style type="text/css" id="css-style">
+    .popfi{margin-left: 0px;width: 220px;}
+    .popfi table{font-size: 14px;}
+    .invis{width: 100%;margin-bottom: 5px;}
+    .invis table{width: 100%;}
+    .invis table th{padding:3px 0px;}
+    .invis table td{padding:3px 0px;}
+    .qrcss{margin-top: 20px;margin-left: 25%;text-align: center;}
+    .tab1{width: 100%;}
+    .tab1 table{width: 100%;border:solid; border-width:1px 0px 0px 1px;text-align:center;}
+    .tab1 th{border:solid; border-width:0px 1px 1px 0px;text-align:center;}
+    .tab1 td{border:solid; border-width:0px 1px 1px 0px;text-align:center;}
+    .tex-l{text-align: left;}
+    .tex-r{text-align: right;}
+    .dotted{width:280px;height:0px;border-top:1px black dashed; margin-top: 20px;margin-left: -30px;}
+</style>
 <div class="row">
     <div class="col-xs-12 col-sm-12">
         <div class="widget-box widget-compact">
@@ -53,6 +69,10 @@
                                         <i class="fa fa-refresh" aria-hidden="true" style="margin-right: 5px"></i>
                                         <span data-locale='reset'>重置</span>
                                     </button>
+                                    <button class="btn btn-info btn-sm" type="button" style="color: orange !important;border-color: orange" onclick="printTest();" >
+                                        <i class="fa fa-search" aria-hidden="true" style="margin-right: 5px"></i>
+                                        <span data-locale='query'>打印</span>
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -70,9 +90,11 @@
         <div class="widget-box" style="display:none" id="setStationDivId"></div>
     </div>
 </div>
+<div id="printArea" style="margin-left: 50px;display: none;"></div>
 <script type="text/javascript">
 
-    var scripts = [null, '${ctxStatic}/assets/js/fuelux/fuelux.spinner.js', '${ctxStatic}/assets/js/date-time/bootstrap-datepicker.js', '${ctxStatic}/assets/js/date-time/bootstrap-datepicker.zh-CN.min.js', null];
+    var scripts = [null, '${ctxStatic}/assets/js/fuelux/fuelux.spinner.js', '${ctxStatic}/assets/js/date-time/bootstrap-datepicker.js',
+        '${ctxStatic}/assets/js/date-time/bootstrap-datepicker.zh-CN.min.js', '${ctxStatic}/qrcode/qrcode.js', '${ctxStatic}/lodop/LodopFuncs.js', null];
     $('.page-content-area').ace_ajax('loadScripts', scripts, function () {
         jQuery(function ($) {
 
@@ -202,6 +224,8 @@
                 }).trigger("reloadGrid"); //重新载入
 
                 getMenuTotal();
+                // 加载打印数据
+                getPrintText();
             });
             /*$("#name").keydown(function (e) {
                 if (e.keyCode == 13)
@@ -216,6 +240,8 @@
                     postData: {'serviceUnitName': ''},
                     page: 1
                 }).trigger("reloadGrid"); //重新载入
+                // 加载打印数据
+                getPrintText();
             });
 
 
@@ -240,6 +266,9 @@
         });
         getMenuTotal();
 
+        // 加载打印数据
+        getPrintText();
+
         function getMenuTotal() {
             var eatDate = $("#eatDate").val();
             var serviceUnitName = $("#serviceUnitName").val();
@@ -253,4 +282,62 @@
         }
 
     });
+
+    // 加载打印数据
+    function getPrintText() {
+        var eatDate = $("#eatDate").val();
+        var serviceUnitName = $("#serviceUnitName").val();
+        $.post("${ctx}/pzCensus/searchPage", {
+            'eatDate': eatDate,
+            'serviceUnitName': serviceUnitName
+        }, function (result) {
+            if (result != null) {
+                console.log(result);
+                for (var i = 0; i < 2; i++) {
+                    var printAreaInfo = " <div class='popfi'>";
+                    printAreaInfo += "<div id='qrCode" + i + "' class='qrcss'></div>";
+                    printAreaInfo += "<div class='invis'><table>";
+                    printAreaInfo += "<tr><td>取餐点：</td><td class='tex-r'>新区大楼</td></tr>";
+                    printAreaInfo += "<tr><td>" + result.rows[i].serviceUnitName + "</td><td class='tex-r'>" + result.rows[i].restaurantName + "</td></tr>";
+                    printAreaInfo += "</table></div>";
+                    printAreaInfo += "<div class='tab1'><table>";
+                    printAreaInfo += "<tr><th style='text-align:center;'>A</th><th style='text-align:center;'>B</th><th style='text-align:center;'>C</th></tr>";
+                    printAreaInfo += "<tr><th style='text-align:center;'>" + result.rows[i].countA + "</th><th style='text-align:center;'>" + result.rows[i].countB + "</th><th style='text-align:center;'>" + result.rows[i].countC + "</th></tr>";
+                    printAreaInfo += "</table></div>";
+                    printAreaInfo += "<div class='dotted'/>";
+                    printAreaInfo += "</div>";
+                    $("#printArea").append(printAreaInfo);
+                    console.log(printAreaInfo);
+                    var qrCodeId = "qrCode" + i;
+                    // var qrcode = new QRCode(qrCodeId);
+                    var qrCodeObj = new QRCode(qrCodeId, {
+                        // text: result.rows.serviceUnitId,
+                        text: "serviceUnit" + "," + result.rows[i].serviceUnitId + "," + result.rows[i].serviceUnitName,
+                        width: 100,
+                        height: 100,
+                        colorDark : "#000000",
+                        colorLight : "#ffffff"
+                    });
+                    qrCodeObj.makeCode("serviceUnit" + "," + result.rows[i].serviceUnitId + "," + result.rows[i].serviceUnitName);
+                }
+            }
+        });
+    }
+
+    var LODOP;
+    function printTest() {
+        var printA = $("#printArea").find(".popfi").length;
+        if (printA > 18) {
+            alert("打印内容超长，请重新选择！");
+            return;
+        }
+        var cssStyle = "<style>" + document.getElementById("css-style").innerHTML + "</style>";
+        var textHtml = cssStyle + "<body>" + document.getElementById("printArea").innerHTML + "</body>";
+        //$("#printArea").jqprint();
+        LODOP=getLodop();
+        LODOP.PRINT_INIT(); // 打印初始化
+        LODOP.SET_PRINT_PAGESIZE(1,800,600*printA,"");  // 设置纸张大小,纸张高度最大32500
+        LODOP.ADD_PRINT_HTM(0,40,'100%','100%',textHtml); // 设置打印内容
+        LODOP.PREVIEW();
+    }
 </script>

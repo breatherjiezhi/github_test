@@ -178,9 +178,9 @@ public class WxDeliveryController {
                 map.put("areaLocation", orderVo.getAreaLocation());
                 map.put("boxName", orderVo.getBoxName());
                 if (StringUtils.isNotBlank(orderVo.getNoEatDate()) && orderVo.getNoEatDate().indexOf(eatDate) > 0) {
-                    map.put("eatFlat", false);
+                    map.put("eatFlag", false);
                 } else {
-                    map.put("eatFlat", true);
+                    map.put("eatFlag", true);
                 }
                 map.put("deliveryFlag", orderVo.isDeliveryFlag());
                 data.add(map);

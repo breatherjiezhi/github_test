@@ -7,9 +7,8 @@
 		"Charset":134
 	},
 	"Printer":{
-		"Size":256,
-		"Width":8,
-		"Height":4,
+		"PrinterName":"HPBDC212 (HP OfficeJet Pro 8720)",
+		"Oriention":"Landscape",
 		"LeftMargin":0,
 		"TopMargin":0,
 		"RightMargin":0,
@@ -18,7 +17,7 @@
 	"DetailGrid":{
 		"Recordset":{
 			"ConnectionString":"MYSQL;\r\nDatabase=2021pzdc;\r\nPassword=KF@32rjb;\r\nPort=3306;\r\nServer=172.16.2.91;\r\nUser=root;",
-			"QuerySQL":"select pbc.BOX_CODE,pbc.BOX_CN_NAME,sso.`NAME` as 'RESTAURANT_NAME'\r\nfrom pz_box_code pbc \r\nleft join sys_office sso on pbc.RESTAURANT_ID=sso.ID",
+			"QuerySQL":"select pbc.ID as BOX_ID,CONCAT(sso.`NAME`,pbc.BOX_CODE) as BOX_CN_NAME,sso.`NAME` as 'RESTAURANT_NAME',pbc.BOX_CODE\r\nfrom pz_box_code pbc\r\nleft join sys_office sso on pbc.RESTAURANT_ID=sso.ID WHERE pbc.del_flag = '0'   limit 2",
 			"Field":[
 				{
 					"Name":"BOX_CODE"
@@ -28,18 +27,21 @@
 				},
 				{
 					"Name":"RESTAURANT_NAME"
+				},
+				{
+					"Name":"BOX_ID"
 				}
 			]
 		},
 		"Column":[
 			{
 				"Name":"Column1",
-				"Width":7.96396,
+				"Width":20.9815,
 				"FixedWidth":true
 			}
 		],
 		"ColumnContent":{
-			"Height":3.99521,
+			"Height":13.9965,
 			"ColumnContentCell":[
 				{
 					"Column":"Column1",
@@ -48,13 +50,13 @@
 						{
 							"Type":"Barcode",
 							"Name":"Barcode1",
-							"Left":0.608542,
-							"Top":1.5875,
-							"Width":6.58813,
-							"Height":2.2225,
+							"Left":2.16958,
+							"Top":4.20688,
+							"Width":16.219,
+							"Height":9.44563,
 							"BarcodeType":"QRCode",
 							"CaptionPosition":"None",
-							"Text":"[#BOX_CODE#]",
+							"Text":"box,[#BOX_ID#],[#BOX_CODE#]",
 							"Font":{
 								"Name":"宋体",
 								"Size":142500,
@@ -64,39 +66,19 @@
 						},
 						{
 							"Type":"MemoBox",
-							"Name":"MemoBox1",
-							"Left":2.61938,
-							"Top":0.846667,
-							"Width":5.00063,
-							"Height":0.608542,
-							"Text":"[#RESTAURANT_NAME#]"
-						},
-						{
-							"Type":"StaticBox",
-							"Name":"StaticBox1",
-							"Left":0.820208,
-							"Top":0.846667,
-							"Width":2.61938,
-							"Height":0.608542,
-							"Text":"餐厅名称："
-						},
-						{
-							"Type":"MemoBox",
 							"Name":"MemoBox5",
-							"Left":2.61938,
+							"Left":2.16958,
 							"Top":0.238125,
-							"Width":5.00063,
-							"Height":0.608542,
+							"Width":16.219,
+							"Height":3.75708,
+							"Font":{
+								"Name":"宋体",
+								"Size":802500,
+								"Bold":true,
+								"Charset":134
+							},
+							"TextAlign":"MiddleCenter",
 							"Text":"[#BOX_CN_NAME#]"
-						},
-						{
-							"Type":"StaticBox",
-							"Name":"StaticBox6",
-							"Left":0.820208,
-							"Top":0.238125,
-							"Width":2.61938,
-							"Height":0.608542,
-							"Text":"箱子名称："
 						}
 					],
 					"BorderCustom":true,

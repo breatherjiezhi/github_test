@@ -16,7 +16,7 @@
     }
 
     StringBuffer RecordsetQuerySQL = new StringBuffer();
-    RecordsetQuerySQL.append("select pbc.ID as BOX_CODE,CONCAT(sso.`NAME`,pbc.BOX_CODE) as BOX_CN_NAME,sso.`NAME` as 'RESTAURANT_NAME'");
+    RecordsetQuerySQL.append("select pbc.ID as BOX_ID,CONCAT(sso.`NAME`,pbc.BOX_CODE) as BOX_CN_NAME,sso.`NAME` as 'RESTAURANT_NAME',pbc.BOX_CODE");
     RecordsetQuerySQL.append("from pz_box_code pbc  ");
     RecordsetQuerySQL.append("left join sys_office sso on pbc.RESTAURANT_ID=sso.ID WHERE");
     if(StringUtils.isNotBlank(temp)){

@@ -297,7 +297,6 @@
                     var printAreaInfo = " <div class='popfi'>";
                     printAreaInfo += "<div id='qrCode" + i + "' class='qrcss'></div>";
                     printAreaInfo += "<div class='invis'><table>";
-                    printAreaInfo += "<tr><td>取餐点：</td><td class='tex-r'>新区大楼</td></tr>";
                     printAreaInfo += "<tr><td>" + result.rows[i].serviceUnitName + "</td><td class='tex-r'>" + result.rows[i].restaurantName + "</td></tr>";
                     printAreaInfo += "</table></div>";
                     printAreaInfo += "<div class='tab1'><table>";

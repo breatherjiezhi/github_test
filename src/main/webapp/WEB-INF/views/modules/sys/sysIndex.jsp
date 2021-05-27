@@ -248,7 +248,7 @@
     font-size: 15px;
     text-align: center;
     line-height: 60px;
-    font-weight: 600;">MMIS系统</li>
+    font-weight: 600;">智能点餐系统</li>
 
 				<c:forEach items="${menuList}" var="parent" varStatus="idxStatus">
 					<c:if test="${parent.parent.id eq '1'&&  parent.isShow eq '1'}">

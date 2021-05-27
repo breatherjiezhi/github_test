@@ -146,6 +146,7 @@ public class PzMenuController extends BaseController {
             PzMenu condition = new PzMenu();
             condition.setMenuName(pzMenu.getMenuName());
             condition.setEatDate(eatDate);
+            condition.setRestaurantId(user.getOffice().getId());
             List<PzMenu> menuList = pzMenuService.findList(condition);
             if(menuList.size() >0){
                 addMessageAjax(returnMap, "0", "下周菜单已添加");

@@ -14,9 +14,11 @@ import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -25,6 +27,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.URL;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 /**
@@ -164,4 +168,46 @@ public class HolidayController extends BaseController {
     }
 
 
+    /*@RequestMapping(value = "getHolidayForYear",method= RequestMethod.POST)
+    @ResponseBody
+    public Map<String,Object> getHolidayForYear(){
+        Map<String,Object> resultMap = new HashMap<>();
+
+        List<String> holidayList = new ArrayList<>();
+        //一年中最后一天日期
+        LocalDate localDate = LocalDate.of(2020, 12, 31);
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        for (int i = 0; i <= 365; i++) {
+            localDate = localDate.plusDays(1);
+            String yyyyMMdd = localDate.format(dateTimeFormatter);
+            String url = "https://tool.bitefu.net/jiari/?d=" + yyyyMMdd;
+            RestTemplate restTemplate = new RestTemplate();
+            ResponseEntity<Integer> res = restTemplate.getForEntity(url, Integer.class);
+            try {
+                Thread.sleep(500);
+                if (res.getBody() != null) {
+                    if (res.getBody() != 0) {
+                        System.out.println(yyyyMMdd + " "+res.toString());
+                        holidayList.add(yyyyMMdd);
+                    }
+                } else {
+                    System.out.println(yyyyMMdd + "get failed");
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return resultMap;
+
+    }
+    //根据传入的年份获取天数
+     public static int dayNum(int year){
+        if(year==0){
+            return LocalDate.now().lengthOfYear();
+        }else{
+            return LocalDate.of(year,1,1).lengthOfYear();
+        }
+    }
+    */
 }

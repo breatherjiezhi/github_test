@@ -70,6 +70,7 @@ public class WxDeliveryController {
         }
         //TODO:判断boxCode和serviceUnitId前缀是否一致
         //判断serviceUnitId是否存在
+        serviceUnitIdStr = serviceUnitIdStr.trim();
         List<String> serviceUnitIdList = Arrays.asList(serviceUnitIdStr.split(","));
         serviceUnitIdList =   serviceUnitIdList.stream().distinct().collect(Collectors.toList());
         for (String serviceUnitId : serviceUnitIdList) {

@@ -15,11 +15,17 @@ public class PzCensus extends DataEntity<PzCensus> {
 
     private String serviceUnitName;
 
+    private String areaName;
+
     private String countA;
 
     private String countB;
 
     private String countC;
+
+    private String countD;
+    private String countE;
+    private String countF;
 
 
     //用于查询
@@ -114,5 +120,37 @@ public class PzCensus extends DataEntity<PzCensus> {
 
     public void setCountC(String countC) {
         this.countC = countC;
+    }
+
+    public String getCountD() {
+        return countD;
+    }
+
+    public void setCountD(String countD) {
+        this.countD = countD;
+    }
+
+    public String getCountE() {
+        return countE;
+    }
+
+    public void setCountE(String countE) {
+        this.countE = countE;
+    }
+
+    public String getCountF() {
+        return countF;
+    }
+
+    public void setCountF(String countF) {
+        this.countF = countF;
+    }
+
+    public String getAreaName() {
+        return areaName;
+    }
+
+    public void setAreaName(String areaName) {
+        this.areaName = areaName;
     }
 }

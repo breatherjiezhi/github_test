@@ -169,9 +169,13 @@
                     '<span data-locale="restaurantId">餐厅名称</span>',
                     'serviceUnitId',
                     '<span data-locale="serviceUnitId">服务单元名称</span>',
+                    '<span data-locale="areaName">投料点名称</span>',
                     'A',
                     'B',
-                    'C'
+                    'C',
+                    'D',
+                    'E',
+                    'F'
 
                 ],
                 colModel: [
@@ -181,9 +185,13 @@
                     {name: 'restaurantName', index: 'restaurant_name'},
                     {name: 'serviceUnitId', hidden: true},
                     {name: 'serviceUnitName', index: 'service_unit_name'},
+                    {name: 'areaName', index: 'area_name'},
                     {name: 'countA', sortable: false},
                     {name: 'countB', sortable: false},
                     {name: 'countC', sortable: false},
+                    {name: 'countD', sortable: false},
+                    {name: 'countE', sortable: false},
+                    {name: 'countF', sortable: false},
                 ],
                 viewrecords: true,
                 rowNum: 20,
@@ -276,7 +284,7 @@
                 'eatDate': eatDate,
                 'serviceUnitName': serviceUnitName
             }, function (result) {
-                var tempVar = "套餐A:"+result.totalA+"份,套餐B:"+result.totalB+"份,套餐C:"+result.totalC+"份";
+                var tempVar = "套餐A:"+result.totalA+"份,套餐B:"+result.totalB+"份,套餐C:"+result.totalC+"份,套餐D:"+result.totalD+"份,套餐E:"+result.totalE+"份,套餐F:"+result.totalF+"份";
                 $("#menuTotal").html(tempVar)
             });
         }
@@ -285,6 +293,7 @@
 
     // 加载打印数据
     function getPrintText() {
+        $("#printArea").html("");
         var eatDate = $("#eatDate").val();
         var serviceUnitName = $("#serviceUnitName").val();
         $.post("${ctx}/pzCensus/searchPage", {
@@ -292,21 +301,23 @@
             'serviceUnitName': serviceUnitName
         }, function (result) {
             if (result != null) {
-                console.log(result);
+
                 for (var i = 0; i < 2; i++) {
                     var printAreaInfo = " <div class='popfi'>";
                     printAreaInfo += "<div id='qrCode" + i + "' class='qrcss'></div>";
                     printAreaInfo += "<div class='invis'><table>";
+                    printAreaInfo += "<tr><td>" + result.rows[i].areaName + "</td><td class='tex-r'>" + result.rows[i].areaName + "</td></tr>";
                     printAreaInfo += "<tr><td>" + result.rows[i].serviceUnitName + "</td><td class='tex-r'>" + result.rows[i].restaurantName + "</td></tr>";
                     printAreaInfo += "</table></div>";
                     printAreaInfo += "<div class='tab1'><table>";
                     printAreaInfo += "<tr><th style='text-align:center;'>A</th><th style='text-align:center;'>B</th><th style='text-align:center;'>C</th></tr>";
                     printAreaInfo += "<tr><th style='text-align:center;'>" + result.rows[i].countA + "</th><th style='text-align:center;'>" + result.rows[i].countB + "</th><th style='text-align:center;'>" + result.rows[i].countC + "</th></tr>";
+                    printAreaInfo += "<tr><th style='text-align:center;'>D</th><th style='text-align:center;'>E</th><th style='text-align:center;'>F</th></tr>";
+                    printAreaInfo += "<tr><th style='text-align:center;'>" + result.rows[i].countD + "</th><th style='text-align:center;'>" + result.rows[i].countE + "</th><th style='text-align:center;'>" + result.rows[i].countF + "</th></tr>";
                     printAreaInfo += "</table></div>";
                     printAreaInfo += "<div class='dotted'/>";
                     printAreaInfo += "</div>";
                     $("#printArea").append(printAreaInfo);
-                    console.log(printAreaInfo);
                     var qrCodeId = "qrCode" + i;
                     // var qrcode = new QRCode(qrCodeId);
                     var qrCodeObj = new QRCode(qrCodeId, {
@@ -335,7 +346,7 @@
         //$("#printArea").jqprint();
         LODOP=getLodop();
         LODOP.PRINT_INIT(); // 打印初始化
-        LODOP.SET_PRINT_PAGESIZE(1,800,600*printA,"");  // 设置纸张大小,纸张高度最大32500
+        LODOP.SET_PRINT_PAGESIZE(1,800,750*printA,"");  // 设置纸张大小,纸张高度最大32500
         LODOP.ADD_PRINT_HTM(0,40,'100%','100%',textHtml); // 设置打印内容
         LODOP.PREVIEW();
     }

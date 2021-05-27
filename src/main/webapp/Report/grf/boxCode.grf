@@ -36,12 +36,12 @@
 		"Column":[
 			{
 				"Name":"Column1",
-				"Width":20.9815,
+				"Width":29.7127,
 				"FixedWidth":true
 			}
 		],
 		"ColumnContent":{
-			"Height":13.9965,
+			"Height":21.0079,
 			"ColumnContentCell":[
 				{
 					"Column":"Column1",
@@ -50,16 +50,16 @@
 						{
 							"Type":"Barcode",
 							"Name":"Barcode1",
-							"Left":2.16958,
-							"Top":4.20688,
+							"Left":6.05896,
+							"Top":7.64646,
 							"Width":16.219,
-							"Height":9.44563,
+							"Height":9.39271,
 							"BarcodeType":"QRCode",
 							"CaptionPosition":"None",
-							"Text":"box,[#BOX_ID#],[#BOX_CODE#]",
+							"Text":"box,[#BOX_ID#],[#BOX_CN_NAME#]",
 							"Font":{
 								"Name":"宋体",
-								"Size":142500,
+								"Size":720000,
 								"Bold":true,
 								"Charset":134
 							}
@@ -67,13 +67,13 @@
 						{
 							"Type":"MemoBox",
 							"Name":"MemoBox5",
-							"Left":2.16958,
-							"Top":0.238125,
+							"Left":6.05896,
+							"Top":2.64583,
 							"Width":16.219,
-							"Height":3.75708,
+							"Height":4.78896,
 							"Font":{
 								"Name":"宋体",
-								"Size":802500,
+								"Size":997500,
 								"Bold":true,
 								"Charset":134
 							},

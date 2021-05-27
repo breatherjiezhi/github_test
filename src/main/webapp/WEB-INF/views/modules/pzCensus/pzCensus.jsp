@@ -139,7 +139,10 @@
                     '<span data-locale="restaurantId">餐厅名称</span>',
                     'A',
                     'B',
-                    'C'
+                    'C',
+                    'D',
+                    'E',
+                    'F'
 
                 ],
                 colModel: [
@@ -150,6 +153,9 @@
                     {name: 'countA', sortable: false},
                     {name: 'countB', sortable: false},
                     {name: 'countC', sortable: false},
+                    {name: 'countD', sortable: false},
+                    {name: 'countE', sortable: false},
+                    {name: 'countF', sortable: false},
                 ],
                 viewrecords: true,
                 rowNum: 20,

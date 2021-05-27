@@ -186,7 +186,7 @@
         SELECT <include refid="Base_Column_List" />
         FROM
         pz_menu_content
-        WHERE del_flag ='0' and menu_id = #{menuId}  ORDER BY  eat_date ASC
+        WHERE del_flag ='0' and menu_id = #{menuId} and (menu_detail is not null  or menu_detail != '') ORDER BY  eat_date ASC
     </select>
 
 

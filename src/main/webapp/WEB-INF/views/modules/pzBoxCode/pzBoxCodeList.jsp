@@ -254,7 +254,7 @@
             }
 
             function _boxCode(ids){
-                window.open("${ctxReport}/HtmReport/doPrintBoxCode.htm?param="+ids);
+                window.open("${ctxReport}/HtmReport/doPrintBoxCode.htm?param="+ids+"&officeId=${officeId}");
             }
 
 

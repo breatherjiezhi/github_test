@@ -1,4 +1,5 @@
 <%@ page import="com.dhc.rad.common.utils.StringUtils" %>
+<%@ page import="com.dhc.rad.modules.sys.utils.UserUtils" %>
 <%@ page contentType="text/html; charset=utf-8"%>
 <%@ include file = "GenXmlData.jsp" %>
 <%
@@ -14,17 +15,21 @@
             }
         }
     }
-
+    String officeId = request.getParameter("officeId");
     StringBuffer RecordsetQuerySQL = new StringBuffer();
     RecordsetQuerySQL.append("select pbc.ID as BOX_ID,CONCAT(sso.`NAME`,pbc.BOX_CODE) as BOX_CN_NAME,sso.`NAME` as 'RESTAURANT_NAME',pbc.BOX_CODE ");
     RecordsetQuerySQL.append("from pz_box_code pbc  ");
-    RecordsetQuerySQL.append("left join sys_office sso on pbc.RESTAURANT_ID=sso.ID WHERE");
-    if(StringUtils.isNotBlank(temp)){
-        RecordsetQuerySQL.append(" pbc.ID IN (");
-        RecordsetQuerySQL.append(temp);
-        RecordsetQuerySQL.append(") AND");
-    }
+    RecordsetQuerySQL.append("left join sys_office sso on pbc.RESTAURANT_ID=sso.ID WHERE ");
     RecordsetQuerySQL.append("  pbc.del_flag = '0'  ");
+    if(StringUtils.isNotBlank(temp)){
+        RecordsetQuerySQL.append(" AND pbc.ID IN (");
+        RecordsetQuerySQL.append(temp);
+        RecordsetQuerySQL.append(") ");
+    }
+    if(!(UserUtils.getRoleFlag("admin") || UserUtils.getRoleFlag("admins"))){
+        RecordsetQuerySQL.append(" AND  pbc.RESTAURANT_ID = '").append(officeId).append("'  ");
+    }
+
     System.out.println(RecordsetQuerySQL);
     XML_GenOneRecordset(response, RecordsetQuerySQL.toString());
 %>

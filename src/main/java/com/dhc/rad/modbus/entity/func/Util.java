@@ -1,5 +1,6 @@
 package com.dhc.rad.modbus.entity.func;
 
+import com.dhc.rad.common.config.Global;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -32,10 +33,8 @@ public class Util {
 
     public static String getImgUrl(){
         ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-        HttpServletRequest request = requestAttributes.getRequest();
-        String localAddr = request.getLocalAddr();
-        int serverPort = request.getServerPort();
-        String imgUrl= "https://" + localAddr + ":" + serverPort + File.separator;
+        String localAddr = Global.getConfig("projectUrl");
+        String imgUrl= "https://" + localAddr + File.separator;
         return  imgUrl;
     }
 

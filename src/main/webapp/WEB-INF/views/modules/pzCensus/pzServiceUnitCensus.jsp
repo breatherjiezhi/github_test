@@ -301,8 +301,7 @@
             'serviceUnitName': serviceUnitName
         }, function (result) {
             if (result != null) {
-
-                for (var i = 0; i < 2; i++) {
+                for (var i = 0; i < result.rows.length; i++) {
                     var printAreaInfo = " <div class='popfi'>";
                     printAreaInfo += "<div id='qrCode" + i + "' class='qrcss'></div>";
                     printAreaInfo += "<div class='invis'><table>";

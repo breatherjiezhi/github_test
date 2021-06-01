@@ -114,9 +114,9 @@ public class PzCensusController extends BaseController {
             returnMap.put("totalA", page.getList().get(0).getCountA());
             returnMap.put("totalB", page.getList().get(0).getCountB());
             returnMap.put("totalC", page.getList().get(0).getCountC());
-            returnMap.put("totalD", page.getList().get(0).getCountC());
-            returnMap.put("totalE", page.getList().get(0).getCountC());
-            returnMap.put("totalF", page.getList().get(0).getCountC());
+            returnMap.put("totalD", page.getList().get(0).getCountD());
+            returnMap.put("totalE", page.getList().get(0).getCountE());
+            returnMap.put("totalF", page.getList().get(0).getCountF());
         } else {
             returnMap.put("totalA", 0);
             returnMap.put("totalB", 0);

@@ -209,14 +209,41 @@
                 editurl: "/dummy.html",//nothing is saved
                 caption: "<span data-locale='StatisticsList'>统计列表</span>&nbsp;&nbsp;&nbsp;&nbsp;<span id='menuTotal' style='color:#3f67e7;'></span>",
                 gridComplete: function () {
+                    $("#printArea").html("");
                     var ids = $(grid_selector).jqGrid('getDataIDs');
+                    console.log(ids);
                     for (var i = 0; i < ids.length; i++) {
                         var id = ids[i];
+                        // 获取每一列数据明细
                         var rowData = $("#grid-table").getRowData(id);
-
+                        console.log(rowData);
+                        var printAreaInfo = " <div class='popfi'>";
+                        printAreaInfo += "<div id='qrCode" + i + "' class='qrcss'></div>";
+                        printAreaInfo += "<div class='invis'><table>";
+                        printAreaInfo += "<tr><td>投料点：</td><td class='tex-r'>" + rowData.areaName + "</td></tr>";
+                        printAreaInfo += "<tr><td>" + rowData.serviceUnitName + "</td><td class='tex-r'>" + rowData.restaurantName + "</td></tr>";
+                        printAreaInfo += "</table></div>";
+                        printAreaInfo += "<div class='tab1'><table>";
+                        printAreaInfo += "<tr><th style='text-align:center;'>A</th><th style='text-align:center;'>B</th><th style='text-align:center;'>C</th></tr>";
+                        printAreaInfo += "<tr><th style='text-align:center;'>" + rowData.countA + "</th><th style='text-align:center;'>" + rowData.countB + "</th><th style='text-align:center;'>" + rowData.countC + "</th></tr>";
+                        printAreaInfo += "<tr><th style='text-align:center;'>D</th><th style='text-align:center;'>E</th><th style='text-align:center;'>F</th></tr>";
+                        printAreaInfo += "<tr><th style='text-align:center;'>" + rowData.countD + "</th><th style='text-align:center;'>" + rowData.countE + "</th><th style='text-align:center;'>" + rowData.countF + "</th></tr>";
+                        printAreaInfo += "</table></div>";
+                        printAreaInfo += "<div class='dotted'/>";
+                        printAreaInfo += "</div>";
+                        $("#printArea").append(printAreaInfo);
+                        var qrCodeId = "qrCode" + i;
+                        // var qrcode = new QRCode(qrCodeId);
+                        var qrCodeObj = new QRCode(qrCodeId, {
+                            // text: result.rows.serviceUnitId,
+                            text: "serviceUnit" + "," + rowData.serviceUnitId + "," + rowData.serviceUnitName + "," + rowData.areaName,
+                            width: 100,
+                            height: 100,
+                            colorDark : "#000000",
+                            colorLight : "#ffffff"
+                        });
+                        qrCodeObj.makeCode("serviceunit" + "," + rowData.serviceUnitId + "," + rowData.serviceUnitName + "," + rowData.areaName);
                     }
-
-
                 }
             });
 
@@ -233,7 +260,7 @@
 
                 getMenuTotal();
                 // 加载打印数据
-                getPrintText();
+                // getPrintText();
             });
             /*$("#name").keydown(function (e) {
                 if (e.keyCode == 13)
@@ -249,7 +276,7 @@
                     page: 1
                 }).trigger("reloadGrid"); //重新载入
                 // 加载打印数据
-                getPrintText();
+                // getPrintText();
             });
 
 
@@ -275,7 +302,7 @@
         getMenuTotal();
 
         // 加载打印数据
-        getPrintText();
+        // getPrintText();
 
         function getMenuTotal() {
             var eatDate = $("#eatDate").val();
@@ -305,7 +332,7 @@
                     var printAreaInfo = " <div class='popfi'>";
                     printAreaInfo += "<div id='qrCode" + i + "' class='qrcss'></div>";
                     printAreaInfo += "<div class='invis'><table>";
-                    printAreaInfo += "<tr><td>" + result.rows[i].areaName + "</td><td class='tex-r'>" + result.rows[i].areaName + "</td></tr>";
+                    printAreaInfo += "<tr><td>投料点：</td><td class='tex-r'>" + result.rows[i].areaName + "</td></tr>";
                     printAreaInfo += "<tr><td>" + result.rows[i].serviceUnitName + "</td><td class='tex-r'>" + result.rows[i].restaurantName + "</td></tr>";
                     printAreaInfo += "</table></div>";
                     printAreaInfo += "<div class='tab1'><table>";
@@ -336,7 +363,7 @@
     var LODOP;
     function printTest() {
         var printA = $("#printArea").find(".popfi").length;
-        if (printA > 18) {
+        if (printA > 40) {
             alert("打印内容超长，请重新选择！");
             return;
         }

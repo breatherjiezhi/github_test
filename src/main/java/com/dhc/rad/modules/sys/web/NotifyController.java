@@ -9,6 +9,7 @@ import java.util.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.dhc.rad.common.config.Global;
 import com.dhc.rad.common.utils.ConstantUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -247,5 +248,18 @@ public class NotifyController extends BaseController {
 		addMessageAjax(returnMap,"1", "操作成功！");
 		return returnMap;
 	}
-	
+
+
+	/*
+	 * wx帮助与建议
+	 */
+	@RequestMapping(value = "getHelpInfo")
+	@ResponseBody
+	public  Map<String,Object> getHelpInfo(RedirectAttributes redirectAttributes) {
+		Map<String,Object> returnMap = Maps.newHashMap();
+		addMessageAjax(returnMap,"1",Global.getConfig("helpInfo"));
+		return returnMap;
+	}
+
+
 }

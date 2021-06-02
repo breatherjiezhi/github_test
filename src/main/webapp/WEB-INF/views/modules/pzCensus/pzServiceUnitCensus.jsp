@@ -327,7 +327,7 @@
                         colorDark : "#000000",
                         colorLight : "#ffffff"
                     });
-                    qrCodeObj.makeCode("serviceUnit" + "," + result.rows[i].serviceUnitId + "," + result.rows[i].serviceUnitName);
+                    qrCodeObj.makeCode("serviceunit" + "," + result.rows[i].serviceUnitId + "," + result.rows[i].serviceUnitName);
                 }
             }
         });

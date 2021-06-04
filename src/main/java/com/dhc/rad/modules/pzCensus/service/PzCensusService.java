@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Transactional(readOnly = true)
@@ -45,6 +46,29 @@ public class PzCensusService extends CrudService<PzCensusDao, PzCensus> {
     }
 
 
+    /**
+     *
+     * @param restaurantId
+     * @param officeId
+     * @param beginDate
+     * @param endDate
+     * @param pageNo
+     * @param pageSize
+     * @return
+     */
+    public List<Map<String,Object>> findUserCensusPage(String restaurantId,String officeId,
+                                                      String beginDate,String endDate,
+                                                      Integer pageNo,Integer pageSize){
+        return   pzCensusDao.selectUserCensus(restaurantId,officeId,beginDate,endDate,pageNo,pageSize);
+    }
 
-
+    /**
+     *
+     * @param beginDate
+     * @param endDate
+     * @return
+     */
+    public List<String> findEatDate(String beginDate,String endDate){
+        return pzCensusDao.findEatDate(beginDate,endDate);
+    }
 }

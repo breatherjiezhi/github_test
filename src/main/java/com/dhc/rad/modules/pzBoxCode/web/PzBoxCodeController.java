@@ -32,6 +32,7 @@ public class PzBoxCodeController extends BaseController {
     @RequestMapping(value = {"list"})
     public String list(PzBoxCode pzBoxCode, HttpServletRequest request, HttpServletResponse response, Model model){
         model.addAttribute("officeId", UserUtils.getUser().getOffice().getId());
+        model.addAttribute("roleFlag", !(UserUtils.getRoleFlag("admin") || UserUtils.getRoleFlag("admins")));
         return "modules/pzBoxCode/pzBoxCodeList";
     }
 

@@ -95,4 +95,22 @@
     </select>
 
 
+    <select id="selectUserCensus" statementType="CALLABLE" resultType="java.util.Map">
+      { CALL pz_census_pro(
+	      #{restaurantId,jdbcType=VARCHAR,mode=IN},
+	      #{officeId,jdbcType=VARCHAR,mode=IN},
+	      #{beginDate,jdbcType=VARCHAR,mode=IN},
+	      #{endDate,jdbcType=VARCHAR,mode=IN},
+	      #{pageNo,jdbcType=INTEGER,mode=IN},
+	      #{pageSize,jdbcType=INTEGER,mode=IN}
+	   )
+      }
+    </select>
+
+
+    <select id="findEatDate" statementType="CALLABLE" resultType="java.lang.String">
+        SELECT DISTINCT EAT_DATE from pz_menu_content where EAT_DATE&gt;=#{beginDate} AND EAT_DATE&lt;=#{endDate}
+    </select>
+
+
 </mapper>

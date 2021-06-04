@@ -16,6 +16,7 @@
         }
     }
     String officeId = request.getParameter("officeId");
+    String roleFlag = request.getParameter("roleFlag");
     StringBuffer RecordsetQuerySQL = new StringBuffer();
     RecordsetQuerySQL.append("select pbc.ID as BOX_ID,CONCAT(sso.`NAME`,pbc.BOX_CODE) as BOX_CN_NAME,sso.`NAME` as 'RESTAURANT_NAME',pbc.BOX_CODE ");
     RecordsetQuerySQL.append("from pz_box_code pbc  ");
@@ -26,7 +27,7 @@
         RecordsetQuerySQL.append(temp);
         RecordsetQuerySQL.append(") ");
     }
-    if(!(UserUtils.getRoleFlag("admin") || UserUtils.getRoleFlag("admins"))){
+    if("true".equals(roleFlag)){
         RecordsetQuerySQL.append(" AND  pbc.RESTAURANT_ID = '").append(officeId).append("'  ");
     }
 

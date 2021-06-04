@@ -45,6 +45,10 @@
                                         <i class="fa fa-refresh" aria-hidden="true" style="margin-right: 5px"></i>
                                         <span data-locale='reset'>重置</span>
                                     </button>
+                                    <button class="btn btn-info btn-sm" type="button" style="color: orange !important;border-color: orange" onclick="download();" >
+                                        <i class="fa fa-search" aria-hidden="true" style="margin-right: 5px"></i>
+                                        <span data-locale='export'>导出execl</span>
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -230,6 +234,12 @@
                 $('.ui-helper-hidden-accessible').remove();
             });
         });
-
     });
+
+
+    function download() {
+        var beginDate = $("#beginDate").val();
+        var endDate = $("#endDate").val();
+        window.location.href="${ctx}/pzCensus/downUserCensus?beginDate="+beginDate+"&endDate="+endDate;
+    }
 </script>

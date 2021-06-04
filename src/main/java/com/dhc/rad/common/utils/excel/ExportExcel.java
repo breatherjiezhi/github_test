@@ -48,34 +48,34 @@ import com.dhc.rad.modules.sys.utils.DictUtils;
  * @version 2013-04-21
  */
 public class ExportExcel {
-	
+
 	private static Logger log = LoggerFactory.getLogger(ExportExcel.class);
-			
+
 	/**
 	 * 工作薄对象
 	 */
 	private SXSSFWorkbook wb;
-	
+
 	/**
 	 * 工作表对象
 	 */
 	private Sheet sheet;
-	
+
 	/**
 	 * 样式列表
 	 */
 	private Map<String, CellStyle> styles;
-	
+
 	/**
 	 * 当前行号
 	 */
 	private int rownum;
-	
+
 	/**
 	 * 注解列表（Object[]{ ExcelField, Field/Method }）
 	 */
 	List<Object[]> annotationList = Lists.newArrayList();
-	
+
 	/**
 	 * 构造函数
 	 * @param title 表格标题，传“空值”，表示无标题
@@ -84,7 +84,7 @@ public class ExportExcel {
 	public ExportExcel(String title, Class<?> cls){
 		this(title, cls, 1);
 	}
-	
+
 	/**
 	 * 构造函数
 	 * @param title 表格标题，传“空值”，表示无标题
@@ -93,7 +93,7 @@ public class ExportExcel {
 	 * @param groups 导入分组
 	 */
 	public ExportExcel(String title, Class<?> cls, int type, int... groups){
-		// Get annotation field 
+		// Get annotation field
 		Field[] fs = cls.getDeclaredFields();
 		for (Field f : fs){
 			ExcelField ef = f.getAnnotation(ExcelField.class);
@@ -163,7 +163,7 @@ public class ExportExcel {
 		}
 		initialize(title, headerList);
 	}
-	
+
 	/**
 	 * 构造函数
 	 * @param title 表格标题，传“空值”，表示无标题
@@ -172,16 +172,18 @@ public class ExportExcel {
 	public ExportExcel(String title, String[] headers) {
 		initialize(title, Lists.newArrayList(headers));
 	}
-	
+
 	/**
 	 * 构造函数
 	 * @param title 表格标题，传“空值”，表示无标题
 	 * @param headerList 表头列表
 	 */
 	public ExportExcel(String title, List<String> headerList) {
+
+
 		initialize(title, headerList);
 	}
-	
+
 	/**
 	 * 初始化函数
 	 * @param title 表格标题，传“空值”，表示无标题
@@ -222,13 +224,13 @@ public class ExportExcel {
 			}
 			sheet.autoSizeColumn(i);
 		}
-		for (int i = 0; i < headerList.size(); i++) {  
+		for (int i = 0; i < headerList.size(); i++) {
 			int colWidth = sheet.getColumnWidth(i)*2;
-	        sheet.setColumnWidth(i, colWidth < 3000 ? 3000 : colWidth);  
+			sheet.setColumnWidth(i, colWidth < 3000 ? 3000 : colWidth);
 		}
 		log.debug("Initialize success.");
 	}
-	
+
 	/**
 	 * 创建表格样式
 	 * @param wb 工作薄对象
@@ -236,7 +238,7 @@ public class ExportExcel {
 	 */
 	private Map<String, CellStyle> createStyles(Workbook wb) {
 		Map<String, CellStyle> styles = new HashMap<String, CellStyle>();
-		
+
 		CellStyle style = wb.createCellStyle();
 		style.setAlignment(CellStyle.ALIGN_CENTER);
 		style.setVerticalAlignment(CellStyle.VERTICAL_CENTER);
@@ -262,7 +264,7 @@ public class ExportExcel {
 		dataFont.setFontHeightInPoints((short) 10);
 		style.setFont(dataFont);
 		styles.put("data", style);
-		
+
 		style = wb.createCellStyle();
 		style.cloneStyleFrom(styles.get("data"));
 		style.setAlignment(CellStyle.ALIGN_LEFT);
@@ -277,7 +279,7 @@ public class ExportExcel {
 		style.cloneStyleFrom(styles.get("data"));
 		style.setAlignment(CellStyle.ALIGN_RIGHT);
 		styles.put("data3", style);
-		
+
 		style = wb.createCellStyle();
 		style.cloneStyleFrom(styles.get("data"));
 //		style.setWrapText(true);
@@ -291,7 +293,7 @@ public class ExportExcel {
 		headerFont.setColor(IndexedColors.WHITE.getIndex());
 		style.setFont(headerFont);
 		styles.put("header", style);
-		
+
 		return styles;
 	}
 
@@ -302,7 +304,7 @@ public class ExportExcel {
 	public Row addRow(){
 		return sheet.createRow(rownum++);
 	}
-	
+
 
 	/**
 	 * 添加一个单元格
@@ -314,7 +316,7 @@ public class ExportExcel {
 	public Cell addCell(Row row, int column, Object val){
 		return this.addCell(row, column, val, 0, Class.class);
 	}
-	
+
 	/**
 	 * 添加一个单元格
 	 * @param row 添加的行
@@ -347,8 +349,8 @@ public class ExportExcel {
 				if (fieldType != Class.class){
 					cell.setCellValue((String)fieldType.getMethod("setValue", Object.class).invoke(null, val));
 				}else{
-					cell.setCellValue((String)Class.forName(this.getClass().getName().replaceAll(this.getClass().getSimpleName(), 
-						"fieldtype."+val.getClass().getSimpleName()+"Type")).getMethod("setValue", Object.class).invoke(null, val));
+					cell.setCellValue((String)Class.forName(this.getClass().getName().replaceAll(this.getClass().getSimpleName(),
+							"fieldtype."+val.getClass().getSimpleName()+"Type")).getMethod("setValue", Object.class).invoke(null, val));
 				}
 			}
 		} catch (Exception ex) {
@@ -398,7 +400,7 @@ public class ExportExcel {
 		}
 		return this;
 	}
-	
+
 	/**
 	 * 输出数据流
 	 * @param os 输出数据流
@@ -407,19 +409,19 @@ public class ExportExcel {
 		wb.write(os);
 		return this;
 	}
-	
+
 	/**
 	 * 输出到客户端
 	 * @param fileName 输出文件名
 	 */
 	public ExportExcel write(HttpServletResponse response, String fileName) throws IOException{
 		response.reset();
-        response.setContentType("application/octet-stream; charset=utf-8");
-        response.setHeader("Content-Disposition", "attachment; filename="+Encodes.urlEncode(fileName));
+		response.setContentType("application/octet-stream; charset=utf-8");
+		response.setHeader("Content-Disposition", "attachment; filename="+Encodes.urlEncode(fileName));
 		write(response.getOutputStream());
 		return this;
 	}
-	
+
 	/**
 	 * 输出到文件
 	 * @param fileName 输出文件名
@@ -429,7 +431,7 @@ public class ExportExcel {
 		this.write(os);
 		return this;
 	}
-	
+
 	/**
 	 * 清理临时文件
 	 */
@@ -437,67 +439,82 @@ public class ExportExcel {
 		wb.dispose();
 		return this;
 	}
-	
-	
-	   /**
-	   * 使用反射根据属性名称获取属性值 
-	   * 
-	   * @param  fieldName 属性名称
-	   * @param  o 操作对象
-	   * @return Object 属性值
-	   */
 
-	   public static  Object getFieldValueByName(String fieldName, Object o) 
-	   {    
-	      try 
-	      {    
-	          String firstLetter = fieldName.substring(0, 1).toUpperCase();    
-	          String getter = "get" + firstLetter + fieldName.substring(1);    
-	          Method method = o.getClass().getMethod(getter, new Class[] {});    
-	          Object value = method.invoke(o, new Object[] {});    
-	          return value;    
-	      } catch (Exception e) 
-	      {    
-	          System.out.println("属性不存在");    
-	          return null;    
-	      }    
-	   } 
-	   
+
+	/**
+	 * 使用反射根据属性名称获取属性值
+	 *
+	 * @param  fieldName 属性名称
+	 * @param  o 操作对象
+	 * @return Object 属性值
+	 */
+
+	public static  Object getFieldValueByName(String fieldName, Object o)
+	{
+		try
+		{
+			String firstLetter = fieldName.substring(0, 1).toUpperCase();
+			String getter = "get" + firstLetter + fieldName.substring(1);
+			Method method = o.getClass().getMethod(getter, new Class[] {});
+			Object value = method.invoke(o, new Object[] {});
+			return value;
+		} catch (Exception e)
+		{
+			System.out.println("属性不存在");
+			return null;
+		}
+	}
+
+
+
+
+	public <E> ExportExcel setMapDataList(List<Map<String,Object>> dataList,List<String> headerList){
+		for (int i = 0; i < dataList.size(); i++) {
+			Row row = this.addRow();
+			for (int j = 0; j < headerList.size(); j++) {
+				this.addCell(row, j, dataList.get(i).get(headerList.get(j)));
+			}
+		}
+		return this;
+	}
+
+
+
 	/**
 	 * 导出测试
 	 */
 	public static void main(String[] args) throws Throwable {
-		
+
 		List<String> headerList = Lists.newArrayList();
 		for (int i = 1; i <= 10; i++) {
 			headerList.add("表头"+i);
 		}
-		
+
 		List<String> dataRowList = Lists.newArrayList();
 		for (int i = 1; i <= headerList.size(); i++) {
 			dataRowList.add("数据"+i);
 		}
-		
+
 		List<List<String>> dataList = Lists.newArrayList();
 		for (int i = 1; i <=1000; i++) {
 			dataList.add(dataRowList);
 		}
 
 		ExportExcel ee = new ExportExcel("表格标题", headerList);
-		
+
 		for (int i = 0; i < dataList.size(); i++) {
 			Row row = ee.addRow();
 			for (int j = 0; j < dataList.get(i).size(); j++) {
 				ee.addCell(row, j, dataList.get(i).get(j));
 			}
 		}
-		
+
 		ee.writeFile("E:/export.xlsx");
 
 		ee.dispose();
-		
+
 		log.debug("Export success.");
-		
+
 	}
 
 }

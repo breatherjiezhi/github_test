@@ -56,7 +56,7 @@
 							"Height":9.39271,
 							"BarcodeType":"QRCode",
 							"CaptionPosition":"None",
-							"Text":"box,[#BOX_ID#],[#BOX_CN_NAME#]",
+							"Text":"box,[#BOX_ID#],[#BOX_CODE#]",
 							"Font":{
 								"Name":"宋体",
 								"Size":720000,

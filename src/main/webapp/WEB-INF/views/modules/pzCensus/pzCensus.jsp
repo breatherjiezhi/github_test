@@ -240,6 +240,7 @@
     function download() {
         var beginDate = $("#beginDate").val();
         var endDate = $("#endDate").val();
+        $("#query").click();
         window.location.href="${ctx}/pzCensus/downUserCensus?beginDate="+beginDate+"&endDate="+endDate;
     }
 </script>

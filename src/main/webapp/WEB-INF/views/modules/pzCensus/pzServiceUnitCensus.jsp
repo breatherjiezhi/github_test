@@ -69,7 +69,7 @@
                                         <i class="fa fa-refresh" aria-hidden="true" style="margin-right: 5px"></i>
                                         <span data-locale='reset'>重置</span>
                                     </button>
-                                    <button class="btn btn-info btn-sm" type="button" style="color: orange !important;border-color: orange" onclick="printTest();" >
+                                    <button class="btn btn-info btn-sm" type="button" style="color: orange !important;border-color: orange" onclick="printOrders();" >
                                         <i class="fa fa-search" aria-hidden="true" style="margin-right: 5px"></i>
                                         <span data-locale='query'>打印</span>
                                     </button>
@@ -211,12 +211,10 @@
                 gridComplete: function () {
                     $("#printArea").html("");
                     var ids = $(grid_selector).jqGrid('getDataIDs');
-                    console.log(ids);
                     for (var i = 0; i < ids.length; i++) {
                         var id = ids[i];
                         // 获取每一列数据明细
                         var rowData = $("#grid-table").getRowData(id);
-                        console.log(rowData);
                         var printAreaInfo = " <div class='popfi'>";
                         printAreaInfo += "<div id='qrCode" + i + "' class='qrcss'></div>";
                         printAreaInfo += "<div class='invis'><table>";
@@ -361,7 +359,7 @@
     }
 
     var LODOP;
-    function printTest() {
+    function printOrders() {
         var printA = $("#printArea").find(".popfi").length;
         if (printA > 40) {
             alert("打印内容超长，请重新选择！");

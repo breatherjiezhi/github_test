@@ -146,7 +146,8 @@
                     'C',
                     'D',
                     'E',
-                    'F'
+                    'F',
+                    '<span data-locale="total">总计</span>',
 
                 ],
                 colModel: [
@@ -160,6 +161,7 @@
                     {name: 'countD', sortable: false},
                     {name: 'countE', sortable: false},
                     {name: 'countF', sortable: false},
+                    {name: 'total', sortable: false},
                 ],
                 viewrecords: true,
                 rowNum: 20,
@@ -181,6 +183,11 @@
                     for (var i = 0; i < ids.length; i++) {
                         var id = ids[i];
                         var rowData = $("#grid-table").getRowData(id);
+                        var total = parseInt(rowData.countA)+parseInt(rowData.countB)+parseInt(rowData.countC)+parseInt(rowData.countD)+parseInt(rowData.countE)+parseInt(rowData.countF);
+
+                        $(grid_selector).jqGrid('setRowData', ids[i], {
+                            total: total
+                        });
 
                     }
 

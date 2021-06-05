@@ -3,8 +3,10 @@ package com.dhc.rad.modules.pzDelivery.dao;
 import com.dhc.rad.common.persistence.CrudDao;
 import com.dhc.rad.common.persistence.annotation.MyBatisDao;
 import com.dhc.rad.modules.pzDelivery.entity.PzDelivery;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author 10951
@@ -24,4 +26,6 @@ public interface PzDeliveryDao extends CrudDao<PzDelivery> {
 
 
     PzDelivery getDelivery(PzDelivery pzDelivery);
+
+    List<Map<String,Object>> findInfoByAreaId(@Param("areaId") String areaId, @Param("restaurantId") String restaurantId);
 }

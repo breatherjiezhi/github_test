@@ -201,5 +201,36 @@ public class WxDeliveryController {
         return returnMap;
     }
 
+    @RequestMapping(value = "findInfoByAreaId", method = RequestMethod.POST)
+    @ResponseBody
+    public Map<String, Object> findInfoByAreaId(@RequestParam("areaId")String areaId) {
+        Map<String,Object> returnMap = new HashMap<>();
+        String userId = UserUtils.getUser().getId();
+        if (StringUtils.isEmpty(areaId)) {
+            returnMap.put("data", null);
+            returnMap.put("status", ConstantUtils.ResCode.PARMERROR);
+            returnMap.put("message", ConstantUtils.ResCode.ParameterException);
+            return returnMap;
+        }
+
+        //是否是配送员
+        if (!UserUtils.getRoleFlag("delivery")) {
+            returnMap.put("data", null);
+            returnMap.put("status", ConstantUtils.ResCode.PASSLIMITS);
+            returnMap.put("message", ConstantUtils.ResCode.PASSLIMITSMSG);
+            return returnMap;
+        }
+
+        //根据登录用户获取officeId
+        String restaurantId = UserUtils.getUser().getOffice().getId();
+
+        List<Map<String,Object>> mapList = pzDeliveryService.findInfoByAreaId(areaId,restaurantId);
+
+        returnMap.put("mapList",mapList);
+
+        return  returnMap;
+
+    }
+
 
 }

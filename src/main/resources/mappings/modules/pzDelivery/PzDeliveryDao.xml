@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.dhc.rad.modules.pzDelivery.dao.PzDeliveryDao">
-    <resultMap id="BaseResultMap" type="com.dhc.rad.modules.pzDelivery.entity.PzDelivery" >
-        <result column="restaurant_id" property="restaurantId" />
-        <result column="service_unit_id" property="serviceUnitId" />
-        <result column="eat_date" property="eatDate" />
-        <result column="box_id" property="boxId" />
-        <result column="create_by" property="createBy.id" />
-        <result column="update_by" property="updateBy.id" />
-        <result column="create_date" property="createDate" />
-        <result column="update_date" property="updateDate" />
-        <result column="remarks" property="remarks" />
-        <result column="del_flag" property="delFlag" />
+    <resultMap id="BaseResultMap" type="com.dhc.rad.modules.pzDelivery.entity.PzDelivery">
+        <result column="restaurant_id" property="restaurantId"/>
+        <result column="service_unit_id" property="serviceUnitId"/>
+        <result column="eat_date" property="eatDate"/>
+        <result column="box_id" property="boxId"/>
+        <result column="create_by" property="createBy.id"/>
+        <result column="update_by" property="updateBy.id"/>
+        <result column="create_date" property="createDate"/>
+        <result column="update_date" property="updateDate"/>
+        <result column="remarks" property="remarks"/>
+        <result column="del_flag" property="delFlag"/>
     </resultMap>
 
     <update id="deleteByIds">
@@ -42,23 +42,23 @@
         FROM
         pz_delivery
         WHERE del_flag ='0'
-        <if test ="null != restaurantId and ''!= restaurantId"> AND restaurant_id = #{restaurantId}</if>
-        <if test ="null != serviceUnitId and ''!= serviceUnitId"> AND service_unit_id =#{serviceUnitId}</if>
-        <if test ="null != eatDate and ''!= eatDate"> AND eat_date =#{eatDate}</if>
-        <if test ="null != boxId and ''!= boxId"> AND box_id =#{boxId}</if>
-        <if test ="null != createBy and ''!= createBy"> AND CREATE_BY = #{createBy.id}</if>
-        <if test ="null != updateBy and ''!= updateBy"> AND UPDATE_BY = #{updateBy.id}</if>
-        <if test ="null != createDate and ''!= createDate"> AND CREATE_DATE = #{createDate}</if>
-        <if test ="null != updateDate and ''!= updateDate"> AND UPDATE_DATE = #{updateDate}</if>
-        <if test ="null != remarks and ''!= remarks"> AND remarks = #{remarks}</if>
-        <if test ="null != beginDate and ''!= beginDate"> AND CREATE_DATE &gt;= #{beginDate}</if>
-        <if test ="null != endDate and ''!= endDate"> AND CREATE_DATE &lt;= #{endDate}</if>
+        <if test="null != restaurantId and ''!= restaurantId">AND restaurant_id = #{restaurantId}</if>
+        <if test="null != serviceUnitId and ''!= serviceUnitId">AND service_unit_id =#{serviceUnitId}</if>
+        <if test="null != eatDate and ''!= eatDate">AND eat_date =#{eatDate}</if>
+        <if test="null != boxId and ''!= boxId">AND box_id =#{boxId}</if>
+        <if test="null != createBy and ''!= createBy">AND CREATE_BY = #{createBy.id}</if>
+        <if test="null != updateBy and ''!= updateBy">AND UPDATE_BY = #{updateBy.id}</if>
+        <if test="null != createDate and ''!= createDate">AND CREATE_DATE = #{createDate}</if>
+        <if test="null != updateDate and ''!= updateDate">AND UPDATE_DATE = #{updateDate}</if>
+        <if test="null != remarks and ''!= remarks">AND remarks = #{remarks}</if>
+        <if test="null != beginDate and ''!= beginDate">AND CREATE_DATE &gt;= #{beginDate}</if>
+        <if test="null != endDate and ''!= endDate">AND CREATE_DATE &lt;= #{endDate}</if>
         <choose>
             <when test="page !=null and page.orderBy != null and page.orderBy != ''">
                 ORDER BY ${page.orderBy}
             </when>
             <otherwise>
-                ORDER BY  CREATE_DATE DESC
+                ORDER BY CREATE_DATE DESC
             </otherwise>
         </choose>
 
@@ -84,73 +84,73 @@
     <insert id="insert" parameterType="com.dhc.rad.modules.pzDelivery.entity.PzDelivery">
         INSERT INTO pz_delivery
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test ="null != id and ''!= id">
+            <if test="null != id and ''!= id">
                 id,
             </if>
-            <if test ="null != restaurantId and ''!= restaurantId">
+            <if test="null != restaurantId and ''!= restaurantId">
                 restaurant_id,
             </if>
-            <if test ="null != serviceUnitId and ''!= serviceUnitId">
+            <if test="null != serviceUnitId and ''!= serviceUnitId">
                 service_unit_id,
             </if>
-            <if test ="null != eatDate and ''!= eatDate">
+            <if test="null != eatDate and ''!= eatDate">
                 eat_date,
             </if>
 
-            <if test ="null != boxId and ''!= boxId">
+            <if test="null != boxId and ''!= boxId">
                 box_id,
             </if>
-            <if test ="null != createBy and ''!= createBy">
+            <if test="null != createBy and ''!= createBy">
                 create_by,
             </if>
-            <if test ="null != updateBy and ''!= updateBy">
+            <if test="null != updateBy and ''!= updateBy">
                 update_by,
             </if>
-            <if test ="null != createDate and ''!= createDate">
+            <if test="null != createDate and ''!= createDate">
                 create_date,
             </if>
-            <if test ="null != updateDate and ''!= updateDate">
+            <if test="null != updateDate and ''!= updateDate">
                 update_date,
             </if>
-            <if test ="null != remarks and ''!= remarks">
+            <if test="null != remarks and ''!= remarks">
                 remarks,
             </if>
-            <if test ="null != delFlag and ''!= delFlag">
+            <if test="null != delFlag and ''!= delFlag">
                 del_flag
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test ="null != id and ''!= id">
+            <if test="null != id and ''!= id">
                 #{id},
             </if>
-            <if test ="null != restaurantId and ''!= restaurantId">
+            <if test="null != restaurantId and ''!= restaurantId">
                 #{restaurantId},
             </if>
-            <if test ="null != serviceUnitId and ''!= serviceUnitId">
+            <if test="null != serviceUnitId and ''!= serviceUnitId">
                 #{serviceUnitId},
             </if>
-            <if test ="null != eatDate and ''!= eatDate">
+            <if test="null != eatDate and ''!= eatDate">
                 #{eatDate},
             </if>
-            <if test ="null != boxId and ''!= boxId">
+            <if test="null != boxId and ''!= boxId">
                 #{boxId},
             </if>
-            <if test ="null != createBy and ''!= createBy">
+            <if test="null != createBy and ''!= createBy">
                 #{createBy.id},
             </if>
-            <if test ="null != updateBy and ''!= updateBy">
+            <if test="null != updateBy and ''!= updateBy">
                 #{updateBy.id},
             </if>
-            <if test ="null != createDate and ''!= createDate">
+            <if test="null != createDate and ''!= createDate">
                 #{createDate},
             </if>
-            <if test ="null != updateDate and ''!= updateDate">
+            <if test="null != updateDate and ''!= updateDate">
                 #{updateDate},
             </if>
-            <if test ="null != remarks and ''!= remarks">
+            <if test="null != remarks and ''!= remarks">
                 #{remarks},
             </if>
-            <if test ="null != delFlag and ''!= delFlag">
+            <if test="null != delFlag and ''!= delFlag">
                 #{delFlag}
             </if>
         </trim>
@@ -159,36 +159,35 @@
     <update id="update" parameterType="com.dhc.rad.modules.pzDelivery.entity.PzDelivery">
         UPDATE pz_delivery
         <set>
-            <if test ="null != restaurantId and ''!= restaurantId">restaurant_id = #{restaurantId},</if>
-            <if test ="null != serviceUnitId and ''!= serviceUnitId">service_unit_id = #{serviceUnitId},</if>
-            <if test ="null != eatDate and ''!= eatDate">eat_date = #{eatDate},</if>
-            <if test ="null != boxId and ''!= boxId">box_id = #{boxId},</if>
-            <if test ="null != createBy and ''!= createBy">create_by = #{createBy.id},</if>
-            <if test ="null != updateBy and ''!= updateBy">update_by = #{updateBy.id},</if>
-            <if test ="null != createDate and ''!= createDate">create_date = #{createDate},</if>
-            <if test ="null != updateDate and ''!= updateDate">update_date = #{updateDate},</if>
-            <if test ="null != remarks and ''!= remarks">remarks = #{remarks},</if>
+            <if test="null != restaurantId and ''!= restaurantId">restaurant_id = #{restaurantId},</if>
+            <if test="null != serviceUnitId and ''!= serviceUnitId">service_unit_id = #{serviceUnitId},</if>
+            <if test="null != eatDate and ''!= eatDate">eat_date = #{eatDate},</if>
+            <if test="null != boxId and ''!= boxId">box_id = #{boxId},</if>
+            <if test="null != createBy and ''!= createBy">create_by = #{createBy.id},</if>
+            <if test="null != updateBy and ''!= updateBy">update_by = #{updateBy.id},</if>
+            <if test="null != createDate and ''!= createDate">create_date = #{createDate},</if>
+            <if test="null != updateDate and ''!= updateDate">update_date = #{updateDate},</if>
+            <if test="null != remarks and ''!= remarks">remarks = #{remarks},</if>
         </set>
-        WHERE  id = #{id} and del_flag ='0'
+        WHERE id = #{id} and del_flag ='0'
     </update>
 
 
     <update id="updateDelivery" parameterType="com.dhc.rad.modules.pzDelivery.entity.PzDelivery">
         UPDATE pz_delivery
         <set>
-            <if test ="null != restaurantId and ''!= restaurantId">restaurant_id = #{restaurantId},</if>
-            <if test ="null != serviceUnitId and ''!= serviceUnitId">service_unit_id = #{serviceUnitId},</if>
-            <if test ="null != boxId and ''!= boxId">box_id = #{boxId},</if>
-            <if test ="null != eatDate and ''!= eatDate">eat_date = #{eatDate},</if>
-            <if test ="null != createBy and ''!= createBy">create_by = #{createBy.id},</if>
-            <if test ="null != updateBy and ''!= updateBy">update_by = #{updateBy.id},</if>
-            <if test ="null != createDate and ''!= createDate">create_date = #{createDate},</if>
-            <if test ="null != updateDate and ''!= updateDate">update_date = #{updateDate},</if>
-            <if test ="null != remarks and ''!= remarks">remarks = #{remarks},</if>
+            <if test="null != restaurantId and ''!= restaurantId">restaurant_id = #{restaurantId},</if>
+            <if test="null != serviceUnitId and ''!= serviceUnitId">service_unit_id = #{serviceUnitId},</if>
+            <if test="null != boxId and ''!= boxId">box_id = #{boxId},</if>
+            <if test="null != eatDate and ''!= eatDate">eat_date = #{eatDate},</if>
+            <if test="null != createBy and ''!= createBy">create_by = #{createBy.id},</if>
+            <if test="null != updateBy and ''!= updateBy">update_by = #{updateBy.id},</if>
+            <if test="null != createDate and ''!= createDate">create_date = #{createDate},</if>
+            <if test="null != updateDate and ''!= updateDate">update_date = #{updateDate},</if>
+            <if test="null != remarks and ''!= remarks">remarks = #{remarks},</if>
         </set>
-        WHERE  eat_date = #{eatDate} and  restaurant_id = #{restaurantId} and service_unit_id = #{serviceUnitId}
+        WHERE eat_date = #{eatDate} and restaurant_id = #{restaurantId} and service_unit_id = #{serviceUnitId}
     </update>
-
 
 
     <select id="getDelivery" resultMap="BaseResultMap">
@@ -207,6 +206,25 @@
         FROM pz_delivery a
         WHERE eat_date = #{eatDate} and  restaurant_id = #{restaurantId} and service_unit_id = #{serviceUnitId}  and del_flag ='0' order by CREATE_DATE desc limit 1
     </select>
+
+
+    <select id="findInfoByAreaId" resultType="map">
+SELECT
+  DISTINCT sa.ID,
+  sa.AREA_LOCATION,
+  pd.RESTAURANT_ID,
+  sso.`NAME` AS 'RESTAURANT_NAME',
+  CONCAT( sso.`NAME`, pbc.BOX_CODE ) AS 'BOX_CN_NAME'
+FROM
+  pz_delivery pd
+  LEFT JOIN sys_office sso ON pd.RESTAURANT_ID = sso.id
+  LEFT JOIN sys_office so ON pd.SERVICE_UNIT_ID = so.id
+  LEFT JOIN sys_area sa ON so.AREA_ID = sa.id
+  LEFT JOIN pz_box_code pbc ON pbc.id = pd.box_id
+WHERE
+  pd.del_flag = '0' AND sa.ID = #{areaId} AND pd.RESTAURANT_ID =#{restaurantId}
+  AND pbc.BOX_CODE IS NOT NULL
+</select>
 
 
 </mapper>

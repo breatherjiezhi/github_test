@@ -8,13 +8,16 @@ import com.dhc.rad.modules.pzBoxCode.entity.PzBoxCode;
 import com.dhc.rad.modules.pzBoxCode.service.PzBoxCodeService;
 import com.dhc.rad.modules.pzDelivery.entity.PzDelivery;
 import com.dhc.rad.modules.pzDelivery.service.PzDeliveryService;
+import com.dhc.rad.modules.sys.entity.Area;
 import com.dhc.rad.modules.sys.entity.Office;
+import com.dhc.rad.modules.sys.service.AreaService;
 import com.dhc.rad.modules.sys.service.OfficeService;
 import com.dhc.rad.modules.sys.utils.UserUtils;
 import com.dhc.rad.modules.wx.entity.OrderVo;
 import com.dhc.rad.modules.wx.service.OrderVoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -42,6 +45,9 @@ public class WxDeliveryController {
 
     @Autowired
     private OfficeService officeService;
+
+    @Autowired
+    private AreaService areaService;
 
 
     /**
@@ -226,10 +232,43 @@ public class WxDeliveryController {
 
         List<Map<String,Object>> mapList = pzDeliveryService.findInfoByAreaId(areaId,restaurantId);
 
-        returnMap.put("mapList",mapList);
+        if(mapList.size()!=0){
+            returnMap.put("data", mapList);
+            returnMap.put("status", ConstantUtils.ResCode.SUCCESS);
+            returnMap.put("message", ConstantUtils.ResCode.SUCCESSMSG);
+        }else{
+            returnMap.put("data", null);
+            returnMap.put("status", ConstantUtils.ResCode.NODATA);
+            returnMap.put("message", ConstantUtils.ResCode.NODATAMSG);
+        }
+
 
         return  returnMap;
 
+    }
+
+    @RequestMapping(value = {"areaList", ""})
+    @ResponseBody
+    public Map<String, Object> list(Area area, Model model) {
+        List<Area> list=areaService.findAll();
+        List<Area> result = new ArrayList<Area>();
+        getList(list,result);
+        result.remove(0); //去除默认投料点
+        Map<String,Object> returnMap = new HashMap<>();
+        returnMap.put("data", result);
+        returnMap.put("status", ConstantUtils.ResCode.SUCCESS);
+        returnMap.put("message", ConstantUtils.ResCode.SUCCESSMSG);
+        return returnMap;
+    }
+
+    private void getList(List<Area> list, List<Area> result) {
+        for(int i=0;i<list.size();i++){
+            Area area = list.get(i);
+            result.add(area);
+            if(!area.getSubArea().isEmpty()){
+                getList(area.getSubArea(), result);
+            }
+        }
     }
 
 

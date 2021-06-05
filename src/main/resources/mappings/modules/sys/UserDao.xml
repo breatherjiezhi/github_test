@@ -263,8 +263,7 @@
         ou.id AS "office.primaryPerson.id",
         ou.name AS "office.primaryPerson.name",
         ou2.id AS "office.deputyPerson.id",
-        ou2.name AS "office.deputyPerson.name"<!-- ,
-			ro.office_id AS "roleList.officeList.id" -->
+        ou2.name AS "office.deputyPerson.name"
         FROM sys_user a
         LEFT JOIN sys_office c ON c.id = a.company_id
         LEFT JOIN sys_area ca ON ca.id = c.area_id
@@ -273,8 +272,7 @@
         LEFT JOIN sys_user cu ON cu.id = c.primary_person
         LEFT JOIN sys_user cu2 ON cu2.id = c.deputy_person
         LEFT JOIN sys_user ou ON ou.id = o.primary_person
-        LEFT JOIN sys_user ou2 ON ou2.id = o.deputy_person<!--
-		LEFT JOIN sys_role_office ro ON ro.role_id = r.id -->
+        LEFT JOIN sys_user ou2 ON ou2.id = o.deputy_person
         WHERE a.login_name = #{loginName} AND a.del_flag = '0'
     </select>
 

@@ -79,8 +79,9 @@ public class WxOrderController extends BaseController {
     @RequestMapping(value = "orderMenu", method = RequestMethod.POST)
     @ResponseBody
     public Map<String, Object> orderMenu(@RequestParam("contentIdStr") String contentIdStr) {
-        //TODO：判断是否点同一家餐厅
+        //TODO：点餐截止日期
         Map<String, Object> returnMap = new HashMap<>();
+
 
         //设置锁定资源名称
         RLock lock = redissonClient.getLock("redLock");
@@ -90,6 +91,25 @@ public class WxOrderController extends BaseController {
 
         try {
             lock.lock();
+            //点餐截止时间
+            List<String> currentWeekDateList = TimeUtils.getNextWeekEatDate();
+            String endTimeStr = currentWeekDateList.get(currentWeekDateList.size() - 1);
+            String endTime = endTimeStr + " " + Global.getConfig("pzorder.orderEndDate");
+            Date currentDate = new Date();
+            Date endDate = null;
+            try {
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                endDate = sdf.parse(endTime);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            if (currentDate.after(endDate)) {
+                returnMap.put("data", null);
+                returnMap.put("status", ConstantUtils.ResCode.NODATA);
+                returnMap.put("message", ConstantUtils.ResCode.ENDDATE);
+                return returnMap;
+            }
+
             //判断contentIdStr是否为空
             if (StringUtils.isBlank(contentIdStr)) {
                 addMessageAjax(returnMap, "0", "请至少选择一天套餐");
@@ -516,7 +536,7 @@ public class WxOrderController extends BaseController {
                 pzScoreLog.setRestaurantId(restaurantId);
             }
             //用户id
-            pzScoreLog.setUserId(pzOrder.getId());
+            pzScoreLog.setUserId(pzOrder.getUserId());
             //积分类型
             pzScoreLog.setScoreType(Global.SCORE_TYPE_CHANGE);
             //积分分类

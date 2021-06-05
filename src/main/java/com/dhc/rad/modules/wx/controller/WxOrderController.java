@@ -92,7 +92,7 @@ public class WxOrderController extends BaseController {
         try {
             lock.lock();
             //点餐截止时间
-            List<String> currentWeekDateList = TimeUtils.getNextWeekEatDate();
+            List<String> currentWeekDateList = TimeUtils.getCurrentWeekEatDate();
             String endTimeStr = currentWeekDateList.get(currentWeekDateList.size() - 1);
             String endTime = endTimeStr + " " + Global.getConfig("pzorder.orderEndDate");
             Date currentDate = new Date();

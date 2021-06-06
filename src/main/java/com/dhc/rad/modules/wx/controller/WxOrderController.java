@@ -92,7 +92,7 @@ public class WxOrderController extends BaseController {
         try {
             lock.lock();
             //点餐截止时间
-            List<String> currentWeekDateList = TimeUtils.getCurrentWeekEatDate();
+            /*List<String> currentWeekDateList = TimeUtils.getCurrentWeekEatDate();
             String endTimeStr = currentWeekDateList.get(currentWeekDateList.size() - 1);
             String endTime = endTimeStr + " " + Global.getConfig("pzorder.orderEndDate");
             Date currentDate = new Date();
@@ -108,7 +108,7 @@ public class WxOrderController extends BaseController {
                 returnMap.put("status", ConstantUtils.ResCode.NODATA);
                 returnMap.put("message", ConstantUtils.ResCode.ENDDATE);
                 return returnMap;
-            }
+            }*/
 
             //判断contentIdStr是否为空
             if (StringUtils.isBlank(contentIdStr)) {
@@ -148,8 +148,31 @@ public class WxOrderController extends BaseController {
             //查询订单信息
             List<PzOrder> list = pzOrderService.findList(pzOrder);
             if (list.size() != 0) {
-                addMessageAjax(returnMap, "0", "下周套餐已预定,请返回");
-                return returnMap;
+                // 修改订单
+                // 1.查询contentId的条数 = 返回餐券数
+                PzOrder order = list.get(0);
+                String orderId = order.getId();
+                Integer personalContentCount = pzOrderContentService.findCountByOrderId(orderId,userId,null);
+                // 2.查询pz_order_content中该用户不吃的条数 = 需要扣除对应个人餐厅积分数（需要判断个人餐厅积分是否足够）
+                PzUserScore userScore = pzUserScoreService.getByUserIdAndRestaurantId(userId, order.getRestaurantId());
+                BigDecimal userScoreCanteenIntegral = userScore.getCanteenIntegral();
+                Integer eatFlagFalseCount = pzOrderContentService.findCountByOrderId(orderId, userId, 0);
+                BigDecimal remainCanteenIntegral = userScoreCanteenIntegral.subtract(new BigDecimal(eatFlagFalseCount));
+                int compareTo = remainCanteenIntegral.compareTo(BigDecimal.ZERO);
+                if (compareTo < 0) {
+                    addMessageAjax(returnMap, "0", "个人餐厅餐券不足，不能重新选餐");
+                    return returnMap;
+                }
+                //3.根据orderId直接删除contentId，并且清空pz_order中no_eat_date字段，sys_user中user_integraL字段更新 pz_user_score中CanteenIntegral
+                Integer updateInfo = wxOrderService.updateInfo(order,userId,new BigDecimal(personalContentCount),new BigDecimal(eatFlagFalseCount));
+                if(updateInfo < 1){
+                    addMessageAjax(returnMap, "0", "更新数据失败");
+                    return returnMap;
+                }
+                //4.删除pz_order中order订单信息
+                pzOrderService.delete(order);
+                // 4.根据orderid新增order_content新的订单
+                // 5提示改为修改订单成功
             }
 
             //判断用户是否有充足的餐券数

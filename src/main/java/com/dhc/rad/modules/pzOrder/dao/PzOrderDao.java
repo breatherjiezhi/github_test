@@ -3,6 +3,7 @@ package com.dhc.rad.modules.pzOrder.dao;
 import com.dhc.rad.common.persistence.CrudDao;
 import com.dhc.rad.common.persistence.annotation.MyBatisDao;
 import com.dhc.rad.modules.pzOrder.entity.PzOrder;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -19,4 +20,6 @@ public interface PzOrderDao extends CrudDao<PzOrder> {
      * @return Integer
      */
     Integer deleteByIds(List<String> ids);
+
+    Integer updateNoEatDateToNull(@Param("orderId") String orderId, @Param("userId") String userId);
 }

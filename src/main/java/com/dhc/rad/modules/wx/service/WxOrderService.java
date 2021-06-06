@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -44,6 +45,8 @@ public class WxOrderService extends CrudService<PzMenuDao, PzMenu> {
 
     @Autowired
     private PzOrderContentDao pzOrderContentDao;
+
+
 
     @Transactional(readOnly = false)
     public Integer updateMenuCount(String id, int version) {
@@ -149,5 +152,29 @@ public class WxOrderService extends CrudService<PzMenuDao, PzMenu> {
 
     public List<Map<String, Object>> findListByOrderId(String orderId) {
         return pzOrderContentDao.findListByOrderId(orderId);
+    }
+
+    @Transactional
+    public Integer updateInfo(PzOrder order, String userId, BigDecimal integral, BigDecimal consumeIntegral) {
+        //根据orderId直接删除contentId，并且清空pz_order中no_eat_date字段，sys_user中user_integraL字段更新 pz_user_score中CanteenIntegral
+        Integer deleteCount = pzOrderContentDao.deleteContentByOrderId(order.getId(),userId);
+
+        Integer updateNoEatDateToNull = null;
+        if(order.getNoEatDate()!=null && !"".equals(order.getNoEatDate())){
+             updateNoEatDateToNull =pzOrderDao.updateNoEatDateToNull(order.getId(),userId);
+        }
+
+        User user = new User();
+        user.setId(userId);
+        user.setUserIntegral(integral);
+        Integer updateIntegral = userDao.updateUserIntegral(user);
+
+        PzUserScore pzUserScore = new PzUserScore();
+        pzUserScore.setCanteenIntegral(consumeIntegral);
+        pzUserScore.setUserId(userId);
+        pzUserScore.setRestaurantId(order.getRestaurantId());
+        Integer updateCanteenIntegral = pzUserScoreDao.updateCanteenIntegral(pzUserScore);
+
+        return (deleteCount > 0 && updateNoEatDateToNull > 0 && updateIntegral > 0 && updateCanteenIntegral > 0) ? 1 : 0;
     }
 }

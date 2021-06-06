@@ -3,6 +3,7 @@
  */
 package com.dhc.rad.modules.sys.dao;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -129,4 +130,7 @@ public interface UserDao extends CrudDao<User> {
 	public List<User> findYgList();
 
 	Integer updateIntegral(User user);
+
+
+	Integer updateUserIntegral(User user);
 }

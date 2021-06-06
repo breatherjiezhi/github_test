@@ -159,6 +159,11 @@
         </set>
         WHERE id = #{id} and del_flag ='0'
     </update>
+    <update id="updateNoEatDateToNull">
+        update pz_order
+        set no_eat_date = null
+        where del_flag ='0' and id = #{orderId} and create_by = #{userId}
+    </update>
 
     <select id="findList" resultMap="BaseResultMap">
         SELECT

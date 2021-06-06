@@ -23,4 +23,6 @@ public interface PzUserScoreDao extends CrudDao<PzUserScore> {
     Integer updateUserScore(PzUserScore pzUserScore);
 
     PzUserScore getByUserIdAndRestaurantId(@Param("userId") String userId, @Param("restaurantId") String restaurantId);
+
+    Integer updateCanteenIntegral(PzUserScore pzUserScore);
 }

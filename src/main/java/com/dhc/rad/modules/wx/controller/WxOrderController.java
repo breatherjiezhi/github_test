@@ -17,8 +17,11 @@ import com.dhc.rad.modules.pzOrderContent.service.PzOrderContentService;
 import com.dhc.rad.modules.pzScoreLog.entity.PzScoreLog;
 import com.dhc.rad.modules.pzUserScore.entity.PzUserScore;
 import com.dhc.rad.modules.pzUserScore.service.PzUserScoreService;
+import com.dhc.rad.modules.sys.entity.ConfigInfo;
 import com.dhc.rad.modules.sys.entity.User;
+import com.dhc.rad.modules.sys.service.ConfigInfoService;
 import com.dhc.rad.modules.sys.service.SystemService;
+import com.dhc.rad.modules.sys.utils.ConfigInfoUtils;
 import com.dhc.rad.modules.sys.utils.UserUtils;
 import com.dhc.rad.modules.wx.utils.RedissonUtils;
 import com.dhc.rad.modules.wx.service.WxOrderService;
@@ -435,7 +438,7 @@ public class WxOrderController extends BaseController {
         String date = pzMenuContent.getEatDate();
 
         //判断当前时间是否已到截至时间
-        String noEatTime = Global.getConfig("pzorder.endDate");
+        String noEatTime = ConfigInfoUtils.getConfigVal("pzorderEndDate").trim();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         String currentTime = simpleDateFormat.format(new Date());
         String endTime = currentTime + " " + noEatTime;

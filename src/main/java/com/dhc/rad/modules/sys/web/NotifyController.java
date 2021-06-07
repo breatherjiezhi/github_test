@@ -249,17 +249,4 @@ public class NotifyController extends BaseController {
 		return returnMap;
 	}
 
-
-	/*
-	 * wx帮助与建议
-	 */
-	@RequestMapping(value = "getHelpInfo")
-	@ResponseBody
-	public  Map<String,Object> getHelpInfo(RedirectAttributes redirectAttributes) {
-		Map<String,Object> returnMap = Maps.newHashMap();
-		addMessageAjax(returnMap,"1",Global.getConfig("helpInfo"));
-		return returnMap;
-	}
-
-
 }

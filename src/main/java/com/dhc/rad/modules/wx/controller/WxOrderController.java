@@ -609,6 +609,7 @@ public class WxOrderController extends BaseController {
             //判断pz_user_score表中个人餐厅积分是否充足
             PzUserScore pzUserScore = pzUserScoreService.getByUserIdAndRestaurantId(pzOrder.getUserId(), pzOrder.getRestaurantId());
             BigDecimal canteenIntegral = pzUserScore.getCanteenIntegral();
+            canteenIntegral = canteenIntegral.subtract(new BigDecimal(1));
             int compareTo = canteenIntegral.compareTo(BigDecimal.ZERO);
             if (compareTo < 0) {
                 returnMap.put("data", null);
@@ -617,7 +618,6 @@ public class WxOrderController extends BaseController {
                 return returnMap;
             }
             //TODO:餐券积分 1：1
-            canteenIntegral = canteenIntegral.subtract(new BigDecimal(1));
             pzUserScore.setCanteenIntegral(canteenIntegral);
             //向pz_score_log记录表添加数据
             PzScoreLog pzScoreLog = new PzScoreLog();

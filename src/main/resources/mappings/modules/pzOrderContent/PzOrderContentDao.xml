@@ -23,12 +23,7 @@
             #{id}
         </foreach>
     </update>
-    <delete id="deleteContentByOrderId">
-        update pz_order_content
-        set
-        del_flag ='1'
-        where order_id = #{orderId} and create_by = #{userId}
-    </delete>
+
 
     <select id="get" resultMap="BaseResultMap">
         SELECT a.ID,
@@ -193,16 +188,24 @@ FROM
 WHERE
 	poc.ORDER_ID = #{orderId} ORDER BY pmc.EAT_DATE
     </select>
+    <delete id="deleteContentByOrderId">
+        update pz_order_content
+        set
+        del_flag ='1'
+        where order_id = #{orderId} and create_by = #{userId}
+    </delete>
+
     <select id="findCountByOrderId" resultType="java.lang.Integer">
         SELECT
-            count(1)
+        count(1)
         FROM
-            pz_order_content
+        pz_order_content
         WHERE del_flag = '0'
         <if test="null != orderId and ''!= orderId">AND order_id = #{orderId}</if>
         <if test="null != userId and ''!= userId">AND CREATE_BY = #{userId}</if>
         <if test="null != eatFlag and ''!= eatFlag">AND eat_flag = #{eatFlag}</if>
     </select>
+
 
 
 </mapper>

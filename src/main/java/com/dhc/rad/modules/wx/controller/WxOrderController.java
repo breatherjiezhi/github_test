@@ -92,9 +92,9 @@ public class WxOrderController extends BaseController {
         try {
             lock.lock();
             //点餐截止时间
-            /*List<String> currentWeekDateList = TimeUtils.getCurrentWeekEatDate();
-            String endTimeStr = currentWeekDateList.get(currentWeekDateList.size() - 1);
-            String endTime = endTimeStr + " " + Global.getConfig("pzorder.orderEndDate");
+            List<String> currentWeekDateList = TimeUtils.getCurrentWeekDateList();
+            String endTimeStr = currentWeekDateList.get(currentWeekDateList.size() - 3);
+            String endTime = endTimeStr + " " + Global.getConfig("pzorder.endDate");
             Date currentDate = new Date();
             Date endDate = null;
             try {
@@ -108,7 +108,7 @@ public class WxOrderController extends BaseController {
                 returnMap.put("status", ConstantUtils.ResCode.NODATA);
                 returnMap.put("message", ConstantUtils.ResCode.ENDDATE);
                 return returnMap;
-            }*/
+            }
 
             //判断contentIdStr是否为空
             if (StringUtils.isBlank(contentIdStr)) {
@@ -152,25 +152,34 @@ public class WxOrderController extends BaseController {
                 // 1.查询contentId的条数 = 返回餐券数
                 PzOrder order = list.get(0);
                 String orderId = order.getId();
-                Integer personalContentCount = pzOrderContentService.findCountByOrderId(orderId,userId,null);
+                Integer personalContentCount = pzOrderContentService.findCountByOrderId(orderId, userId, null);
                 // 2.查询pz_order_content中该用户不吃的条数 = 需要扣除对应个人餐厅积分数（需要判断个人餐厅积分是否足够）
-                PzUserScore userScore = pzUserScoreService.getByUserIdAndRestaurantId(userId, order.getRestaurantId());
-                BigDecimal userScoreCanteenIntegral = userScore.getCanteenIntegral();
-                Integer eatFlagFalseCount = pzOrderContentService.findCountByOrderId(orderId, userId, 0);
-                BigDecimal remainCanteenIntegral = userScoreCanteenIntegral.subtract(new BigDecimal(eatFlagFalseCount));
-                int compareTo = remainCanteenIntegral.compareTo(BigDecimal.ZERO);
-                if (compareTo < 0) {
-                    addMessageAjax(returnMap, "0", "个人餐厅餐券不足，不能重新选餐");
-                    return returnMap;
+                String contentId = contentIds.get(0);
+                PzMenuContent pzMenuContent = pzMenuContentService.get(contentId);
+                PzMenu pzMenu = pzMenuService.get(pzMenuContent.getMenuId());
+                PzUserScore userScore = pzUserScoreService.getByUserIdAndRestaurantId(userId, pzMenu.getRestaurantId());
+                Integer eatFlagFalseCount = pzOrderContentService.findCountByOrderId(orderId, userId, "0");
+                if (userScore != null) {
+                    BigDecimal userScoreCanteenIntegral = userScore.getCanteenIntegral();
+                    BigDecimal remainCanteenIntegral = userScoreCanteenIntegral.subtract(new BigDecimal(eatFlagFalseCount));
+                    int compareTo = remainCanteenIntegral.compareTo(BigDecimal.ZERO);
+                    if (compareTo < 0) {
+                        addMessageAjax(returnMap, "0", "个人餐厅餐券不足，重新选择餐厅");
+                        return returnMap;
+                    }
                 }
+
+                if (eatFlagFalseCount == null) {
+                    eatFlagFalseCount = 0;
+                }
+
                 //3.根据orderId直接删除contentId，并且清空pz_order中no_eat_date字段，sys_user中user_integraL字段更新 pz_user_score中CanteenIntegral
-                Integer updateInfo = wxOrderService.updateInfo(order,userId,new BigDecimal(personalContentCount),new BigDecimal(eatFlagFalseCount));
-                if(updateInfo < 1){
+                Integer updateInfo = wxOrderService.updateInfo(orderId, order.getRestaurantId(), userId, new BigDecimal(personalContentCount), new BigDecimal(eatFlagFalseCount));
+                if (updateInfo < 1) {
                     addMessageAjax(returnMap, "0", "更新数据失败");
                     return returnMap;
                 }
                 //4.删除pz_order中order订单信息
-                pzOrderService.delete(order);
                 // 4.根据orderid新增order_content新的订单
                 // 5提示改为修改订单成功
             }
@@ -605,6 +614,7 @@ public class WxOrderController extends BaseController {
                 returnMap.put("data", null);
                 returnMap.put("status", ConstantUtils.ResCode.SERVERERROR);
                 returnMap.put("message", ConstantUtils.ResCode.INTEGRALNOTENOUGH);
+                return returnMap;
             }
             //TODO:餐券积分 1：1
             canteenIntegral = canteenIntegral.subtract(new BigDecimal(1));

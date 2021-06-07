@@ -39,7 +39,7 @@ FROM
 	AND pd.EAT_DATE = #{eatDate}
 	LEFT JOIN pz_box_code pbc ON pbc.id = pd.box_id
 WHERE
-	po.EAT_DATE = #{eatDates} AND po.SERVICE_UNIT_ID= #{officeId}  AND pmc.MENU_DETAIL is not NULL
+	po.EAT_DATE = #{eatDates} AND po.SERVICE_UNIT_ID= #{officeId}  AND pmc.MENU_DETAIL is not NULL and po.del_flag ='0'
 	 ORDER  BY DELIVERY_FLAG DESC
 
     </select>

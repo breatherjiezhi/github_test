@@ -760,6 +760,12 @@
     </update>
 
 
+    <update id="updateUserIntegral">
+        UPDATE sys_user
+        SET  user_integral = user_integral + #{userIntegral}
+        WHERE  ID  = #{id}
+    </update>
+
     <!-- 员工用户信息用于充值 -->
     <select id="findYgList" resultType="User">
         SELECT

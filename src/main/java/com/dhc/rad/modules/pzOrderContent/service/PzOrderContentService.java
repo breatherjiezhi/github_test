@@ -41,4 +41,13 @@ public class PzOrderContentService extends CrudService<PzOrderContentDao, PzOrde
     public PzOrderContent getByContentIdAndCreateBy(String contentId, String userId) {
         return pzOrderContentDao.getByContentIdAndCreateBy(contentId,userId);
     }
+    @Transactional(readOnly = false)
+    public Integer findCountByOrderId(String orderId, String userId, String eatFlag) {
+        return pzOrderContentDao.findCountByOrderId(orderId,userId,eatFlag);
+    }
+
+    @Transactional(readOnly = false)
+    public Integer deleteContentByOrderId(String orderId, String userId) {
+        return pzOrderContentDao.deleteContentByOrderId(orderId,userId);
+    }
 }

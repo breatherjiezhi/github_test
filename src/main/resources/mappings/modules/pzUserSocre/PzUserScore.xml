@@ -137,6 +137,7 @@
 
     </update>
 
+
     <select id="findList" resultMap="BaseResultMap">
         SELECT
         ID,
@@ -187,6 +188,12 @@
             user_id = #{userId}
           AND restaurant_id = #{restaurantId} AND del_flag ='0'
     </select>
+
+    <update id="updateCanteenIntegral">
+       update pz_user_score
+       set canteen_integral = canteen_integral - #{canteenIntegral}
+       WHERE  restaurant_id = #{restaurantId} and  user_id= #{userId} and del_flag ='0'
+    </update>
 
 
 </mapper>

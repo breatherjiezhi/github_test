@@ -5,6 +5,7 @@
         <result property="userName" column="USER_NAME"/>
         <result property="userNo" column="USER_NO"/>
         <result property="menuName" column="MENU_NAME"/>
+		<result property="menuType" column="MENU_TYPE"/>
         <result property="serviceUnit" column="SERVICE_UNIT"/>
         <result property="restaurantName" column="RESTAURANT_NAME"/>
         <result property="noEatDate" column="NO_EAT_DATE"/>
@@ -19,6 +20,7 @@ SELECT
 	su.`NO` AS 'USER_NO',
 	su.`NAME` AS 'USER_NAME',
 	pmc.MENU_DETAIL AS 'MENU_NAME',
+	pm.MENU_NAME AS 'MENU_TYPE',
 	so.`NAME` AS 'SERVICE_UNIT',
 	sso.`NAME` AS 'RESTAURANT_NAME',
 	sa.AREA_LOCATION,
@@ -30,6 +32,7 @@ FROM
 	pz_order po
 	LEFT JOIN pz_order_content poc ON poc.ORDER_ID = po.id
 	LEFT JOIN pz_menu_content pmc ON poc.CONTENT_ID = pmc.id  AND pmc.EAT_DATE= #{eatDate}
+	LEFT JOIN pz_menu pm ON pmc.menu_id=pm.id
 	LEFT JOIN sys_office so ON po.SERVICE_UNIT_ID = so.id
 	LEFT JOIN sys_area sa ON so.AREA_ID = sa.id
 	LEFT JOIN sys_office sso ON po.RESTAURANT_ID = sso.id

@@ -3,7 +3,6 @@ package com.dhc.rad.modules.wx.controller;
 
 import com.dhc.rad.common.utils.ConstantUtils;
 import com.dhc.rad.common.web.BaseController;
-import com.dhc.rad.modules.sys.entity.ConfigInfo;
 import com.dhc.rad.modules.sys.service.ConfigInfoService;
 import com.dhc.rad.modules.sys.utils.ConfigInfoUtils;
 import com.google.common.collect.Maps;

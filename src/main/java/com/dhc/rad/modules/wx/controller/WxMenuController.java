@@ -12,6 +12,7 @@ import com.dhc.rad.modules.pzMenu.service.PzMenuService;
 import com.dhc.rad.modules.pzMenuContent.entity.PzMenuContent;
 import com.dhc.rad.modules.sys.entity.Office;
 import com.dhc.rad.modules.sys.service.OfficeService;
+import com.dhc.rad.modules.sys.utils.ConfigInfoUtils;
 import com.dhc.rad.modules.sys.utils.UserUtils;
 import jodd.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,9 +38,6 @@ public class WxMenuController {
 
     @Autowired
     private OfficeService officeService;
-
-    @Autowired
-    private HolidayService holidayService;
 
 
     @RequestMapping(value = {"findMenuByRid"}, method = RequestMethod.POST)
@@ -120,13 +118,15 @@ public class WxMenuController {
             StringBuffer temp = new StringBuffer();
             for (PzMenu pzMenu : menuList) {
                 if (StringUtils.isNotBlank(temp)) {
-                    temp.append("\n\n").append(pzMenu.getMenuName() + "套餐:" + pzMenu.getPzMenuContentString());
+                    temp.append("  ").append(pzMenu.getMenuName() + "套餐:" + pzMenu.getPzMenuContentString());
                 } else {
                     temp.append(pzMenu.getMenuName() + "套餐:" + pzMenu.getPzMenuContentString());
                 }
 
             }
             map.put("menuDetail", temp);
+            map.put("imgUrl",  Util.getImgUrl()+ConfigInfoUtils.getConfigVal(office.getName()+"Image"));
+            map.put("restaurantColor", ConfigInfoUtils.getConfigVal(office.getName()+"Color"));
             dataList.add(map);
         }
 

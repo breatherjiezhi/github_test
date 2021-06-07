@@ -17,6 +17,8 @@ public class OrderVo {
 
     private String menuName;
 
+    private String menuType;
+
     private String serviceUnit;
 
     private String restaurantName;
@@ -133,5 +135,13 @@ public class OrderVo {
 
     public void setDeliveryFlag(boolean deliveryFlag) {
         this.deliveryFlag = deliveryFlag;
+    }
+
+    public String getMenuType() {
+        return menuType;
+    }
+
+    public void setMenuType(String menuType) {
+        this.menuType = menuType;
     }
 }

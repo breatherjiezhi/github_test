@@ -179,7 +179,7 @@ public class WxDeliveryController {
                 Map<String, Object> map = new HashMap<String, Object>();
                 map.put("userNo", orderVo.getUserNo());
                 map.put("userName", orderVo.getUserName());
-                map.put("menuName", orderVo.getMenuName());
+                map.put("menuName", orderVo.getMenuType()+":"+orderVo.getMenuName());
                 map.put("serviceUnit", orderVo.getServiceUnit());
                 map.put("restaurantName", orderVo.getRestaurantName());
                 map.put("areaLocation", orderVo.getAreaLocation());

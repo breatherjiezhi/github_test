@@ -207,11 +207,6 @@
 
     </select>
 
-    <update id="updateNoEatDateToNull">
-        update pz_order
-        set no_eat_date = null
-        where del_flag ='0' and id = #{orderId} and create_by = #{userId}
-    </update>
 
 
 </mapper>

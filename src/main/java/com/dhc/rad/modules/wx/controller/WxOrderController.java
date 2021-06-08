@@ -97,7 +97,7 @@ public class WxOrderController extends BaseController {
             //点餐截止时间
             List<String> currentWeekDateList = TimeUtils.getCurrentWeekDateList();
             String endTimeStr = currentWeekDateList.get(currentWeekDateList.size() - 3);
-            String endTime = endTimeStr + " " + Global.getConfig("pzorder.endDate");
+            String endTime = endTimeStr + " " + ConfigInfoUtils.getConfigVal("pzorderEndDate").trim();;
             Date currentDate = new Date();
             Date endDate = null;
             try {

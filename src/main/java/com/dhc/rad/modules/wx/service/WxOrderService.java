@@ -159,7 +159,7 @@ public class WxOrderService extends CrudService<PzMenuDao, PzMenu> {
     @Transactional
     public Integer updateInfo(String orderId,String restaurantId, String userId, BigDecimal integral, BigDecimal consumeIntegral) {
         //根据orderId直接删除contentId，并且清空pz_order中no_eat_date字段，sys_user中user_integraL字段更新 pz_user_score中CanteenIntegral
-        Integer deleteCount = pzOrderContentDao.deleteContentByOrderId(orderId,userId);
+        Integer deleteCount = pzOrderContentDao.reallyDeleteContentIds(orderId,userId);
 
         /*Integer updateNoEatDateToNull = null;  && updateNoEatDateToNull > 0
         if(order.getNoEatDate()!=null && !"".equals(order.getNoEatDate())){
@@ -183,10 +183,8 @@ public class WxOrderService extends CrudService<PzMenuDao, PzMenu> {
         }
 
 
-        List<String> ids = new ArrayList<>();
-        ids.add(orderId);
-        Integer deleteByIds = pzOrderDao.deleteByIds(ids);
+        Integer deleteByOrderId = pzOrderDao.reallyDeleteByOrderId(orderId);
 
-        return (deleteCount > 0  && updateIntegral > 0 && updateCanteenIntegral > 0 && deleteByIds  > 0) ? 1 : 0;
+        return (deleteCount > 0  && updateIntegral > 0 && updateCanteenIntegral > 0 && deleteByOrderId  > 0) ? 1 : 0;
     }
 }

@@ -188,10 +188,15 @@ FROM
 WHERE
 	poc.ORDER_ID = #{orderId} ORDER BY pmc.EAT_DATE
     </select>
-    <delete id="deleteContentByOrderId">
+    <update id="deleteContentByOrderId">
         update pz_order_content
         set
         del_flag ='1'
+        where order_id = #{orderId} and create_by = #{userId}
+    </update>
+
+    <delete id="reallyDeleteContentIds">
+        delete from pz_order_content
         where order_id = #{orderId} and create_by = #{userId}
     </delete>
 

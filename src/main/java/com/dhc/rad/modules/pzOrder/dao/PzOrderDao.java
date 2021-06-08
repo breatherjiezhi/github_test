@@ -22,4 +22,7 @@ public interface PzOrderDao extends CrudDao<PzOrder> {
     Integer deleteByIds(List<String> ids);
 
     Integer updateNoEatDateToNull(@Param("orderId") String orderId, @Param("userId") String userId);
+
+
+    Integer reallyDeleteByOrderId(@Param("orderId")String orderId);
 }

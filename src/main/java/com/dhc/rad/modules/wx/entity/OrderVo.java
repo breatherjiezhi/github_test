@@ -31,7 +31,6 @@ public class OrderVo {
 
     private boolean deliveryFlag;
 
-
     /**
      * 以下字段用于查询
      */

@@ -177,9 +177,10 @@ public class WxDeliveryController {
 
             for (OrderVo orderVo : orderList) {
                 Map<String, Object> map = new HashMap<String, Object>();
+                map.put("eatDate", orderVo.getEatDate());
                 map.put("userNo", orderVo.getUserNo());
                 map.put("userName", orderVo.getUserName());
-                map.put("menuName", orderVo.getMenuType()+":"+orderVo.getMenuName());
+                map.put("menuName", orderVo.getMenuType()+"套餐:"+orderVo.getMenuName());
                 map.put("serviceUnit", orderVo.getServiceUnit());
                 map.put("restaurantName", orderVo.getRestaurantName());
                 map.put("areaLocation", orderVo.getAreaLocation());

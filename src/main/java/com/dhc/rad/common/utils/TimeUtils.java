@@ -479,4 +479,19 @@ public class TimeUtils {
         return weeks[week_index];
     }
 
+
+    public static String getDateByWeek(String week){
+    List<String> currentWeekDateList = getCurrentWeekDateList();
+        String[] weeks = {"周一","周二","周三","周四","周五","周六","周日"};
+        int index = 0;
+        for (int i = 0;i<weeks.length;i++){
+            if(weeks[i].equals(week)){
+               index = i;
+               break;
+            }
+        }
+      return currentWeekDateList.get(index);
+    }
+
+
 }

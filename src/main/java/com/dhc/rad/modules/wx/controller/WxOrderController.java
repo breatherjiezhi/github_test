@@ -35,6 +35,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.math.BigDecimal;
+import java.sql.Time;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -95,9 +96,9 @@ public class WxOrderController extends BaseController {
         try {
             lock.lock();
             //点餐截止时间
-            List<String> currentWeekDateList = TimeUtils.getCurrentWeekDateList();
-            String endTimeStr = currentWeekDateList.get(currentWeekDateList.size() - 3);
-            String endTime = endTimeStr + " " + ConfigInfoUtils.getConfigVal("pzorderEndDate").trim();;
+            String[] pzOrderEndWeek = ConfigInfoUtils.getConfigVal("pzOrderEndWeek").trim().split(",");
+            String endTimeStr = TimeUtils.getDateByWeek(pzOrderEndWeek[0].trim());
+            String endTime = endTimeStr + " " +pzOrderEndWeek[1].trim();
             Date currentDate = new Date();
             Date endDate = null;
             try {
@@ -488,9 +489,8 @@ public class WxOrderController extends BaseController {
         //根据contentId查询eatDate
         PzMenuContent pzMenuContent = pzMenuContentService.get(contentId);
         String date = pzMenuContent.getEatDate();
-
         //判断当前时间是否已到截至时间
-        String noEatTime = ConfigInfoUtils.getConfigVal("pzorderEndDate").trim();
+        String noEatTime = ConfigInfoUtils.getConfigVal("pzOrderEndDate").trim();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         String currentTime = simpleDateFormat.format(new Date());
         String endTime = currentTime + " " + noEatTime;
@@ -698,6 +698,4 @@ public class WxOrderController extends BaseController {
         return returnMap;
 
     }
-
-
 }

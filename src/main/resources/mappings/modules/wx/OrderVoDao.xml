@@ -32,7 +32,7 @@ IF
 	( pd.ID &lt;&gt; 'NULL', 1, 0 ) AS 'DELIVERY_FLAG'
 FROM
 	pz_order po
-	LEFT JOIN pz_order_content poc ON poc.ORDER_ID = po.id
+	LEFT JOIN pz_order_content poc ON poc.ORDER_ID = po.id AND poc.EAT_FLAG='1'
 	LEFT JOIN pz_menu_content pmc ON poc.CONTENT_ID = pmc.id  AND pmc.EAT_DATE= #{eatDate}
 	LEFT JOIN pz_menu pm ON pmc.menu_id=pm.id
 	LEFT JOIN sys_office so ON po.SERVICE_UNIT_ID = so.id
@@ -44,10 +44,10 @@ FROM
 	AND pd.EAT_DATE = #{eatDate}
 	LEFT JOIN pz_box_code pbc ON pbc.id = pd.box_id
 WHERE
-	po.EAT_DATE = #{eatDates} AND po.SERVICE_UNIT_ID= #{officeId}  AND pmc.MENU_DETAIL is not NULL and po.del_flag ='0'
+	po.EAT_DATE = #{eatDates} AND po.SERVICE_UNIT_ID= #{officeId}  AND pmc.MENU_DETAIL is not NULL
 	 ORDER  BY DELIVERY_FLAG DESC
 
     </select>
 
 
-</mapper>.0
+</mapper>

@@ -58,7 +58,7 @@
                 ORDER BY ${page.orderBy}
             </when>
             <otherwise>
-                ORDER BY SERVICE_UNIT_ID DESC,EAT_DATE ASC
+                ORDER BY  area_name ASC,service_unit_name ASC,restaurant_name DESC
             </otherwise>
         </choose>
     </select>

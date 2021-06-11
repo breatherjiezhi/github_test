@@ -79,14 +79,29 @@ public class WxDeliveryController {
         serviceUnitIdStr = serviceUnitIdStr.trim();
         List<String> serviceUnitIdList = Arrays.asList(serviceUnitIdStr.split(","));
         serviceUnitIdList =   serviceUnitIdList.stream().distinct().collect(Collectors.toList());
+
+
+        String areaName=null;
         for (String serviceUnitId : serviceUnitIdList) {
             Office officeByServiceUnitId = officeService.get(serviceUnitId);
-            if(officeByServiceUnitId==null){
+            if(officeByServiceUnitId==null || officeByServiceUnitId.getArea()==null){
                 returnMap.put("data", null);
                 returnMap.put("status", ConstantUtils.ResCode.PARMERROR);
                 returnMap.put("message", ConstantUtils.ResCode.ParameterException);
                 return returnMap;
             }
+            if(areaName==null){
+                areaName=officeByServiceUnitId.getArea().getName();
+            }else{
+                if(!areaName.equals(officeByServiceUnitId.getArea().getName())){
+                    returnMap.put("data", null);
+                    returnMap.put("status", ConstantUtils.ResCode.PARMERROR);
+                    returnMap.put("message", ConstantUtils.ResCode.ParameterException);
+                    return returnMap;
+                }
+            }
+
+
 
         }
         //判断当前用户是否具有配送权限

@@ -22,7 +22,7 @@
 						<shiro:hasPermission name="sys:area:edit"><td nowrap>
 							<div class="action-buttons">
 							<a data-action="edit" href="javascript:void(0);" class="tooltip-success green" data-rel="tooltip" title="编辑"  style="border-color:#69aa46 "><i class="ace-icon fa fa-pencil bigger-130"></i></a>
-							<a data-action="delete"  href="javascript:void(0);" class="tooltip-error red" data-rel="tooltip" title="删除" style="border-color:#dd5a43"><i class="ace-icon fa fa-trash-o bigger-130"></i></a>
+							<%--<a data-action="delete"  href="javascript:void(0);" class="tooltip-error red" data-rel="tooltip" title="删除" style="border-color:#dd5a43"><i class="ace-icon fa fa-trash-o bigger-130"></i></a>--%>
 							<a data-action="add" href="javascript:void(0);" class="tooltip-info" data-rel="tooltip" title="添加下级区域"><i class="ace-icon fa fa-bars bigger-130"></i></a> 
 							</div>
 						</td></shiro:hasPermission>

@@ -71,7 +71,7 @@
 			name, 
 			sort,
 			type,
-			area_location
+			area_location,
 			create_by, 
 			create_date, 
 			update_by, 

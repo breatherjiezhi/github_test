@@ -772,4 +772,6 @@ public class SystemService extends BaseService implements InitializingBean {
 		user.preUpdate();
 		return userDao.userRecharge(user);
 	}
+
+
 }

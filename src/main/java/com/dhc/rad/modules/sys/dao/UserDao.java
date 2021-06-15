@@ -133,4 +133,11 @@ public interface UserDao extends CrudDao<User> {
 
 
 	Integer updateUserIntegral(User user);
+
+
+
+
+	Integer updateOfficeIdById(@Param("id") String id,@Param("officeId") String officeId);
+
+
 }

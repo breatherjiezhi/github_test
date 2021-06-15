@@ -6,10 +6,13 @@
     <resultMap id="BaseResultMap" type="com.dhc.rad.modules.sys.entity.ChangeInfo" >
         <result column="id" property="id" />
         <result column="change_type" property="changeType" />
+        <result column="old_name" property="oldName" />
         <result column="old_value" property="oldValue" />
+        <result column="new_name" property="newName" />
         <result column="new_value" property="newValue" />
         <result column="apply_status" property="applyStatus" />
         <result column="create_by" property="createBy.id" />
+        <result column="create_name" property="createBy.name" />
         <result column="create_date" property="createDate" />
         <result column="update_by" property="updateBy.id" />
         <result column="update_date" property="updateDate" />
@@ -142,5 +145,42 @@
         </set>
         WHERE  id = #{id}
     </update>
+
+
+    <select id="findApplyList" resultMap="BaseResultMap">
+        SELECT
+        ci.id,
+        ci.change_type,
+        soo.name as old_name,
+        ci.old_value,
+        sooo.name as new_name,
+        ci.new_value,
+        ci.apply_status,
+        ci.create_by,
+        su.name as create_name,
+        ci.create_date,
+        ci.update_by,
+        ci.update_date,
+        ci.remarks,
+        ci.del_flag
+        FROM sys_change_info ci
+        left join sys_user su on ci.create_by=su.id
+        left join sys_office so on su.OFFICE_ID=so.id
+        left join sys_office soo on ci.old_value=soo.id
+        left join sys_office sooo on ci.new_value=sooo.id
+        WHERE ci.del_flag ='0'  and ci.change_type = #{changeType} and ci.apply_status = #{applyStatus}
+        <if test="null != officeId and '' != officeId"> and so.PARENT_ID=#{officeId}</if>
+        order by create_date desc
+    </select>
+
+
+
+    <select id="get" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM sys_change_info
+        WHERE del_flag ='0' and id = #{id}
+    </select>
+
 
 </mapper>

@@ -29,4 +29,20 @@ public class ChangeInfoService extends CrudService<ChangeInfoDao, ChangeInfo> {
         }
         return 0;
     }
+
+
+    public List<ChangeInfo> findApplyList(ChangeInfo  changeInfo){
+        return changeInfoDao.findApplyList(changeInfo);
+    }
+
+
+
+    @Transactional(readOnly = false)
+    public Integer update(ChangeInfo changeInfo) {
+        if (ObjectUtils.isNotEmpty(changeInfo)) {
+            changeInfo.preUpdate();
+            return   changeInfoDao.update(changeInfo);
+        }
+        return 0;
+    }
 }

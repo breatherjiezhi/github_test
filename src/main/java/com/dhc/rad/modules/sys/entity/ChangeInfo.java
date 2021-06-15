@@ -26,6 +26,15 @@ public class ChangeInfo   extends DataEntity<ChangeInfo> {
     private Integer applyStatus;
 
 
+    //展示字段
+    private String oldName;
+    private String newName;
+
+    //用于查询
+    private String officeId;
+
+
+
     public Integer getChangeType() {
         return changeType;
     }
@@ -56,5 +65,29 @@ public class ChangeInfo   extends DataEntity<ChangeInfo> {
 
     public void setApplyStatus(Integer applyStatus) {
         this.applyStatus = applyStatus;
+    }
+
+    public String getOldName() {
+        return oldName;
+    }
+
+    public void setOldName(String oldName) {
+        this.oldName = oldName;
+    }
+
+    public String getNewName() {
+        return newName;
+    }
+
+    public void setNewName(String newName) {
+        this.newName = newName;
+    }
+
+    public String getOfficeId() {
+        return officeId;
+    }
+
+    public void setOfficeId(String officeId) {
+        this.officeId = officeId;
     }
 }

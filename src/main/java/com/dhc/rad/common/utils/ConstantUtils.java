@@ -307,6 +307,10 @@ public class ConstantUtils {
 
 
         public static final String SUCCESSMSG = "请求成功";
+
+        public static final String FAILMSG = "请求失败";
+
+
         /**
          * 请求成功，无数据
          */

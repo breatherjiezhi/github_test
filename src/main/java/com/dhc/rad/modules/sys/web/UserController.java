@@ -661,17 +661,6 @@ public class UserController extends BaseController {
         }
     }
 
-    /**
-     * 返回用户信息
-     *
-     * @return
-     */
-    @RequiresPermissions("user")
-    @ResponseBody
-    @RequestMapping(value = "infoData")
-    public User infoData() {
-        return systemService.getUserId(UserUtils.getUser().getId());
-    }
 
     /**
      * 修改个人用户密码

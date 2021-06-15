@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dhc.rad.modules.sys.dao.ChangeInfoDao">
+
+    <resultMap id="BaseResultMap" type="com.dhc.rad.modules.sys.entity.ChangeInfo" >
+        <result column="id" property="id" />
+        <result column="change_type" property="changeType" />
+        <result column="old_value" property="oldValue" />
+        <result column="new_value" property="newValue" />
+        <result column="apply_status" property="applyStatus" />
+        <result column="create_by" property="createBy.id" />
+        <result column="create_date" property="createDate" />
+        <result column="update_by" property="updateBy.id" />
+        <result column="update_date" property="updateDate" />
+        <result column="remarks" property="remarks" />
+        <result column="del_flag" property="delFlag" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+                id,
+                change_type,
+                old_value,
+                new_value,
+                apply_status,
+                create_by,
+                create_date,
+                update_by,
+                update_date,
+                remarks,
+                del_flag
+    </sql>
+
+    <insert id="insert" parameterType="com.dhc.rad.modules.sys.entity.ChangeInfo">
+        INSERT INTO sys_change_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test ="null != id and ''!= id">
+                id,
+            </if>
+            <if test="null != changeType and '' != changeType">
+                change_type,
+            </if>
+            <if test="null != oldValue and '' != oldValue">
+                old_value,
+            </if>
+            <if test="null != newValue and '' != newValue">
+                new_value,
+            </if>
+            <if test="null != applyStatus and '' != applyStatus">
+                apply_status,
+            </if>
+            <if test="null != createBy and '' != createBy">
+                create_by,
+            </if>
+            <if test="null != createDate and '' != createDate">
+                create_date,
+            </if>
+            <if test="null != updateBy and '' != updateBy">
+                update_by,
+            </if>
+            <if test="null != updateDate and '' != updateDate">
+                update_date,
+            </if>
+            <if test="null != remarks and '' != remarks">
+                remarks,
+            </if>
+            <if test="null != delFlag and '' != delFlag">
+                del_flag
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test ="null != id and ''!= id">
+                #{id},
+            </if>
+            <if test="null != changeType and '' != changeType">
+                #{changeType},
+            </if>
+            <if test="null != oldValue and '' != oldValue">
+                #{oldValue},
+            </if>
+            <if test="null != newValue and '' != newValue">
+                #{newValue},
+            </if>
+            <if test="null != applyStatus and '' != applyStatus">
+                #{applyStatus},
+            </if>
+            <if test="null != createBy and '' != createBy">
+                #{createBy.id},
+            </if>
+            <if test="null != createDate and '' != createDate">
+                #{createDate},
+            </if>
+            <if test="null != updateBy and '' != updateBy">
+                #{updateBy.id},
+            </if>
+            <if test="null != updateDate and '' != updateDate">
+                #{updateDate},
+            </if>
+            <if test="null != remarks and '' != remarks">
+                #{remarks},
+            </if>
+            <if test="null != delFlag and '' != delFlag">
+                #{delFlag}
+            </if>
+        </trim>
+    </insert>
+
+
+
+
+    <select id="findList" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM sys_change_info
+        WHERE del_flag ='0'
+        <if test="null != id and '' != id"> and id = #{id}</if>
+        <if test="null != changeType and '' != changeType"> and change_type = #{changeType}</if>
+        <if test="null != oldValue and '' != oldValue"> and old_value = #{oldValue}</if>
+        <if test="null != newValue and '' != newValue"> and new_value = #{newValue}</if>
+        <if test="null != applyStatus and '' != applyStatus"> and apply_status = #{applyStatus}</if>
+        <if test="null != createBy and '' != createBy"> and create_by = #{createBy.id}</if>
+        <if test="null != createDate and '' != createDate"> and create_date = #{createDate}</if>
+        <if test="null != updateBy and '' != updateBy"> and update_by = #{updateBy.id}</if>
+        <if test="null != updateDate and '' != updateDate"> and update_date = #{updateDate}</if>
+        <if test="null != remarks and '' != remarks"> and remarks = #{remarks}</if>
+        order by create_date desc
+    </select>
+
+    <update id="update" parameterType="com.dhc.rad.modules.sys.entity.ChangeInfo">
+        UPDATE sys_change_info
+        <set>
+            <if test="null != changeType and '' != changeType">change_type = #{changeType},</if>
+            <if test="null != oldValue and '' != oldValue">old_value = #{oldValue},</if>
+            <if test="null != newValue and '' != newValue">new_value = #{newValue},</if>
+            <if test="null != applyStatus and '' != applyStatus">apply_status = #{applyStatus},</if>
+            <if test="null != createBy and '' != createBy">create_by = #{createBy.id},</if>
+            <if test="null != createDate and '' != createDate">create_date = #{createDate},</if>
+            <if test="null != updateBy and '' != updateBy">update_by = #{updateBy.id},</if>
+            <if test="null != updateDate and '' != updateDate">update_date = #{updateDate},</if>
+            <if test="null != remarks and '' != remarks">remarks = #{remarks},</if>
+            <if test="null != delFlag and '' != delFlag">del_flag = #{delFlag}</if>
+        </set>
+        WHERE  id = #{id}
+    </update>
+
+</mapper>

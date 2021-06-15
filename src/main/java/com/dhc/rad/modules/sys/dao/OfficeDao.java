@@ -24,6 +24,9 @@ public interface OfficeDao extends TreeDao<Office> {
 
 	List<Office> 	findOffice(@Param("parentId") String parentId);
 
-	public List<Office> findRestaurantOffice();
+	List<Office> findRestaurantOffice();
+
+
+	List<Office> findServiceUnit();
 	
 }

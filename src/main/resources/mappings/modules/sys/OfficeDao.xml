@@ -214,5 +214,34 @@
 		WHERE a.del_flag = '0' AND a.type = '5'
 	</select>
 
+
+
+
+	<select id="findServiceUnit" resultType="Office">
+		SELECT
+		a.id,
+		a.parent_id AS "parent.id",
+		a.parent_ids,
+		a.area_id AS "area.id",
+		a.code,
+		a.name,
+		a.sort,
+		a.type,
+		a.grade,
+		a.address,
+		a.zip_code,
+		a.master,
+		a.phone,
+		a.fax,
+		a.email,
+		a.remarks,
+		a.create_by AS "createBy.id",
+		a.create_date,
+		a.update_by AS "updateBy.id",
+		a.update_date,
+		a.del_flag
+		FROM sys_office a
+		WHERE a.del_flag = '0' AND (a.type = '1' or a.type = '2' or a.type = '3')
+	</select>
 	
 </mapper>

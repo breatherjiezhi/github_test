@@ -67,5 +67,10 @@ public class OfficeService extends TreeService<OfficeDao, Office> {
 		return OfficeDao.findRestaurantOffice();
 
 	}
+
+
+	public List<Office> findServiceUnit(){
+		return OfficeDao.findServiceUnit();
+	}
 	
 }

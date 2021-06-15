@@ -56,16 +56,26 @@
             url: "${ctx}/sys/office/findRestaurantOffice",
             type: "post",
             success: function (data) {
+                var officeId =  "${officeId}";
+
                 var htmlT1 = "<option value=''>---请选择---</option>";
                 if (data.length != 0) {
                     for (var i = 0; i < data.length; i++) {
-                        htmlT1 += "<option value=" + data[i].id + ">" + data[i].name + "</option>";
+                        if(officeId!=""){
+                            if(officeId===data[i].id){
+                                htmlT1 += "<option value=" + data[i].id + ">" + data[i].name + "</option>";
+                            }
+                        }else{
+                            htmlT1 += "<option value=" + data[i].id + ">" + data[i].name + "</option>";
+                        }
+
+
                     }
                 }
                 $("#restaurantId").html(htmlT1);
                 $("#restaurantId").trigger("chosen:updated");
 
-                var officeId =  "${officeId}";
+
                 if(officeId!=""){
                     $("#restaurantId").select2("val", officeId);
                 }else{

@@ -6,7 +6,6 @@ import com.dhc.rad.modules.sys.dao.UserDao;
 import com.dhc.rad.modules.sys.entity.ChangeInfo;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @Service
 @Transactional(readOnly = true)

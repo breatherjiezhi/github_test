@@ -171,7 +171,8 @@ public class WxUserController extends BaseController {
             changeInfo.setOfficeId(null);
         } else if (UserUtils.getRoleFlag("deptAdmin")) {
             User user = systemService.getUserId(UserUtils.getUser().getId());
-            changeInfo.setOfficeId(user.getOffice().getId());
+            Office office = officeService.get(user.getOffice().getId());
+            changeInfo.setOfficeId(office.getParentId());
         } else {
             returnMap.put("status", ConstantUtils.ResCode.PASSLIMITS);
             returnMap.put("message", ConstantUtils.ResCode.PASSLIMITSMSG);

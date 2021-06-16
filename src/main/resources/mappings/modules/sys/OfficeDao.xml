@@ -84,6 +84,7 @@
 			<include refid="companyColumns"/>
 		FROM sys_office a
 		WHERE a.del_flag = #{DEL_FLAG_NORMAL} AND a.type = #{type}
+		ORDER BY a.code
 	</select>
 
 	<select id="findAllOffice" resultType="Office">
@@ -91,6 +92,7 @@
 		<include refid="companyColumns"/>
 		FROM sys_office a
 		WHERE a.del_flag = '0' AND a.type = '2'
+		ORDER BY a.code
 	</select>
 
 	<select id="findOffice" resultType="Office">
@@ -99,6 +101,7 @@
 		FROM sys_office a
 		WHERE a.del_flag = '0'
 		and a.parent_id=#{parentId}
+		ORDER BY a.code
 	</select>
 	
 	<select id="findByParentIdsLike" resultType="Office">
@@ -212,6 +215,7 @@
 		<include refid="companyColumns"/>
 		FROM sys_office a
 		WHERE a.del_flag = '0' AND a.type = '5'
+		ORDER BY a.code
 	</select>
 
 
@@ -242,6 +246,7 @@
 		a.del_flag
 		FROM sys_office a
 		WHERE a.del_flag = '0' AND (a.type = '1' or a.type = '2' or a.type = '3')
+		ORDER BY a.code
 	</select>
 	
 </mapper>

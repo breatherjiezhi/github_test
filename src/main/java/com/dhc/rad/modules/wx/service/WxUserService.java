@@ -4,14 +4,18 @@ package com.dhc.rad.modules.wx.service;
 import com.dhc.rad.modules.sys.dao.ChangeInfoDao;
 import com.dhc.rad.modules.sys.dao.UserDao;
 import com.dhc.rad.modules.sys.entity.ChangeInfo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional(readOnly = true)
 public class WxUserService {
+
+    @Autowired
     private UserDao userDao;
 
+    @Autowired
     private ChangeInfoDao changeInfoDao;
 
 

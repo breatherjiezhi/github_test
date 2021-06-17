@@ -153,10 +153,17 @@ public class SystemService extends BaseService implements InitializingBean {
 	 * @return
 	 */
 	public List<User> findYgList(){
-		List<User> list = userDao.findYgList();
-		return list;
+		return userDao.findYgList();
 	}
 
+	/**
+	 *
+	 * @param officeId 当前用户服务当前部门id
+	 * @return
+	 */
+	public List<User> findBatchOrderUserList(String officeId,String eatDate){
+		return userDao.findBatchOrderUserList(officeId,eatDate);
+	}
 
 
 	/**

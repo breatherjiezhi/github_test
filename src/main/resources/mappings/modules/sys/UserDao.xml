@@ -195,7 +195,7 @@
     </sql>
 
     <!-- 根据编号获得用户 -->
-    <select id="get" resultType="User">
+    <select id="get" resultType="com.dhc.rad.modules.sys.entity.User">
         SELECT
         <include refid="userColumns"/><!-- ,
 			ro.office_id AS "roleList.officeList.id" -->
@@ -216,7 +216,7 @@
         WHERE a.id = #{id}
     </select>
     <!-- 根据登录名查询用户 -->
-    <select id="getByLoginName" resultType="User" parameterType="User">
+    <select id="getByLoginName" resultType="com.dhc.rad.modules.sys.entity.User" parameterType="User">
         SELECT
         a.id,
         a.company_id AS "company.id",
@@ -277,7 +277,7 @@
     </select>
 
     <!-- 根据卡号查询用户 -->
-    <select id="getByCardID" resultType="User" parameterType="User">
+    <select id="getByCardID" resultType="com.dhc.rad.modules.sys.entity.User" parameterType="User">
         SELECT
         <include refid="userColumns"/>
         FROM sys_user a
@@ -286,7 +286,7 @@
     </select>
 
     <!-- 根据Q码查询用户 -->
-    <select id="getByQCode" resultType="User" parameterType="User">
+    <select id="getByQCode" resultType="com.dhc.rad.modules.sys.entity.User" parameterType="User">
         SELECT
         <include refid="userColumns"/>
         FROM sys_user a
@@ -296,7 +296,7 @@
 
 
     <!-- 分页查询用户信息 -->
-    <select id="findList" resultType="User">
+    <select id="findList" resultType="com.dhc.rad.modules.sys.entity.User">
         SELECT
         <include refid="userColumns"/>
 
@@ -344,7 +344,7 @@
     </select>
 
     <!-- 分页查询用户信息 -->
-    <select id="findListByProjectOrg" resultType="User">
+    <select id="findListByProjectOrg" resultType="com.dhc.rad.modules.sys.entity.User">
         SELECT
         a.id AS "id",
         a.company_id AS "company.id",
@@ -407,7 +407,7 @@
         </choose>
     </select>
 
-    <select id="findForemanByProjectOrg" resultType="User">
+    <select id="findForemanByProjectOrg" resultType="com.dhc.rad.modules.sys.entity.User">
         SELECT
         a.id AS "id",
         a.company_id AS "company.id",
@@ -461,7 +461,7 @@
     </select>
 
 
-    <select id="findUserByProjectOrg" resultType="User">
+    <select id="findUserByProjectOrg" resultType="com.dhc.rad.modules.sys.entity.User">
         SELECT
         a.id AS "id",
         a.company_id AS "company.id",
@@ -521,7 +521,7 @@
 
     </select>
 
-    <select id="findUserByRoleName" resultType="User">
+    <select id="findUserByRoleName" resultType="com.dhc.rad.modules.sys.entity.User">
         select su.id   as id,
                su.name as name
         from sys_user_role sur
@@ -534,7 +534,7 @@
 
 
     <!-- 根据OfficeId获取用户（树查询用户时用） -->
-    <select id="findUserByOfficeId" resultType="User" useCache="true">
+    <select id="findUserByOfficeId" resultType="com.dhc.rad.modules.sys.entity.User" useCache="true">
         SELECT a.id,
                a.name,
                a.login_name
@@ -544,7 +544,7 @@
         ORDER BY a.name
     </select>
 
-    <select id="findUserByOffice" resultType="User">
+    <select id="findUserByOffice" resultType="com.dhc.rad.modules.sys.entity.User">
         SELECT a.id,
                a.name,
                a.login_name
@@ -554,7 +554,7 @@
     </select>
 
     <!-- 查询全部用户 -->
-    <select id="findAllList" resultType="User">
+    <select id="findAllList" resultType="com.dhc.rad.modules.sys.entity.User">
         SELECT
         <include refid="userColumns"/>
         FROM sys_user a
@@ -702,13 +702,13 @@
     </update>
 
     <!-- 操作端登录，根据卡号查询密码 -->
-    <select id="getPwd" resultType="String">
+    <select id="getPwd" resultType="java.lang.String">
         select password
         from SYS_USER
         where LOGIN_NAME = #{loginName}
     </select>
 
-    <select id="selectAll" resultType="User">
+    <select id="selectAll" resultType="com.dhc.rad.modules.sys.entity.User">
         select *
         from SYS_USER
         where 1=1
@@ -717,7 +717,7 @@
         </if>
     </select>
 
-    <select id="selectUser" resultType="User">
+    <select id="selectUser" resultType="com.dhc.rad.modules.sys.entity.User">
         select *
         from SYS_USER
         WHERE del_flag = '0' AND ID !='1'
@@ -767,7 +767,7 @@
     </update>
 
     <!-- 员工用户信息用于充值 -->
-    <select id="findYgList" resultType="User">
+    <select id="findYgList" resultType="com.dhc.rad.modules.sys.entity.User">
         SELECT
         a.ID,
         a.LOGIN_NAME
@@ -777,6 +777,19 @@
         LEFT JOIN sys_role r ON ur.ROLE_ID = r.ID
         WHERE
         r.ENNAME = 'staff'
+    </select>
+    <select id="findBatchOrderUserList" resultType="com.dhc.rad.modules.sys.entity.User">
+        select
+        DISTINCT a.ID
+        FROM
+        sys_user a
+		LEFT JOIN pz_order po ON a.ID=po.USER_ID AND po.EAT_DATE=#{eatDate}
+        LEFT JOIN sys_user_role ur ON a.id = ur.USER_ID
+        LEFT JOIN sys_role r ON ur.ROLE_ID = r.ID
+		LEFT JOIN sys_office so on a.OFFICE_ID=so.id
+		LEFT JOIN pz_order poo ON poo.USER_ID=a.ID
+        WHERE
+        r.ENNAME = 'staff'  AND so.PARENT_ID=#{officeId} AND poo.ID is NOT NULL AND po.id is NULL
     </select>
 
 

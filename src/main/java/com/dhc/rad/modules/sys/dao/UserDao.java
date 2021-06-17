@@ -3,12 +3,9 @@
  */
 package com.dhc.rad.modules.sys.dao;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
-import com.dhc.rad.modules.sys.entity.Role;
-import com.dhc.rad.modules.sys.entity.UserTemplate;
 import org.apache.ibatis.annotations.Param;
 
 import com.dhc.rad.common.persistence.CrudDao;
@@ -108,9 +105,11 @@ public interface UserDao extends CrudDao<User> {
 	public List<User>selectAll(@Param("getDataFlag") int getDataFlag, @Param("strFilter")String strFilter);
 
 	public String getPwd(@Param("loginName") String strUserName);
+
 	public List<User>selectUser(@Param("list")List<String> list,@Param("flag")String flag,@Param("officeId")String officeId);
 
 	public List<User> findListByProjectOrg(User user);
+
 	public void updateqCodeById(User user);
 
 	public List<User> findUserByProjectOrg(List<String> list);
@@ -127,7 +126,14 @@ public interface UserDao extends CrudDao<User> {
 
 	public Integer userRecharge(User user);
 
+	/**
+	 * 查询员工列表集合
+	 * @return
+	 */
 	public List<User> findYgList();
+
+	public List<User> findBatchOrderUserList(@Param("officeId") String officeId,@Param("eatDate")String eatDate);
+
 
 	Integer updateIntegral(User user);
 

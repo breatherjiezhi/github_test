@@ -125,10 +125,14 @@ public class WxUserController extends BaseController {
     public Map<String, Object> changeServiceUnit(@RequestParam("newValue") String newValue) {
 
         //TODO:每天只能改一次,16点之前修改(提交错误无法修改)
-
         Map<String, Object> returnMap = new HashMap<>();
-
         User user = systemService.getUserId(UserUtils.getUser().getId());
+
+
+        if(user.getOffice().getId().equals(newValue)){
+            returnMap.put("status", ConstantUtils.ResCode.PARMERROR);
+            returnMap.put("message", ConstantUtils.ResCode.ParameterException);
+        }
 
         ChangeInfo changeInfo = new ChangeInfo();
         changeInfo.setChangeType(1);

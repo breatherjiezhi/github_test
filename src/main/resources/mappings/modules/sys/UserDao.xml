@@ -778,18 +778,27 @@
         WHERE
         r.ENNAME = 'staff'
     </select>
-    <select id="findBatchOrderUserList" resultType="com.dhc.rad.modules.sys.entity.User">
+
+    <!-- 查询之前点过餐但是下周未点餐的用户 -->
+    <resultMap id="batchOrderUser" type="com.dhc.rad.modules.sys.entity.User">
+    <id property="id" column="id"/>
+    <result property="office.id" column="office.id"/>
+    </resultMap>
+
+    <select id="findBatchOrderUserList" resultMap="batchOrderUser">
         select
-        DISTINCT a.ID
+        DISTINCT a.ID,a.office_id as  "office.id"
         FROM
         sys_user a
 		LEFT JOIN pz_order po ON a.ID=po.USER_ID AND po.EAT_DATE=#{eatDate}
         LEFT JOIN sys_user_role ur ON a.id = ur.USER_ID
         LEFT JOIN sys_role r ON ur.ROLE_ID = r.ID
-		LEFT JOIN sys_office so on a.OFFICE_ID=so.id
+        LEFT JOIN sys_office so on a.OFFICE_ID=so.id
 		LEFT JOIN pz_order poo ON poo.USER_ID=a.ID
         WHERE
-        r.ENNAME = 'staff'  AND so.PARENT_ID=#{officeId} AND poo.ID is NOT NULL AND po.id is NULL
+        r.ENNAME = 'staff'
+        <if test="null != officeId and '' != officeId"> AND so.PARENT_ID=#{officeId}</if>
+        AND poo.ID is NOT NULL AND po.id is NULL
     </select>
 
 

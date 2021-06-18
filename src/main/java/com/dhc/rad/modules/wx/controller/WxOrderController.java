@@ -718,7 +718,9 @@ public class WxOrderController extends BaseController {
         List<String> nextWeekEatDate = TimeUtils.getNextWeekEatDate();
         String eatDate = nextWeekEatDate.stream().collect(Collectors.joining(",")) + ",";
         List<User> listUser = new ArrayList<>();
-        if(UserUtils.getRoleFlag("deptAdmin")){
+        if(UserUtils.getRoleFlag("admin")||UserUtils.getRoleFlag("admins")){
+            listUser = systemService.findBatchOrderUserList(null,eatDate);
+        }else if(UserUtils.getRoleFlag("deptAdmin")){
             User user = systemService.getUserId(UserUtils.getUser().getId());
             Office office = officeService.get(user.getOffice().getId());
             listUser = systemService.findBatchOrderUserList(office.getParentId(),eatDate);
@@ -774,21 +776,23 @@ public class WxOrderController extends BaseController {
                     PzMenu pzMenu = new PzMenu();
                     pzMenu.setRestaurantId(restaurantId);
                     pzMenu.setEatDate(eatDate);
+                    pzMenu.setMenuStatus(3);
                     pzMenu.setMenuName(ConfigInfoUtils.getConfigVal(office.getName() + "defaultMenu") == null ? ConfigInfoUtils.getConfigVal("defaultMenu") : ConfigInfoUtils.getConfigVal(office.getName() + "defaultMenu"));
                     List<PzMenu> menuList = pzMenuService.search(pzMenu);
+
                     String contentIdStr = "";
                     if (menuList.size() > 0 && menuList.get(0).getPzMenuContentList().size() > 0) {
                         for (PzMenuContent pzMenuContent : menuList.get(0).getPzMenuContentList()) {
 
                             if (StringUtils.isNotBlank(contentIdStr)) {
-                                contentIdStr = "," + pzMenuContent.getId();
+                                contentIdStr += "," + pzMenuContent.getId();
                             } else {
                                 contentIdStr = pzMenuContent.getId();
                             }
                         }
                     } else {
-                        message = "供餐商还未上架菜单,请稍后再试!";
-                        break;
+                       //供餐商还未上架菜单
+                        continue;
                     }
 
 
@@ -810,6 +814,7 @@ public class WxOrderController extends BaseController {
                     //查询订单信息
                     List<PzOrder> list = pzOrderService.findList(pzOrder);
                     if (list.size() > 0) {
+                        //已有订单
                         continue;
                     }
 
@@ -831,6 +836,7 @@ public class WxOrderController extends BaseController {
                     //如果不足，返回 重新充值
                     int compareTo = remainIntegral.compareTo(BigDecimal.ZERO);
                     if (compareTo < 0) {
+                        //餐卷不足
                         continue;
                     }
 
@@ -843,7 +849,7 @@ public class WxOrderController extends BaseController {
                     PzMenu pzMenu2 = pzMenuService.get(pzMenuContent.getMenuId());
                     pzOrder.setRestaurantId(pzMenu2.getRestaurantId());
                     //服务单元id
-                    String serviceUnitId = UserUtils.getUser().getOffice().getId();
+                    String serviceUnitId = user.getOffice().getId();
                     pzOrder.setServiceUnitId(serviceUnitId);
 
                     //扣除餐券数
@@ -871,7 +877,6 @@ public class WxOrderController extends BaseController {
                 lock.unlock();
             }
         }
-
         if (StringUtils.isNotBlank(message)) {
             returnMap.put("status", ConstantUtils.ResCode.SERVERERROR);
             returnMap.put("message", message);

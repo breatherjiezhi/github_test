@@ -93,7 +93,7 @@
                 ],
                 colModel: [
                     {name: 'id', index: 'id', hidden: true},
-                    {name: 'gcsName', index: 'gcs_name'},
+                    {name: 'gcsName', sortable: false},
                     {name: 'menuName', index: 'menu_name'},
                     {name: 'pzMenuContentString', sortable: false},
                     {name: 'menuStatus', index: 'menu_status'},

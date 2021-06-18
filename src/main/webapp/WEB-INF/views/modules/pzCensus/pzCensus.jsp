@@ -49,6 +49,13 @@
                                         <i class="fa fa-search" aria-hidden="true" style="margin-right: 5px"></i>
                                         <span data-locale='export'>导出execl</span>
                                     </button>
+                                    <shiro:hasPermission name="batch:user:order">
+                                    <button class="btn btn-info btn-sm" type="button" style="color: orange !important;border-color: orange" onclick="batchUserOrder();"  id="batchUserOrder">
+                                        <i class="fa fa-search" aria-hidden="true" style="margin-right: 5px"></i>
+                                        <span data-locale='query' title="批量给之前订过餐但下周未订用户订餐">批量订餐</span>
+                                    </button>
+                                    </shiro:hasPermission>
+
                                 </div>
                             </div>
                         </div>
@@ -249,5 +256,43 @@
         var endDate = $("#endDate").val();
         $("#query").click();
         window.location.href="${ctx}/pzCensus/downUserCensus?beginDate="+beginDate+"&endDate="+endDate;
+    }
+
+
+
+    function batchUserOrder() {
+        $.ajax({
+            url: '${ctx}/wx/wxOrder/batchOrderByUser',
+            type: 'post',
+            dataType: 'json',
+            async: true,
+            beforeSend: function () {
+                $("body").append('<div id="load" style="position: fixed; top: 0; left: 0;  width: 100%; height: 100%; background: rgba(0, 0, 0, 0.2); z-index: 15000; opacity:0.2; filter: alpha(opacity=40);">' +
+                    '<img style="position: absolute; top: 50%; left: 50%; width: 60px; height: 60px; margin-top: -15px; margin-left: -15px;" src="${ctxStatic}/images/loading.gif"></div>');
+            },
+            complete: function () {
+                $("#load").remove();
+            },
+            success: function (result) {
+                if (result.status == "200") {
+                    $("#query").click();
+                    $("#load").remove();
+                    $.msg_show.Init({
+                        'msg': result.message,
+                        'type': 'success'
+                    });
+
+                } else {
+                    $("#load").remove();
+                    $.msg_show.Init({
+                        'msg': result.message,
+                        'type': 'error'
+                    });
+                }
+            },
+            error: function () {
+                $("#load").remove();
+            }
+        });
     }
 </script>

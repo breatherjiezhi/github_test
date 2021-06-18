@@ -83,7 +83,7 @@ public class WxOrderController extends BaseController {
     /**
      * @Description: 订餐功能
      * @Param: menuId：套餐id
-     * @return: Map<String                                                                                                                                                                                                                                                               ,                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               Object>
+     * @return: Map<String                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               ,                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               Object>
      * @Date: 2021/5/6
      */
     @RequestMapping(value = "orderMenu", method = RequestMethod.POST)
@@ -288,7 +288,7 @@ public class WxOrderController extends BaseController {
     /**
      * @Description: 查询当前用户下一周的订餐信息
      * @Param: null
-     * @return: Map<String                                                                                                                                                                                                                                                               ,                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               Object>
+     * @return: Map<String                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               ,                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               Object>
      * @Date: 2021/4/29
      */
     @RequestMapping(value = "findOrderNextWeek", method = RequestMethod.POST)
@@ -372,7 +372,7 @@ public class WxOrderController extends BaseController {
     /**
      * @Description: 查询当前用户当前周的订餐信息
      * @Param: null
-     * @return: Map<String                                                                                                                                                                                                                                                               ,                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               Object>
+     * @return: Map<String                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               ,                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               Object>
      * @Date: 2021/4/29
      */
     @RequestMapping(value = "findOrderCurrentWeek", method = RequestMethod.POST)
@@ -476,7 +476,7 @@ public class WxOrderController extends BaseController {
     /**
      * @Description: 吃/不吃
      * @Param: mark:吃/不吃的标志 orderId:订单id date:日期
-     * @return: Map<String                                                                                                                                                                                                                                                               ,                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               Object>
+     * @return: Map<String                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               ,                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               Object>
      * @Date: 2021/4/30
      */
     @RequestMapping(value = "chooseEatOrNoEat", method = RequestMethod.POST)
@@ -707,6 +707,7 @@ public class WxOrderController extends BaseController {
 
     /**
      * 部门管理员批量给本部门人订餐
+     *
      * @return
      */
     @RequestMapping(value = "batchOrderByUser", method = RequestMethod.POST)
@@ -714,30 +715,30 @@ public class WxOrderController extends BaseController {
     public Map<String, Object> batchOrderByUser() {
 
         Map<String, Object> returnMap = new HashMap<>();
+        //设置锁定资源名称
+        RLock lock = redissonClient.getLock("redLock");
+        try {
+            lock.lock();
 
-        List<String> nextWeekEatDate = TimeUtils.getNextWeekEatDate();
-        String eatDate = nextWeekEatDate.stream().collect(Collectors.joining(",")) + ",";
-        List<User> listUser = new ArrayList<>();
-        if(UserUtils.getRoleFlag("admin")||UserUtils.getRoleFlag("admins")){
-            listUser = systemService.findBatchOrderUserList(null,eatDate);
-        }else if(UserUtils.getRoleFlag("deptAdmin")){
-            User user = systemService.getUserId(UserUtils.getUser().getId());
-            Office office = officeService.get(user.getOffice().getId());
-            listUser = systemService.findBatchOrderUserList(office.getParentId(),eatDate);
-        }else{
-            returnMap.put("status", ConstantUtils.ResCode.PASSLIMITS);
-            returnMap.put("message", ConstantUtils.ResCode.PASSLIMITSMSG);
-            return returnMap;
-        }
 
-        String message = "";
-        for (User user : listUser) {
-            //设置锁定资源名称
-            RLock lock = redissonClient.getLock("redLock");
-            String userId = user.getId();
-            try {
-                lock.lock();
+            List<String> nextWeekEatDate = TimeUtils.getNextWeekEatDate();
+            String eatDate = nextWeekEatDate.stream().collect(Collectors.joining(",")) + ",";
+            List<User> listUser = new ArrayList<>();
+            if (UserUtils.getRoleFlag("admin") || UserUtils.getRoleFlag("admins")) {
+                listUser = systemService.findBatchOrderUserList(null, eatDate);
+            } else if (UserUtils.getRoleFlag("deptAdmin")) {
+                User user = systemService.getUserId(UserUtils.getUser().getId());
+                Office office = officeService.get(user.getOffice().getId());
+                listUser = systemService.findBatchOrderUserList(office.getParentId(), eatDate);
+            } else {
+                returnMap.put("status", ConstantUtils.ResCode.PASSLIMITS);
+                returnMap.put("message", ConstantUtils.ResCode.PASSLIMITSMSG);
+                return returnMap;
+            }
 
+            String message = "";
+            for (User user : listUser) {
+                String userId = user.getId();
                 //点餐截止时间
                 String[] pzOrderEndWeek = ConfigInfoUtils.getConfigVal("pzOrderEndWeek").trim().split(",");
                 String endTimeStr = TimeUtils.getDateByWeek(pzOrderEndWeek[0].trim());
@@ -791,18 +792,19 @@ public class WxOrderController extends BaseController {
                             }
                         }
                     } else {
-                       //供餐商还未上架菜单
+                        //供餐商还未上架菜单
                         continue;
                     }
 
 
                     //去除头尾为空
-                    contentIdStr = contentIdStr.trim();
+                    contentIdStr =  contentIdStr.trim();
 
                     //判断contentIdStr是否为空
                     if (StringUtils.isBlank(contentIdStr)) {
-                        message = "请至少选择一天套餐!";
-                        break;
+                        //  if (StringUtils.isBlank(contentIdStr)) {
+                        //未查询到套餐
+                        continue;
                     }
 
                     //创建订单对象
@@ -873,22 +875,19 @@ public class WxOrderController extends BaseController {
                     //订餐：新增订单信息 新增用户积分记录信息 更新用户积分(sys_user)
                     wxOrderService.orderMenu(pzMenu2, pzOrder, contentIds, user, pzScoreLog);
                 }
-            } finally {
-                lock.unlock();
             }
+            if (StringUtils.isNotBlank(message)) {
+                returnMap.put("status", ConstantUtils.ResCode.SERVERERROR);
+                returnMap.put("message", message);
+            } else {
+                returnMap.put("status", ConstantUtils.ResCode.SUCCESS);
+                returnMap.put("message", ConstantUtils.ResCode.SUCCESSMSG);
+            }
+
+            return returnMap;
+        } finally {
+            lock.unlock();
         }
-        if (StringUtils.isNotBlank(message)) {
-            returnMap.put("status", ConstantUtils.ResCode.SERVERERROR);
-            returnMap.put("message", message);
-        } else {
-            returnMap.put("status", ConstantUtils.ResCode.SUCCESS);
-            returnMap.put("message", ConstantUtils.ResCode.SUCCESSMSG);
-        }
-
-
-
-        return returnMap;
-
     }
 
 

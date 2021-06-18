@@ -79,15 +79,21 @@ public class PzCensusController extends BaseController {
 
         Page<PzCensus> page = pzCensusService.searchPage(new Page<>(request, response), pzCensus);
 
-        Page<PzCensus> page1 = pzCensusService.findCensusPage(new Page<>(), pzCensus);
-        if (page1.getList().size() > 0) {
-            returnMap.put("totalA", page1.getList().get(0).getCountA());
-            returnMap.put("totalB", page1.getList().get(0).getCountB());
-            returnMap.put("totalC", page1.getList().get(0).getCountC());
+        List<PzCensus> list = pzCensusService.findCensusSum(pzCensus);
+        if (list.size() > 0) {
+            returnMap.put("totalA", list.get(0).getCountA());
+            returnMap.put("totalB", list.get(0).getCountB());
+            returnMap.put("totalC", list.get(0).getCountC());
+            returnMap.put("totalD", list.get(0).getCountD());
+            returnMap.put("totalE", list.get(0).getCountE());
+            returnMap.put("totalF", list.get(0).getCountF());
         } else {
             returnMap.put("totalA", 0);
             returnMap.put("totalB", 0);
             returnMap.put("totalC", 0);
+            returnMap.put("totalD", 0);
+            returnMap.put("totalE", 0);
+            returnMap.put("totalF", 0);
         }
         returnMap.put("total", page.getTotalPage());
         returnMap.put("pageNo", page.getPageNo());
@@ -116,14 +122,14 @@ public class PzCensusController extends BaseController {
             String eatDate = sdf.format(new Date());
             pzCensus.setEatDate(eatDate);
         }
-        Page<PzCensus> page = pzCensusService.findCensusPage(new Page<>(), pzCensus);
-        if (page.getList().size() > 0) {
-            returnMap.put("totalA", page.getList().get(0).getCountA());
-            returnMap.put("totalB", page.getList().get(0).getCountB());
-            returnMap.put("totalC", page.getList().get(0).getCountC());
-            returnMap.put("totalD", page.getList().get(0).getCountD());
-            returnMap.put("totalE", page.getList().get(0).getCountE());
-            returnMap.put("totalF", page.getList().get(0).getCountF());
+        List<PzCensus> list = pzCensusService.findCensusSum(pzCensus);
+        if (list.size() > 0) {
+            returnMap.put("totalA", list.get(0).getCountA());
+            returnMap.put("totalB", list.get(0).getCountB());
+            returnMap.put("totalC", list.get(0).getCountC());
+            returnMap.put("totalD", list.get(0).getCountD());
+            returnMap.put("totalE", list.get(0).getCountE());
+            returnMap.put("totalF", list.get(0).getCountF());
         } else {
             returnMap.put("totalA", 0);
             returnMap.put("totalB", 0);
@@ -225,10 +231,12 @@ public class PzCensusController extends BaseController {
             headerKeyList.add("serviceUnitName");
             headerList.add("取餐点");
             headerKeyList.add("areaName");
-            headerList.add("工号");
-            headerKeyList.add("userNo");
-            headerList.add("姓名");
-            headerKeyList.add("userName");
+            if(UserUtils.getRoleFlag("admin")||UserUtils.getRoleFlag("admins")){
+                headerList.add("工号");
+                headerKeyList.add("userNo");
+                headerList.add("姓名");
+                headerKeyList.add("userName");
+            }
             headerList.add("餐饮公司");
             headerKeyList.add("restaurantName");
             for (String eatDate : eadDateList) {

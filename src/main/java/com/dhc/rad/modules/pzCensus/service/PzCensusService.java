@@ -47,6 +47,18 @@ public class PzCensusService extends CrudService<PzCensusDao, PzCensus> {
 
 
     /**
+     * 按每天统计套餐数量
+     * @param pzCensus RESTAURANT_ID = '17cdd4d1f96b4afa89cd11bec6be6d96',beginDate开始时间,endDate结束时间
+     * @return
+     */
+    public List<PzCensus> findCensusSum(PzCensus pzCensus){
+        List<PzCensus> list =  pzCensusDao.findCensusSum(pzCensus);
+        return list;
+
+    }
+
+
+    /**
      *
      * @param restaurantId
      * @param officeId

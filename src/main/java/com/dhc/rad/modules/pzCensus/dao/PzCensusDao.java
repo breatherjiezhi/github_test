@@ -13,6 +13,7 @@ public interface PzCensusDao extends CrudDao<PzCensus> {
 
     List<PzCensus> findCensusList(PzCensus pzCensus);
 
+    List<PzCensus> findCensusSum(PzCensus pzCensus);
 
     List<Map<String, Object>> selectUserCensus(@Param("restaurantId") String restaurantId, @Param("officeId") String officeId,
                                                @Param("beginDate") String beginDate, @Param("endDate") String endDate,

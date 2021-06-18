@@ -64,6 +64,34 @@
     </select>
 
 
+
+    <select id="findCensusSum" resultMap="BaseResultMap">
+        SELECT
+        EAT_DATE,
+        EAT_WEEK,
+        SUM( COUNT_A ) AS COUNT_A,
+        SUM( COUNT_B ) AS COUNT_B,
+        SUM( COUNT_C ) AS COUNT_C,
+        SUM( COUNT_D ) AS COUNT_D,
+        SUM( COUNT_E ) AS COUNT_E,
+        SUM( COUNT_F ) AS COUNT_F
+        FROM
+        pz_census
+        WHERE 1=1
+        <if test="null != eatDate and ''!= eatDate">AND eat_date = #{eatDate}</if>
+        <if test="null != restaurantId and ''!= restaurantId">AND restaurant_id = #{restaurantId}</if>
+        <if test="null != restaurantName and ''!= restaurantName">AND restaurant_name like
+            concat('%',#{restaurantName},'%')
+        </if>
+        <if test="null != beginDate and ''!= beginDate">AND eat_date &gt;= #{beginDate}</if>
+        <if test="null != endDate and ''!= endDate">AND eat_date &lt;= #{endDate}</if>
+        GROUP BY
+        EAT_DATE,
+        EAT_WEEK
+        ORDER BY EAT_DATE
+    </select>
+
+
     <select id="findCensusList" resultMap="BaseResultMap">
         SELECT
         EAT_DATE,

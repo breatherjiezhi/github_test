@@ -55,11 +55,11 @@ public interface UserDao extends CrudDao<User> {
 
 
 	/**
-	 * 更新用户密码
+	 * 查询需要更新密码的用户
 	 * @param user
 	 * @return
 	 */
-	public int updatePasswordCreateBy(@Param("password") String password);
+	public List<User> selectPasswordCreateBy();
 	
 	/**
 	 * 查询全部用户数目

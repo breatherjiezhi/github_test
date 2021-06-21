@@ -77,7 +77,7 @@ public class WxOrderController extends BaseController {
     @Autowired
     private OfficeService officeService;
 
-    private static final RedissonClient redissonClient = RedissonUtils.getRedissonClient();
+    private static final RedissonClient redissonClient = RedissonUtils.getRedissonClient(1);
 
 
     /**

@@ -390,7 +390,7 @@ public class UserController extends BaseController {
     @RequiresPermissions("sys:user:edit")
     @RequestMapping(value = "resetAllPwd")
     @ResponseBody
-    public Map<String, Object> resetAllPwd(String id, String loginName, RedirectAttributes redirectAttributes) {
+    public Map<String, Object> resetAllPwd() {
         Map<String, Object> returnMap = Maps.newHashMap();
         if (Global.isDemoMode()) {
             addMessageAjax(returnMap, "0", "演示模式，不允许操作！");
@@ -400,7 +400,10 @@ public class UserController extends BaseController {
             addMessageAjax(returnMap, "0", "非超级管理员用户不可以重置用户密码！");
             return returnMap;
         }
-        systemService.updatePasswordCreateBy();
+       List<User> list =  systemService.selectPasswordCreateBy();
+        for (User user : list) {
+            systemService.updatePasswordById(user.getId(), user.getLoginName(), "123456");
+        }
         addMessageAjax(returnMap, "1", "重置密码成功");
         return returnMap;
     }

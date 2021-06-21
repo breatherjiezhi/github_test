@@ -675,10 +675,13 @@
 
 
     <!-- 更新用户密码 -->
-    <update id="updatePasswordCreateBy">
-        UPDATE sys_user
-        SET password = #{password} where create_by is null
-    </update>
+    <select id="selectPasswordCreateBy"  resultType="com.dhc.rad.modules.sys.entity.User">
+    select id,login_name from  sys_user where create_by is null
+    </select>
+
+
+
+
 
     <update id="updateqCodeById">
         UPDATE sys_user

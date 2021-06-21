@@ -15,6 +15,9 @@ import com.dhc.rad.modules.sys.service.OfficeService;
 import com.dhc.rad.modules.sys.utils.UserUtils;
 import com.dhc.rad.modules.wx.entity.OrderVo;
 import com.dhc.rad.modules.wx.service.OrderVoService;
+import com.dhc.rad.modules.wx.utils.RedissonUtils;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -49,16 +52,17 @@ public class WxDeliveryController {
     @Autowired
     private AreaService areaService;
 
+    private static final RedissonClient redissonClient = RedissonUtils.getRedissonClient(2);
 
     /**
      * @Description: 根据箱子编码和服务单元存储配送信息
      * @Param: boxCode serviceUintId
-     * @return: Map<String ,   Object>
+     * @return: Map<String   ,       Object>
      * @Date: 2021/5/7
      */
     @RequestMapping(value = "saveByBoxIdAndServiceUintId", method = RequestMethod.POST)
     @ResponseBody
-    public Map<String, Object> saveByBoxIdAndServiceUintId(@RequestParam("boxId") String boxId,@RequestParam("serviceUnitIdStr") String serviceUnitIdStr) {
+    public Map<String, Object> saveByBoxIdAndServiceUintId(@RequestParam("boxId") String boxId, @RequestParam("serviceUnitIdStr") String serviceUnitIdStr) {
         Map<String, Object> returnMap = new HashMap<>();
         //判断boxCode是否为空
         if (StringUtils.isEmpty(boxId)) {
@@ -78,29 +82,28 @@ public class WxDeliveryController {
         //判断serviceUnitId是否存在
         serviceUnitIdStr = serviceUnitIdStr.trim();
         List<String> serviceUnitIdList = Arrays.asList(serviceUnitIdStr.split(","));
-        serviceUnitIdList =   serviceUnitIdList.stream().distinct().collect(Collectors.toList());
+        serviceUnitIdList = serviceUnitIdList.stream().distinct().collect(Collectors.toList());
 
 
-        String areaName=null;
+        String areaName = null;
         for (String serviceUnitId : serviceUnitIdList) {
             Office officeByServiceUnitId = officeService.get(serviceUnitId);
-            if(officeByServiceUnitId==null || officeByServiceUnitId.getArea()==null){
+            if (officeByServiceUnitId == null || officeByServiceUnitId.getArea() == null) {
                 returnMap.put("data", null);
                 returnMap.put("status", ConstantUtils.ResCode.PARMERROR);
                 returnMap.put("message", ConstantUtils.ResCode.ParameterException);
                 return returnMap;
             }
-            if(areaName==null){
-                areaName=officeByServiceUnitId.getArea().getName();
-            }else{
-                if(!areaName.equals(officeByServiceUnitId.getArea().getName())){
+            if (areaName == null) {
+                areaName = officeByServiceUnitId.getArea().getName();
+            } else {
+                if (!areaName.equals(officeByServiceUnitId.getArea().getName())) {
                     returnMap.put("data", null);
                     returnMap.put("status", ConstantUtils.ResCode.PARMERROR);
                     returnMap.put("message", ConstantUtils.ResCode.ParameterException);
                     return returnMap;
                 }
             }
-
 
 
         }
@@ -171,62 +174,78 @@ public class WxDeliveryController {
     @ResponseBody
     public Map<String, Object> getOrderInfo() {
         Map<String, Object> returnMap = new HashMap<>();
-        String officeId = UserUtils.getUser().getOffice().getId();
 
-        //获取当前时间本周吃饭时间集合
-        List<String> currentWeekDateList = TimeUtils.getCurrentWeekEatDate();
-        //时间用逗号","进行拼接
-        String crrentWeek = currentWeekDateList.stream().collect(Collectors.joining(",")) + ",";
+        //设置锁定资源名称
+        RLock lock = redissonClient.getLock("readLock");
+        try {
+            lock.lock();
 
-        //获取当天时间
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        String eatDate = sdf.format(new Date());
 
-        OrderVo ov = new OrderVo();
-        ov.setEatDate(eatDate);
-        ov.setEatDates(crrentWeek);
-        ov.setOfficeId(officeId);
-        List<OrderVo> orderList = orderVoService.findServiceUnitOrder(ov);
-        if (orderList.size() > 0) {
-            List<Map<String, Object>> data = new ArrayList<Map<String, Object>>();
+            String officeId = UserUtils.getUser().getOffice().getId();
 
-            for (OrderVo orderVo : orderList) {
-                Map<String, Object> map = new HashMap<String, Object>();
-                map.put("eatDate", orderVo.getEatDate());
-                map.put("userNo", orderVo.getUserNo());
-                map.put("userName", orderVo.getUserName());
-                map.put("menuName", orderVo.getMenuType()+"套餐:"+orderVo.getMenuName());
-                map.put("serviceUnit", orderVo.getServiceUnit());
-                map.put("restaurantName", orderVo.getRestaurantName());
-                map.put("areaLocation", orderVo.getAreaLocation());
-                map.put("boxName", orderVo.getBoxName());
-                if (StringUtils.isNotBlank(orderVo.getNoEatDate()) && orderVo.getNoEatDate().indexOf(eatDate) > 0) {
-                    map.put("eatFlag", false);
-                } else {
-                    map.put("eatFlag", true);
+            //获取当前时间本周吃饭时间集合
+            List<String> currentWeekDateList = TimeUtils.getCurrentWeekEatDate();
+            //时间用逗号","进行拼接
+            String crrentWeek = currentWeekDateList.stream().collect(Collectors.joining(",")) + ",";
+
+            //获取当天时间
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            String eatDate = sdf.format(new Date());
+
+            OrderVo ov = new OrderVo();
+            ov.setEatDate(eatDate);
+            ov.setEatDates(crrentWeek);
+            ov.setOfficeId(officeId);
+            List<OrderVo> orderList = orderVoService.findServiceUnitOrder(ov);
+            if (orderList.size() > 0) {
+                List<Map<String, Object>> data = new ArrayList<Map<String, Object>>();
+
+                for (OrderVo orderVo : orderList) {
+                    Map<String, Object> map = new HashMap<String, Object>();
+                    map.put("eatDate", orderVo.getEatDate());
+                    map.put("userNo", orderVo.getUserNo());
+                    map.put("userName", orderVo.getUserName());
+                    map.put("menuName", orderVo.getMenuType() + "套餐:" + orderVo.getMenuName());
+                    map.put("serviceUnit", orderVo.getServiceUnit());
+                    map.put("restaurantName", orderVo.getRestaurantName());
+                    map.put("areaLocation", orderVo.getAreaLocation());
+                    map.put("boxName", orderVo.getBoxName());
+                    if (StringUtils.isNotBlank(orderVo.getNoEatDate()) && orderVo.getNoEatDate().indexOf(eatDate) > 0) {
+                        map.put("eatFlag", false);
+                    } else {
+                        map.put("eatFlag", true);
+                    }
+                    map.put("deliveryFlag", orderVo.isDeliveryFlag());
+                    data.add(map);
                 }
-                map.put("deliveryFlag", orderVo.isDeliveryFlag());
-                data.add(map);
+
+
+                returnMap.put("data", data);
+                returnMap.put("status", ConstantUtils.ResCode.SUCCESS);
+                returnMap.put("message", ConstantUtils.ResCode.SUCCESSMSG);
+            } else {
+                returnMap.put("data", null);
+                returnMap.put("status", ConstantUtils.ResCode.NODATA);
+                returnMap.put("message", ConstantUtils.ResCode.NODATAMSG);
             }
 
-
-            returnMap.put("data", data);
-            returnMap.put("status", ConstantUtils.ResCode.SUCCESS);
-            returnMap.put("message", ConstantUtils.ResCode.SUCCESSMSG);
-        } else {
-            returnMap.put("data", null);
-            returnMap.put("status", ConstantUtils.ResCode.NODATA);
-            returnMap.put("message", ConstantUtils.ResCode.NODATAMSG);
+        } finally {
+            // 是否还是锁定状态
+            if (lock.isLocked()) {
+                // 是否是当前执行线程的锁
+                if (lock.isHeldByCurrentThread()) {
+                    lock.unlock(); // 释放锁
+                }
+            }
         }
-
 
         return returnMap;
     }
 
     @RequestMapping(value = "findInfoByAreaId", method = RequestMethod.POST)
     @ResponseBody
-    public Map<String, Object> findInfoByAreaId(@RequestParam("areaId")String areaId) {
-        Map<String,Object> returnMap = new HashMap<>();
+    public Map<String, Object> findInfoByAreaId(@RequestParam("areaId") String areaId) {
+        Map<String, Object> returnMap = new HashMap<>();
         String userId = UserUtils.getUser().getId();
         if (StringUtils.isEmpty(areaId)) {
             returnMap.put("data", null);
@@ -246,31 +265,31 @@ public class WxDeliveryController {
         //根据登录用户获取officeId
         String restaurantId = UserUtils.getUser().getOffice().getId();
 
-        List<Map<String,Object>> mapList = pzDeliveryService.findInfoByAreaId(areaId,restaurantId);
+        List<Map<String, Object>> mapList = pzDeliveryService.findInfoByAreaId(areaId, restaurantId);
 
-        if(mapList.size()!=0){
+        if (mapList.size() != 0) {
             returnMap.put("data", mapList);
             returnMap.put("status", ConstantUtils.ResCode.SUCCESS);
             returnMap.put("message", ConstantUtils.ResCode.SUCCESSMSG);
-        }else{
+        } else {
             returnMap.put("data", null);
             returnMap.put("status", ConstantUtils.ResCode.NODATA);
             returnMap.put("message", ConstantUtils.ResCode.NODATAMSG);
         }
 
 
-        return  returnMap;
+        return returnMap;
 
     }
 
     @RequestMapping(value = {"areaList", ""})
     @ResponseBody
     public Map<String, Object> list(Area area, Model model) {
-        List<Area> list=areaService.findAll();
+        List<Area> list = areaService.findAll();
         List<Area> result = new ArrayList<Area>();
-        getList(list,result);
+        getList(list, result);
         result.remove(0); //去除默认投料点
-        Map<String,Object> returnMap = new HashMap<>();
+        Map<String, Object> returnMap = new HashMap<>();
         returnMap.put("data", result);
         returnMap.put("status", ConstantUtils.ResCode.SUCCESS);
         returnMap.put("message", ConstantUtils.ResCode.SUCCESSMSG);
@@ -278,10 +297,10 @@ public class WxDeliveryController {
     }
 
     private void getList(List<Area> list, List<Area> result) {
-        for(int i=0;i<list.size();i++){
+        for (int i = 0; i < list.size(); i++) {
             Area area = list.get(i);
             result.add(area);
-            if(!area.getSubArea().isEmpty()){
+            if (!area.getSubArea().isEmpty()) {
                 getList(area.getSubArea(), result);
             }
         }

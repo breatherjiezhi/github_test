@@ -268,11 +268,10 @@ public class SystemService extends BaseService implements InitializingBean {
 
 
 	/**
-	 * 批量更新createby为空得用户数据
+	 * 批量查询createby为空的用户数据
 	 */
-	@Transactional(readOnly = false)
-	public void updatePasswordCreateBy() {
-		userDao.updatePasswordCreateBy(entryptPassword("123456"));
+	public List<User> selectPasswordCreateBy() {
+		return  userDao.selectPasswordCreateBy();
 	}
 
 

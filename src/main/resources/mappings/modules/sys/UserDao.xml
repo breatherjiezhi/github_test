@@ -787,7 +787,7 @@
 
     <select id="findBatchOrderUserList" resultMap="batchOrderUser">
         select
-        DISTINCT a.ID,a.office_id as  "office.id"
+        DISTINCT a.ID,a.office_id as  "office.id", a.login_name
         FROM
         sys_user a
 		LEFT JOIN pz_order po ON a.ID=po.USER_ID AND po.EAT_DATE=#{eatDate}

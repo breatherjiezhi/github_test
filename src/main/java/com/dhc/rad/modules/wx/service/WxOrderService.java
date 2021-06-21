@@ -81,6 +81,10 @@ public class WxOrderService extends CrudService<PzMenuDao, PzMenu> {
 
         //新增订单
         pzOrder.preInsert();
+
+        //订单创建人始终是用户自己,更新人可以是管理员(管理员批量点餐)
+        pzOrder.setCreateBy(user);
+
         Integer insertOrder = pzOrderDao.insert(pzOrder);
 
         //扣除积分

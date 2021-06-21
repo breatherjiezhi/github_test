@@ -31,6 +31,44 @@ public class PzMenuContent extends DataEntity<PzMenuContent> {
      */
     private String eatWeek;
 
+    /**
+     * 套餐是否限量 0：不限量 1：限量
+     */
+    private String menuLimited;
+
+    /**
+     * 套餐余量
+     */
+    private Integer menuCount;
+
+    /**
+     *版本号
+     */
+    private Integer version;
+
+    public Integer getVersion() {
+        return version;
+    }
+
+    public void setVersion(Integer version) {
+        this.version = version;
+    }
+
+    public String getMenuLimited() {
+        return menuLimited;
+    }
+
+    public void setMenuLimited(String menuLimited) {
+        this.menuLimited = menuLimited;
+    }
+
+    public Integer getMenuCount() {
+        return menuCount;
+    }
+
+    public void setMenuCount(Integer menuCount) {
+        this.menuCount = menuCount;
+    }
 
     public PzMenuContent() {
     }

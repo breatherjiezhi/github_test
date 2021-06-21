@@ -3,6 +3,8 @@ package com.dhc.rad.modules.wx.service;
 import com.dhc.rad.common.service.CrudService;
 import com.dhc.rad.modules.pzMenu.dao.PzMenuDao;
 import com.dhc.rad.modules.pzMenu.entity.PzMenu;
+import com.dhc.rad.modules.pzMenuContent.dao.PzMenuContentDao;
+import com.dhc.rad.modules.pzMenuContent.entity.PzMenuContent;
 import com.dhc.rad.modules.pzOrder.dao.PzOrderDao;
 import com.dhc.rad.modules.pzOrder.entity.PzOrder;
 import com.dhc.rad.modules.pzOrderContent.dao.PzOrderContentDao;
@@ -47,6 +49,9 @@ public class WxOrderService extends CrudService<PzMenuDao, PzMenu> {
     @Autowired
     private PzOrderContentDao pzOrderContentDao;
 
+    @Autowired
+    private PzMenuContentDao pzMenuContentDao;
+
 
 
     @Transactional(readOnly = false)
@@ -64,43 +69,45 @@ public class WxOrderService extends CrudService<PzMenuDao, PzMenu> {
      * @Date: 2021/4/28
      */
     @Transactional
-    public Integer orderMenu(PzMenu pzMenu, PzOrder pzOrder, List<String> contentIds, User user, PzScoreLog pzScoreLog) {
-
-        Integer updateMenuCount = null;
-        if("1".equals(pzMenu.getMenuLimited())){
-            //更新套餐余量
-             updateMenuCount = updateMenuCount(pzMenu.getId(), pzMenu.getVersion());
-
-            if (updateMenuCount == null || updateMenuCount == 0) {
-                return 0;
-            }
-        }else {
-            updateMenuCount = 1;
-        }
+    public Integer orderMenu(PzMenu pzMenu, PzOrder pzOrder, List<String> contentIds, User currentUser, PzScoreLog pzScoreLog) {
 
 
         //新增订单
         pzOrder.preInsert();
 
         //订单创建人始终是用户自己,更新人可以是管理员(管理员批量点餐)
-        pzOrder.setCreateBy(user);
+        pzOrder.setCreateBy(currentUser);
 
         Integer insertOrder = pzOrderDao.insert(pzOrder);
 
         //扣除积分
-        user.preUpdate();
-        Integer updateIntegral = userDao.updateIntegral(user);
+        currentUser.preUpdate();
+        Integer updateIntegral = userDao.updateIntegral(currentUser);
 
         //新增记录
         pzScoreLog.preInsert();
         int logInsert = pzScoreLogDao.insert(pzScoreLog);
 
-        //TODO:批量新增（后续）
+        //更新套餐余量和生成订单详情
         Integer result = 0;
+        Integer updateMenuContentResult = 0;
         for (String contentId : contentIds) {
+            Integer updateMenuContentCount = null;
             PzOrderContent pzOrderContent = new PzOrderContent();
             pzOrderContent.setContentId(contentId);
             pzOrderContent.setOrderId(pzOrder.getId());
+            //套餐限量，需要更新套餐余量
+            PzMenuContent pzMenuContent = pzMenuContentDao.get(contentId);
+            if("1".equals(pzMenuContent.getMenuLimited())){
+                //更新套餐余量
+                updateMenuContentCount = pzMenuContentDao.updateMenuContentCount(contentId, pzMenuContent.getVersion());
+
+                if (updateMenuContentCount == null || updateMenuContentCount == 0) {
+                    return 0;
+                }
+            }
+            updateMenuContentResult++;
+            //新增订单详情
             pzOrderContent.preInsert();
             int insert = pzOrderContentDao.insert(pzOrderContent);
             if(insert > 0){
@@ -110,7 +117,7 @@ public class WxOrderService extends CrudService<PzMenuDao, PzMenu> {
 
 
         //返回
-        return (result.equals(contentIds.size()) && updateMenuCount > 0 && insertOrder > 0 && updateIntegral > 0 && logInsert > 0) ? 1 : 0;
+        return (result.equals(contentIds.size()) && updateMenuContentResult.equals(contentIds.size()) && insertOrder > 0 && updateIntegral > 0 && logInsert > 0) ? 1 : 0;
     }
 
     @Transactional

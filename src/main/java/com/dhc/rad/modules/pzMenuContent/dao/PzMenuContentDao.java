@@ -24,5 +24,11 @@ public interface PzMenuContentDao extends CrudDao<PzMenuContent> {
 
     List<PzMenuContent> findListByMenuId(@Param("menuId")String menuId);
 
-
+    /**
+     *更新套餐余量
+     * @param contentId version
+     *@param  version
+     * @return Integer
+     */
+    Integer updateMenuContentCount(@Param("contentId") String contentId, @Param("version") Integer version);
 }

@@ -25,10 +25,10 @@ public class IdGen implements IdGenerator, SessionIdGenerator {
 	private static SecureRandom random = new SecureRandom();
 	
 	/**
-	 * 封装JDK自带的UUID, 通过Random数字生成, 中间无-分割.
+	 * 封装JDK自带的UUID, 通过Random数字生成
 	 */
 	public static String uuid() {
-		return UUID.randomUUID().toString().replaceAll("-", "");
+		return UUID.randomUUID().toString();
 	}
 	
 	/**

@@ -9,6 +9,9 @@
         <result column="menu_detail" property="menuDetail" />
         <result column="eat_date" property="eatDate" />
         <result column="eat_week" property="eatWeek" />
+        <result column="menu_limited" property="menuLimited" />
+        <result column="menu_count" property="menuCount" />
+        <result column="version" property="version" />
         <result column="create_by" property="createBy.id" />
         <result column="update_by" property="updateBy.id" />
         <result column="create_date" property="createDate" />
@@ -23,6 +26,9 @@
                 menu_detail,
                 eat_date,
                 eat_week,
+                menu_limited,
+                menu_count,
+                version,
                 create_by,
                 update_by,
                 create_date,
@@ -71,6 +77,12 @@
             <if test="null != eatWeek and '' != eatWeek">
                 eat_week,
             </if>
+            <if test="null != menuLimited and '' != menuLimited">
+                menu_limited,
+            </if>
+            <if test="null != menuCount and '' != menuCount">
+                menu_count,
+            </if>
             <if test ="null != createBy and ''!= createBy">
                 create_by,
             </if>
@@ -106,6 +118,12 @@
             <if test="null != eatWeek and '' != eatWeek">
                 #{eatWeek},
             </if>
+            <if test="null != menuLimited and '' != menuLimited">
+                #{menu_limited},
+            </if>
+            <if test="null != menuCount and '' != menuCount">
+                #{menu_count},
+            </if>
             <if test ="null != createBy and ''!= createBy">
                 #{createBy.id},
             </if>
@@ -139,6 +157,8 @@
             <if test="null != menuDetail and '' != menuDetail">menu_detail = #{menuDetail},</if>
             <if test="null != eatDate and '' != eatDate">eat_date = #{eatDate},</if>
             <if test="null != eatWeek and '' != eatWeek">eat_week = #{eatWeek},</if>
+            <if test="null != menuLimited and '' != menuLimited">menu_limited = #{menuLimited},</if>
+            <if test="null != menuCount and '' != menuCount">menu_count = #{menuCount},</if>
             <if test ="null != createBy and ''!= createBy">  CREATE_BY = #{createBy.id},</if>
             <if test ="null != updateBy and ''!= updateBy">  UPDATE_BY = #{updateBy.id},</if>
             <if test ="null != createDate and ''!= createDate">  CREATE_DATE = #{createDate},</if>
@@ -147,6 +167,17 @@
         </set>
         WHERE id = #{id} and del_flag ='0'
     </update>
+    <update id="updateMenuContentCount" parameterType="com.dhc.rad.modules.pzMenuContent.entity.PzMenuContent">
+        UPDATE pz_menu_content
+        SET
+            MENU_COUNT = MENU_COUNT - 1,
+            VERSION = VERSION + 1
+        WHERE
+            id = #{contentId}
+          AND VERSION = #{version}
+          AND DEL_FLAG = '0'
+          AND MENU_COUNT > 0
+    </update>
 
 
     <select id="findList" resultMap="BaseResultMap">
@@ -154,15 +185,17 @@
         FROM
         pz_menu_content
         WHERE del_flag ='0'
-        <if test="null != menuId and '' != menuId">menu_id = #{menuId},</if>
-        <if test="null != menuDetail and '' != menuDetail">menu_detail = #{menuDetail},</if>
-        <if test="null != eatDate and '' != eatDate">eat_date = #{eatDate},</if>
-        <if test="null != eatWeek and '' != eatWeek">eat_week = #{eatWeek},</if>
-        <if test ="null != createBy and ''!= createBy">  CREATE_BY = #{createBy.id},</if>
-        <if test ="null != updateBy and ''!= updateBy">  UPDATE_BY = #{updateBy.id},</if>
-        <if test ="null != createDate and ''!= createDate">  CREATE_DATE = #{createDate},</if>
-        <if test ="null != updateDate and ''!= updateDate">  UPDATE_DATE = #{updateDate},</if>
-        <if test ="null != remarks and ''!= remarks">  remarks = #{remarks}</if>
+        <if test="null != menuId and '' != menuId">AND menu_id = #{menuId},</if>
+        <if test="null != menuDetail and '' != menuDetail">AND menu_detail = #{menuDetail},</if>
+        <if test="null != eatDate and '' != eatDate">AND eat_date = #{eatDate},</if>
+        <if test="null != eatWeek and '' != eatWeek">AND eat_week = #{eatWeek},</if>
+        <if test="null != menuLimited and '' != menuLimited">AND menu_limited = #{menuLimited},</if>
+        <if test="null != menuCount and '' != menuCount">AND menu_count = #{menuCount},</if>
+        <if test ="null != createBy and ''!= createBy">AND  CREATE_BY = #{createBy.id},</if>
+        <if test ="null != updateBy and ''!= updateBy">AND  UPDATE_BY = #{updateBy.id},</if>
+        <if test ="null != createDate and ''!= createDate">AND  CREATE_DATE = #{createDate},</if>
+        <if test ="null != updateDate and ''!= updateDate">AND  UPDATE_DATE = #{updateDate},</if>
+        <if test ="null != remarks and ''!= remarks">AND  remarks = #{remarks}</if>
         <choose>
             <when test="page !=null and page.orderBy != null and page.orderBy != ''">
                 ORDER BY ${page.orderBy}

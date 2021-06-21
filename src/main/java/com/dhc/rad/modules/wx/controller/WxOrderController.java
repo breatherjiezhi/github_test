@@ -83,7 +83,7 @@ public class WxOrderController extends BaseController {
     /**
      * @Description: 订餐功能
      * @Param: menuId：套餐id
-     * @return: Map<String                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               ,                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               Object>
+     * @return: Map<String, Object>
      * @Date: 2021/5/6
      */
     @RequestMapping(value = "orderMenu", method = RequestMethod.POST)
@@ -214,27 +214,27 @@ public class WxOrderController extends BaseController {
             //餐厅套餐信息
             for (String contentId : contentIds) {
                 PzMenuContent pzMenuContent = pzMenuContentService.get(contentId);
-                String menuId = pzMenuContent.getMenuId();
-                PzMenu pzMenu = pzMenuService.get(menuId);
-                if (null == pzMenu) {
+                if (null == pzMenuContent) {
                     addMessageAjax(returnMap, "0", "查询不到套餐信息，请重新核对");
                     return returnMap;
                 }
-                //TODO: 从pzmenuContent中查询限量 或直接判断餐厅最大服务人数上限
-//                //查询套餐余量
-//                Integer menuCount = pzMenu.getMenuCount();
-//                //查询套餐是否限量
-//                String menuLimited = pzMenu.getMenuLimited();
-//                //判断当前套餐是否限量
-//                if (menuLimited != null && "1".equals(menuLimited)) {
-//                    //剩余套餐数量
-//                    BigDecimal remainMenuDecimal = BigDecimal.valueOf(menuCount).subtract(new BigDecimal(1));
-//                    Integer compare = remainMenuDecimal.compareTo(BigDecimal.ZERO);
-//                    if (compare < 0) {
-//                        addMessageAjax(returnMap, "0", pzMenu.getMenuName() + "套餐余量不足，请选择其他套餐");
-//                        return returnMap;
-//                    }
-//                }
+                //从pzMenuContent中查询限量
+                //查询套餐余量
+                Integer menuContentCount = pzMenuContent.getMenuCount();
+                //查询套餐是否限量
+                String menuLimited = pzMenuContent.getMenuLimited();
+                //判断当前套餐是否限量
+                if (menuLimited != null && "1".equals(menuLimited)) {
+                    //剩余套餐数量
+                    BigDecimal remainMenuContentDecimal = BigDecimal.valueOf(menuContentCount).subtract(new BigDecimal(1));
+                    Integer compare = remainMenuContentDecimal.compareTo(BigDecimal.ZERO);
+                    if (compare < 0) {
+                        PzMenu pzMenu = pzMenuService.get(pzMenuContent.getMenuId());
+                        Office office = officeService.get(pzMenu.getRestaurantId());
+                        addMessageAjax(returnMap, "0", office.getName() + "--" + pzMenu.getMenuName() + "套餐--" + pzMenuContent.getMenuDetail() + "套餐余量不足，请选择其他套餐");
+                        return returnMap;
+                    }
+                }
             }
             //套餐积分
             pzOrder.setMenuIntegral(couponCount);
@@ -274,12 +274,18 @@ public class WxOrderController extends BaseController {
                 returnMap.put("consumeIntegral", couponCount.toString());
                 addMessageAjax(returnMap, "1", "订餐成功");
             } else {
-                addMessageAjax(returnMap, "0", "订餐失败");
+                addMessageAjax(returnMap, "0", "订餐失败,请联系管理员");
             }
 
             return returnMap;
         } finally {
-            lock.unlock();
+            // 是否还是锁定状态
+            if (lock.isLocked()) {
+                // 是否是当前执行线程的锁
+                if (lock.isHeldByCurrentThread()) {
+                    lock.unlock(); // 释放锁
+                }
+            }
         }
 
     }
@@ -288,7 +294,7 @@ public class WxOrderController extends BaseController {
     /**
      * @Description: 查询当前用户下一周的订餐信息
      * @Param: null
-     * @return: Map<String                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               ,                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               Object>
+     * @return: Map<String, Object>
      * @Date: 2021/4/29
      */
     @RequestMapping(value = "findOrderNextWeek", method = RequestMethod.POST)
@@ -372,7 +378,7 @@ public class WxOrderController extends BaseController {
     /**
      * @Description: 查询当前用户当前周的订餐信息
      * @Param: null
-     * @return: Map<String                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               ,                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               Object>
+     * @return: Map<String, Object>
      * @Date: 2021/4/29
      */
     @RequestMapping(value = "findOrderCurrentWeek", method = RequestMethod.POST)
@@ -476,7 +482,7 @@ public class WxOrderController extends BaseController {
     /**
      * @Description: 吃/不吃
      * @Param: mark:吃/不吃的标志 orderId:订单id date:日期
-     * @return: Map<String                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               ,                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               Object>
+     * @return: Map<String, Object>
      * @Date: 2021/4/30
      */
     @RequestMapping(value = "chooseEatOrNoEat", method = RequestMethod.POST)
@@ -717,27 +723,26 @@ public class WxOrderController extends BaseController {
         Map<String, Object> returnMap = new HashMap<>();
         //设置锁定资源名称
         RLock lock = redissonClient.getLock("redLock");
-        try {
-            lock.lock();
 
+        List<String> nextWeekEatDate = TimeUtils.getNextWeekEatDate();
+        String eatDate = nextWeekEatDate.stream().collect(Collectors.joining(",")) + ",";
+        List<User> listUser = new ArrayList<>();
+        if (UserUtils.getRoleFlag("admin") || UserUtils.getRoleFlag("admins")) {
+            listUser = systemService.findBatchOrderUserList(null, eatDate);
+        } else if (UserUtils.getRoleFlag("deptAdmin")) {
+            User user = systemService.getUserId(UserUtils.getUser().getId());
+            Office office = officeService.get(user.getOffice().getId());
+            listUser = systemService.findBatchOrderUserList(office.getParentId(), eatDate);
+        } else {
+            returnMap.put("status", ConstantUtils.ResCode.PASSLIMITS);
+            returnMap.put("message", ConstantUtils.ResCode.PASSLIMITSMSG);
+            return returnMap;
+        }
 
-            List<String> nextWeekEatDate = TimeUtils.getNextWeekEatDate();
-            String eatDate = nextWeekEatDate.stream().collect(Collectors.joining(",")) + ",";
-            List<User> listUser = new ArrayList<>();
-            if (UserUtils.getRoleFlag("admin") || UserUtils.getRoleFlag("admins")) {
-                listUser = systemService.findBatchOrderUserList(null, eatDate);
-            } else if (UserUtils.getRoleFlag("deptAdmin")) {
-                User user = systemService.getUserId(UserUtils.getUser().getId());
-                Office office = officeService.get(user.getOffice().getId());
-                listUser = systemService.findBatchOrderUserList(office.getParentId(), eatDate);
-            } else {
-                returnMap.put("status", ConstantUtils.ResCode.PASSLIMITS);
-                returnMap.put("message", ConstantUtils.ResCode.PASSLIMITSMSG);
-                return returnMap;
-            }
-
-            String message = "";
-            for (User user : listUser) {
+        String message = "";
+        for (User user : listUser) {
+            try {
+                lock.lock();
                 String userId = user.getId();
                 //点餐截止时间
                 String[] pzOrderEndWeek = ConfigInfoUtils.getConfigVal("pzOrderEndWeek").trim().split(",");
@@ -770,7 +775,6 @@ public class WxOrderController extends BaseController {
                 if (orderList.size() > 0) {
                     //获取当前时间下一周吃饭时间集合
 
-
                     String restaurantId = orderList.get(0).getRestaurantId();
                     Office office = officeService.get(restaurantId);
                     //查询下周每天菜单id集合
@@ -798,7 +802,7 @@ public class WxOrderController extends BaseController {
 
 
                     //去除头尾为空
-                    contentIdStr =  contentIdStr.trim();
+                    contentIdStr = contentIdStr.trim();
 
                     //判断contentIdStr是否为空
                     if (StringUtils.isBlank(contentIdStr)) {
@@ -830,6 +834,7 @@ public class WxOrderController extends BaseController {
 
                     List<String> contentIds = Arrays.asList(contentIdStr.split(","));
                     contentIds = contentIds.stream().distinct().collect(toList());
+
 
                     //计算餐券数
                     BigDecimal couponCount = BigDecimal.valueOf(contentIds.size());
@@ -870,24 +875,30 @@ public class WxOrderController extends BaseController {
                     //积分变动
                     pzScoreLog.setScoreChange("-" + pzOrder.getMenuIntegral());
                     //变动积分描述
-                    String description = user.getId() + "-" + user.getLoginName() + "：" + pzScoreLog.getScoreChange() + "积分";
+                    String description = "管理员批量订餐-" + user.getId() + "-" + user.getLoginName() + "：" + pzScoreLog.getScoreChange() + "积分";
                     pzScoreLog.setScoreDescription(description);
                     //订餐：新增订单信息 新增用户积分记录信息 更新用户积分(sys_user)
                     wxOrderService.orderMenu(pzMenu2, pzOrder, contentIds, user, pzScoreLog);
                 }
+            } finally {
+                // 是否还是锁定状态
+                if (lock.isLocked()) {
+                    // 是否是当前执行线程的锁
+                    if (lock.isHeldByCurrentThread()) {
+                        lock.unlock(); // 释放锁
+                    }
+                }
             }
-            if (StringUtils.isNotBlank(message)) {
-                returnMap.put("status", ConstantUtils.ResCode.SERVERERROR);
-                returnMap.put("message", message);
-            } else {
-                returnMap.put("status", ConstantUtils.ResCode.SUCCESS);
-                returnMap.put("message", ConstantUtils.ResCode.SUCCESSMSG);
-            }
-
-            return returnMap;
-        } finally {
-            lock.unlock();
         }
+        if (StringUtils.isNotBlank(message)) {
+            returnMap.put("status", ConstantUtils.ResCode.SERVERERROR);
+            returnMap.put("message", message);
+        } else {
+            returnMap.put("status", ConstantUtils.ResCode.SUCCESS);
+            returnMap.put("message", ConstantUtils.ResCode.SUCCESSMSG);
+        }
+
+        return returnMap;
     }
 
 

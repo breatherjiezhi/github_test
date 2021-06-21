@@ -75,8 +75,8 @@ public class WxOrderService extends CrudService<PzMenuDao, PzMenu> {
         //新增订单
         pzOrder.preInsert();
 
-        //订单创建人始终是用户自己,更新人可以是管理员(管理员批量点餐)
-        pzOrder.setCreateBy(currentUser);
+        //订单更新人始终是用户自己,创建人可以是管理员(管理员批量点餐)
+        pzOrder.setUpdateBy(currentUser);
 
         Integer insertOrder = pzOrderDao.insert(pzOrder);
 
@@ -109,6 +109,9 @@ public class WxOrderService extends CrudService<PzMenuDao, PzMenu> {
             updateMenuContentResult++;
             //新增订单详情
             pzOrderContent.preInsert();
+            //订单更新人始终是用户自己,创建人可以是管理员(管理员批量点餐)
+            pzOrderContent.setUpdateBy(currentUser);
+
             int insert = pzOrderContentDao.insert(pzOrderContent);
             if(insert > 0){
                 result ++;

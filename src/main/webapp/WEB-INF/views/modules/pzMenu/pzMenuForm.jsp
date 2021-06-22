@@ -9,7 +9,7 @@
             <div class="form-group">
                 <label class="control-label col-xs-12 col-sm-3 no-padding-right" for="menuName">菜单名称:</label>
                 <div class="col-xs-12 col-sm-8">
-                        <form:select path="menuName" class="chosen-select form-control width-100"
+                        <form:select path="menuName" class="chosen-select form-control width-100" onchange="menuNameChanges(this.value)">
                         data-placeholder="点击选择...">
                         <option value="">---请选择---</option>
                         <form:options items="${fns:getDictList('pz_menu_type_name')}" itemLabel="label" itemValue="value"
@@ -23,14 +23,13 @@
                     <form:hidden path="pzMenuContentList[${status.index}].eatWeek" />
                     <label class="control-label col-xs-12 col-sm-3 no-padding-right" >${pmcl.eatDate}(${pmcl.eatWeek}):</label>
                     <div class="col-xs-12 col-sm-8">
-                        <form:input path="pzMenuContentList[${status.index}].menuDetail" htmlEscape="false" maxlength="64" class="input-xlarge required" />
+                        <form:input path="pzMenuContentList[${status.index}].menuDetail" htmlEscape="false" maxlength="64" class="input-xlarge required" placeholder="请填写套餐明细"/>
                         <form:select path="pzMenuContentList[${status.index}].menuLimited" class="chosen-select form-control width-75"
                                      data-placeholder="点击选择...">
-                            <option value="">---请选择---</option>
-                            <form:options items="${fns:getDictList('yes_no')}" itemLabel="label" itemValue="value"
+                            <form:options items="${fns:getDictList('pz_menu_limited')}" itemLabel="label" itemValue="value"
                                           htmlEscape="false"/>
                         </form:select>
-                        <form:input path="pzMenuContentList[${status.index}].menuCount" htmlEscape="false" maxlength="64" class="input-xlarge required" />
+                       <form:input path="pzMenuContentList[${status.index}].menuCount" htmlEscape="false" maxlength="64" class="input-xlarge required"  onkeyup="this.value=this.value.replace(/\D/g,'')"  placeholder="请填写限量份数"/>
                     </div>
                 </div>
             </c:forEach>
@@ -68,7 +67,7 @@
                 <label class="control-label col-xs-12 col-sm-3 no-padding-right" for="menuImgUrl">菜单图片:</label>
                 <div class="control-label col-xs-12 col-sm-6 no-padding-right">
                     <div class="layui-upload">
-                        <input id="menuImgUrl" name="menuImgUrl" type="hidden" htmlEscape="false" maxlength="128" class="input-xlarge" value="${pzMenu.menuImgUrl}" />
+                        <input id="menuImgUrl" name="menuImgUrl" type="hidden" htmlEscape="false" maxlength="255" class="input-xlarge required" value="${pzMenu.menuImgUrl}" />
                         <button type="button" class="layui-btn" id="imgButton">上传图片</button>
                         <div class="layui-upload-list">
                             <img class="layui-upload-img" id="menuImg" >
@@ -82,9 +81,41 @@
     </div>
 </div>
 <script type="text/javascript">
+
+    function  menuNameChanges(d){
+       if(d==="A"){
+           $("select[name*='menuLimited']").each(function()
+           {
+               $(this).val(0);
+               $(this).trigger("chosen:updated");
+               $(this).hide();
+           })
+           $("input[name*='menuCount']").each(function()
+           {
+               $(this).val("");
+               $(this).hide();
+           })
+       }else{
+           $("select[name*='menuLimited']").each(function()
+           {
+               $(this).val(0);
+               $(this).trigger("chosen:updated");
+               $(this).show();
+           })
+           $("input[name*='menuCount']").each(function()
+           {
+               $(this).val("");
+               $(this).show();
+           })
+       }
+    }
+
+
+
     var scripts = [null, '${ctxStatic}/layui/js/layer.js', null];
     $('.page-content-area').ace_ajax('loadScripts', scripts, function () {
         jQuery(function ($) {
+            menuNameChanges("${pzMenu.menuName}");
             layui.use('upload', function () {
                 var $ = layui.jquery, upload = layui.upload;
                 //普通图片上传

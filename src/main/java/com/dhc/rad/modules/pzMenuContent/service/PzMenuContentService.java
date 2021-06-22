@@ -28,6 +28,10 @@ public class PzMenuContentService extends CrudService<PzMenuContentDao, PzMenuCo
     }
 
 
+    public  List<PzMenuContent> findAllListByMenuId(String menuId){
+        return pzMenuContentDao.findAllListByMenuId(menuId);
+    }
+
     public  List<PzMenuContent> findListByMenuId(String menuId){
         return pzMenuContentDao.findListByMenuId(menuId);
     }

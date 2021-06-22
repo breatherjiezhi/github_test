@@ -489,6 +489,7 @@ public class WxOrderController extends BaseController {
     @ResponseBody
     public Map<String, Object> chooseEatOrNoEat(@RequestParam("mark") String mark, @RequestParam("contentId") String contentId) {
         Map<String, Object> returnMap = new HashMap<>();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         //判断参数是否为空
         if (mark == null || contentId == null) {
             returnMap.put("data", null);
@@ -502,18 +503,21 @@ public class WxOrderController extends BaseController {
         String date = pzMenuContent.getEatDate();
         //判断当前时间是否已到截至时间
         String noEatTime = ConfigInfoUtils.getConfigVal("pzOrderEndDate").trim();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        String currentTime = simpleDateFormat.format(new Date());
-        String endTime = currentTime + " " + noEatTime;
-        Date currentDate = new Date();
+        String endTime = date + " " + noEatTime;
+        Calendar currentDate = Calendar.getInstance();
+        currentDate.add(Calendar.DAY_OF_MONTH, 1);
+        String currDate = sdf.format(currentDate.getTime());
+
+
         Date endDate = null;
+        Date cDate = null;
         try {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             endDate = sdf.parse(endTime);
+            cDate = sdf.parse(currDate);
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        if (currentDate.after(endDate)) {
+        if (cDate.after(endDate)) {
             returnMap.put("data", null);
             returnMap.put("status", ConstantUtils.ResCode.NODATA);
             returnMap.put("message", ConstantUtils.ResCode.ENDDATE);
@@ -679,8 +683,8 @@ public class WxOrderController extends BaseController {
             return returnMap;
         }
 
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        String nowDate = sdf.format(new Date());
+        SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");
+        String nowDate = sdf1.format(new Date());
         List<Map<String, Object>> eatDateList = new ArrayList<>();
 
         String[] eatDateTemp = pzOrder.getEatDate() == null ? new String[0] : pzOrder.getEatDate().split(",");
@@ -696,7 +700,18 @@ public class WxOrderController extends BaseController {
                     tempList.put("eatFlag", true);
                 }
                 //yes为可选 no为不可选
-                if (nowDate.compareTo(eatDateTemp[i]) <= 0) {
+                String enDate = eatDateTemp[i] + " " + noEatTime;
+
+                Date eDate = null;
+                try {
+                     eDate =  sdf.parse(enDate);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
+
+
+                if (cDate.after(eDate)) {
                     tempList.put("checkFlag", false);
                 } else {
                     tempList.put("checkFlag", true);

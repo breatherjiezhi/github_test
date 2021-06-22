@@ -93,7 +93,7 @@ public class PzMenuController extends BaseController {
         List<PzMenuContent> pzMenuContentList = new ArrayList<PzMenuContent>();
 
         if(pzMenu!=null&&StringUtils.isNotBlank(pzMenu.getId())){
-            pzMenuContentList =  pzMenuContentService.findListByMenuId(pzMenu.getId());
+            pzMenuContentList =  pzMenuContentService.findAllListByMenuId(pzMenu.getId());
         }else{
             if(pzMenuContentList.size()==0){
                List<String> list =  TimeUtils.getNextWeekEatDate();

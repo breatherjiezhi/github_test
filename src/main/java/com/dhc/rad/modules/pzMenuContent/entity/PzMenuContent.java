@@ -46,14 +46,6 @@ public class PzMenuContent extends DataEntity<PzMenuContent> {
      */
     private Integer version;
 
-    public Integer getVersion() {
-        return version;
-    }
-
-    public void setVersion(Integer version) {
-        this.version = version;
-    }
-
     public String getMenuLimited() {
         return menuLimited;
     }
@@ -68,6 +60,14 @@ public class PzMenuContent extends DataEntity<PzMenuContent> {
 
     public void setMenuCount(Integer menuCount) {
         this.menuCount = menuCount;
+    }
+
+    public Integer getVersion() {
+        return version;
+    }
+
+    public void setVersion(Integer version) {
+        this.version = version;
     }
 
     public PzMenuContent() {

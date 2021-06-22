@@ -24,6 +24,13 @@
                     <label class="control-label col-xs-12 col-sm-3 no-padding-right" >${pmcl.eatDate}(${pmcl.eatWeek}):</label>
                     <div class="col-xs-12 col-sm-8">
                         <form:input path="pzMenuContentList[${status.index}].menuDetail" htmlEscape="false" maxlength="64" class="input-xlarge required" />
+                        <form:select path="pzMenuContentList[${status.index}].menuLimited" class="chosen-select form-control width-75"
+                                     data-placeholder="点击选择...">
+                            <option value="">---请选择---</option>
+                            <form:options items="${fns:getDictList('yes_no')}" itemLabel="label" itemValue="value"
+                                          htmlEscape="false"/>
+                        </form:select>
+                        <form:input path="pzMenuContentList[${status.index}].menuCount" htmlEscape="false" maxlength="64" class="input-xlarge required" />
                     </div>
                 </div>
             </c:forEach>

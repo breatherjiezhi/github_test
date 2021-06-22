@@ -119,10 +119,10 @@
                 #{eatWeek},
             </if>
             <if test="null != menuLimited and '' != menuLimited">
-                #{menu_limited},
+                #{menuLimited},
             </if>
             <if test="null != menuCount and '' != menuCount">
-                #{menu_count},
+                #{menuCount},
             </if>
             <if test ="null != createBy and ''!= createBy">
                 #{createBy.id},

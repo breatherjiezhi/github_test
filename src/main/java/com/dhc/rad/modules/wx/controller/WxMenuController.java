@@ -59,8 +59,6 @@ public class WxMenuController {
 
         List<PzMenu> menuList = pzMenuService.findListByRid(rid, eatDate);
 
-
-
         List<Map<String,Object>> dataList = new ArrayList<>();
 
         //菜单接口需求id;

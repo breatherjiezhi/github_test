@@ -180,8 +180,14 @@ public class PzMenuService extends CrudService<PzMenuDao, PzMenu> {
         for (PzMenuContent pzMenuContent : pzMenuContentList) {
             if (StringUtils.isNotBlank(temp)) {
                 temp.append("\n").append(pzMenuContent.getEatDate()).append("(").append(pzMenuContent.getEatWeek()).append("):").append(pzMenuContent.getMenuDetail());
+                if("1".equals(pzMenuContent.getMenuLimited())){
+                    temp.append("(余量:").append(pzMenuContent.getMenuCount()).append("份)");
+                }
             } else {
                 temp.append(pzMenuContent.getEatDate()).append("(").append(pzMenuContent.getEatWeek()).append("):").append(pzMenuContent.getMenuDetail());
+                if("1".equals(pzMenuContent.getMenuLimited())){
+                    temp.append("(余量:").append(pzMenuContent.getMenuCount()).append("份)");
+                }
             }
         }
         return temp.toString();

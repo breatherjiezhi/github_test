@@ -26,7 +26,7 @@ public interface PzOrderContentDao extends CrudDao<PzOrderContent> {
 
     Integer findCountByOrderId(@Param("orderId") String orderId, @Param("userId") String userId,@Param("eatFlag")String eatFlag);
 
-    Integer deleteContentByOrderId(@Param("orderId")String orderId, @Param("userId") String userId);
+
 
     Integer reallyDeleteContentIds(@Param("orderId")String orderId, @Param("userId") String userId);
 }

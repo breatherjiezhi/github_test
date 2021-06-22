@@ -142,7 +142,6 @@
         <if test="null != orderId and ''!= orderId">AND order_id = #{orderId}</if>
         <if test="null != contentId and ''!= contentId">AND content_id = #{contentId}</if>
         <if test="null != eatFlag and ''!= eatFlag">AND eat_flag = #{eatFlag}</if>
-        <if test="null != createBy and ''!= createBy">AND CREATE_BY = #{createBy.id}</if>
         <if test="null != updateBy and ''!= updateBy">AND UPDATE_BY = #{updateBy.id}</if>
         <if test="null != createDate and ''!= createDate">AND CREATE_DATE = #{createDate}</if>
         <if test="null != updateDate and ''!= updateDate">AND UPDATE_DATE = #{updateDate}</if>
@@ -168,8 +167,8 @@
                a.update_date,
                a.remarks,
                a.del_flag
-        FROM pz_order_content a
-        WHERE a.content_id = #{contentId} and a.create_by = #{userId}
+        FROM pz_order_content a LEFT JOIN pz_order po ON po.id = a.ORDER_ID
+        WHERE a.content_id = #{contentId} and (po.USER_ID = #{userId} or a.create_by =#{userId})
           and a.del_flag = '0'
     </select>
     <select id="findListByOrderId" resultType="java.util.Map">
@@ -188,27 +187,22 @@ FROM
 WHERE
 	poc.ORDER_ID = #{orderId} ORDER BY pmc.EAT_DATE
     </select>
-    <update id="deleteContentByOrderId">
-        update pz_order_content
-        set
-        del_flag ='1'
-        where order_id = #{orderId} and create_by = #{userId}
-    </update>
+
 
     <delete id="reallyDeleteContentIds">
-        delete from pz_order_content
-        where order_id = #{orderId} and create_by = #{userId}
+        delete from pz_order_content poc left join pz_order po on po.id = poc.order_id
+        where poc.order_id = #{orderId} and (po.user_id = #{userId} or poc.created_by=#{userId})
     </delete>
 
     <select id="findCountByOrderId" resultType="java.lang.Integer">
         SELECT
         count(1)
         FROM
-        pz_order_content
-        WHERE del_flag = '0'
-        <if test="null != orderId and ''!= orderId">AND order_id = #{orderId}</if>
-        <if test="null != userId and ''!= userId">AND CREATE_BY = #{userId}</if>
-        <if test="null != eatFlag and ''!= eatFlag">AND eat_flag = #{eatFlag}</if>
+        pz_order_content poc left join pz_order po on poc.order_id = po.id
+        WHERE poc.del_flag = '0'
+        <if test="null != orderId and ''!= orderId">AND poc.order_id = #{orderId}</if>
+        <if test="null != userId and ''!= userId">AND (poc.CREATE_BY = #{userId} or po.user_id=#{userId})</if>
+        <if test="null != eatFlag and ''!= eatFlag">AND poc.eat_flag = #{eatFlag}</if>
     </select>
 
 

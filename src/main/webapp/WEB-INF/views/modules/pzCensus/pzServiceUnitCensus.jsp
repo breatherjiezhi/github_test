@@ -219,7 +219,7 @@
                         var printAreaInfo = " <div class='popfi'>";
                         printAreaInfo += "<div id='qrCode" + i + "' class='qrcss'></div>";
                         printAreaInfo += "<div class='invis'><table>";
-                        printAreaInfo += "<tr><td class='tex-r'>" + rowData.serviceUnitName + "</td></tr>";
+                        printAreaInfo += "<tr><td colspan='2' class='tex-s'>" + rowData.serviceUnitName + "</td></tr>";
                         printAreaInfo += "<tr><td>" + rowData.areaName + "</td><td class='tex-r'>" + rowData.restaurantName + "</td></tr>";
                         printAreaInfo += "</table></div>";
                         printAreaInfo += "<div class='tab1'><table>";
@@ -362,7 +362,7 @@
     var LODOP;
     function printOrders() {
         var printA = $("#printArea").find(".popfi").length;
-        if (printA > 40) {
+        if (printA > 35) {
             alert("打印内容超长，请重新选择！");
             return;
         }
@@ -371,7 +371,7 @@
         //$("#printArea").jqprint();
         LODOP=getLodop();
         LODOP.PRINT_INIT(); // 打印初始化
-        LODOP.SET_PRINT_PAGESIZE(1,800,780*printA,"");  // 设置纸张大小,纸张高度最大32500
+        LODOP.SET_PRINT_PAGESIZE(1,800,800*printA,"");  // 设置纸张大小,纸张高度最大32500
         LODOP.ADD_PRINT_HTM(0,40,'100%','100%',textHtml); // 设置打印内容
         LODOP.PREVIEW();
     }

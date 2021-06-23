@@ -16,6 +16,7 @@
     .tab1 td{border:solid; border-width:0px 1px 1px 0px;text-align:center;}
     .tex-l{text-align: left;}
     .tex-r{text-align: right;}
+    .tex-s{font-size: 18px;font-weight: bolder;text-align: center;}
     .dotted{width:280px;height:0px;border-top:1px black dashed; margin-top: 20px;margin-left: -30px;}
 </style>
 <div class="row">
@@ -100,7 +101,7 @@
             var printAreaInfo = " <div class='popfi'>";
             printAreaInfo += "<div id='qrCode" + count + "' class='qrcss'></div>";
             printAreaInfo += "<div class='invis'><table>";
-            printAreaInfo += "<tr><td>取餐点：</td><td class='tex-r'>${orderStatisticMap.areaLocation}</td></tr>";
+            printAreaInfo += "<tr><td class='tex-s'>${orderStatisticMap.areaLocation}</td></tr>";
             printAreaInfo += "<tr><td>${orderStatisticMap.serviceUnitName}</td><td class='tex-r'>${orderStatisticMap.restaurantName}</td></tr>";
             printAreaInfo += "</table></div>";
             printAreaInfo += "<div class='tab1'><table>";

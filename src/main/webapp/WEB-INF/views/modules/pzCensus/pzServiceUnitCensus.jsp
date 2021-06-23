@@ -16,6 +16,7 @@
     .tab1 td{border:solid; border-width:0px 1px 1px 0px;text-align:center;}
     .tex-l{text-align: left;}
     .tex-r{text-align: right;}
+    .tex-s{font-size: 28px;font-weight: bolder;text-align: center;}
     .dotted{width:280px;height:0px;border-top:1px black dashed; margin-top: 20px;margin-left: -30px;}
 </style>
 <div class="row">
@@ -218,8 +219,8 @@
                         var printAreaInfo = " <div class='popfi'>";
                         printAreaInfo += "<div id='qrCode" + i + "' class='qrcss'></div>";
                         printAreaInfo += "<div class='invis'><table>";
-                        printAreaInfo += "<tr><td>投料点：</td><td class='tex-r'>" + rowData.areaName + "</td></tr>";
-                        printAreaInfo += "<tr><td>" + rowData.serviceUnitName + "</td><td class='tex-r'>" + rowData.restaurantName + "</td></tr>";
+                        printAreaInfo += "<tr><td class='tex-r'>" + rowData.serviceUnitName + "</td></tr>";
+                        printAreaInfo += "<tr><td>" + rowData.areaName + "</td><td class='tex-r'>" + rowData.restaurantName + "</td></tr>";
                         printAreaInfo += "</table></div>";
                         printAreaInfo += "<div class='tab1'><table>";
                         printAreaInfo += "<tr><th style='text-align:center;'>A</th><th style='text-align:center;'>B</th><th style='text-align:center;'>C</th></tr>";
@@ -370,7 +371,7 @@
         //$("#printArea").jqprint();
         LODOP=getLodop();
         LODOP.PRINT_INIT(); // 打印初始化
-        LODOP.SET_PRINT_PAGESIZE(1,800,750*printA,"");  // 设置纸张大小,纸张高度最大32500
+        LODOP.SET_PRINT_PAGESIZE(1,800,780*printA,"");  // 设置纸张大小,纸张高度最大32500
         LODOP.ADD_PRINT_HTM(0,40,'100%','100%',textHtml); // 设置打印内容
         LODOP.PREVIEW();
     }

@@ -93,11 +93,15 @@
 </div>
 <script type="text/javascript">
 
+
+
+
+
+
+
     var scripts = [null, '${ctxStatic}/assets/js/fuelux/fuelux.spinner.js', '${ctxStatic}/assets/js/date-time/bootstrap-datepicker.js', '${ctxStatic}/assets/js/date-time/bootstrap-datepicker.zh-CN.min.js', null];
     $('.page-content-area').ace_ajax('loadScripts', scripts, function () {
         jQuery(function ($) {
-
-
             var select2 = $('.select2');
             var select2width = select2.parent().width();
             $('.select2').css('width', select2width).select2({allowClear: true});
@@ -249,7 +253,6 @@
                         var id = $(this).attr('data-id');
                         submitMenu(id);
                     });
-
                 }
             });
 
@@ -577,6 +580,8 @@
                 $('[class*=select2]').remove();
                 $('.ui-helper-hidden-accessible').remove();
             });
+
         });
     });
+
 </script>

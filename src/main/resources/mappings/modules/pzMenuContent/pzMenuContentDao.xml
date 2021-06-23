@@ -80,7 +80,7 @@
             <if test="null != menuLimited and '' != menuLimited">
                 menu_limited,
             </if>
-            <if test="null != menuCount and '' != menuCount">
+            <if test="null != menuCount ">
                 menu_count,
             </if>
             <if test ="null != createBy and ''!= createBy">
@@ -121,7 +121,7 @@
             <if test="null != menuLimited and '' != menuLimited">
                 #{menuLimited},
             </if>
-            <if test="null != menuCount and '' != menuCount">
+            <if test="null != menuCount">
                 #{menuCount},
             </if>
             <if test ="null != createBy and ''!= createBy">
@@ -158,7 +158,7 @@
             <if test="null != eatDate and '' != eatDate">eat_date = #{eatDate},</if>
             <if test="null != eatWeek and '' != eatWeek">eat_week = #{eatWeek},</if>
             <if test="null != menuLimited and '' != menuLimited">menu_limited = #{menuLimited},</if>
-            <if test="null != menuCount and '' != menuCount">menu_count = #{menuCount},</if>
+            <if test="null != menuCount">menu_count = #{menuCount},</if>
             <if test ="null != createBy and ''!= createBy">  CREATE_BY = #{createBy.id},</if>
             <if test ="null != updateBy and ''!= updateBy">  UPDATE_BY = #{updateBy.id},</if>
             <if test ="null != createDate and ''!= createDate">  CREATE_DATE = #{createDate},</if>

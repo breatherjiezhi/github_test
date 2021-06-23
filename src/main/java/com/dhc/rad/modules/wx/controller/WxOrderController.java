@@ -212,6 +212,7 @@ public class WxOrderController extends BaseController {
                 return returnMap;
             }
             //餐厅套餐信息
+            StringBuffer message = new StringBuffer();
             for (String contentId : contentIds) {
                 PzMenuContent pzMenuContent = pzMenuContentService.get(contentId);
                 if (null == pzMenuContent) {
@@ -230,11 +231,21 @@ public class WxOrderController extends BaseController {
                     Integer compare = remainMenuContentDecimal.compareTo(BigDecimal.ZERO);
                     if (compare < 0) {
                         PzMenu pzMenu = pzMenuService.get(pzMenuContent.getMenuId());
-                        Office office = officeService.get(pzMenu.getRestaurantId());
-                        addMessageAjax(returnMap, "0", office.getName() + "--" + pzMenu.getMenuName() + "套餐--" + pzMenuContent.getMenuDetail() + "套餐余量不足，请选择其他套餐");
-                        return returnMap;
+                        if(StringUtils.isNotBlank(message)){
+                            message.append(",").append(pzMenuContent.getEatWeek()).append(pzMenu.getMenuName()).append("套餐");
+                        }else{
+                            message.append(pzMenuContent.getEatWeek()).append(pzMenu.getMenuName()).append("套餐");
+                        }
+
                     }
                 }
+
+            }
+
+            if(StringUtils.isNotBlank(message)){
+                message.append("数量不足,请修改订单!");
+                addMessageAjax(returnMap, "0", message.toString());
+                return returnMap;
             }
             //套餐积分
             pzOrder.setMenuIntegral(couponCount);

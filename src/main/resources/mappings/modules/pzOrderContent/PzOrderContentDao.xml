@@ -190,8 +190,8 @@ WHERE
 
 
     <delete id="reallyDeleteContentIds">
-        delete from pz_order_content poc left join pz_order po on po.id = poc.order_id
-        where poc.order_id = #{orderId} and (po.user_id = #{userId} or poc.created_by=#{userId})
+        delete poc from pz_order_content poc left join pz_order po on po.id = poc.order_id
+        where poc.order_id = #{orderId} and (po.user_id = #{userId} or poc.CREATE_BY=#{userId})
     </delete>
 
     <select id="findCountByOrderId" resultType="java.lang.Integer">

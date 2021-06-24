@@ -371,7 +371,7 @@
         //$("#printArea").jqprint();
         LODOP=getLodop();
         LODOP.PRINT_INIT(); // 打印初始化
-        LODOP.SET_PRINT_PAGESIZE(1,800,800*printA,"");  // 设置纸张大小,纸张高度最大32500
+        LODOP.SET_PRINT_PAGESIZE(1,800,820*printA,"");  // 设置纸张大小,纸张高度最大32500
         LODOP.ADD_PRINT_HTM(0,40,'100%','100%',textHtml); // 设置打印内容
         LODOP.PREVIEW();
     }

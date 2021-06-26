@@ -139,6 +139,10 @@ public class PzMenuController extends BaseController {
         List<PzMenuContent> list =  pzMenu.getPzMenuContentList();
         String eatDate = "";
         for (PzMenuContent pzMenuContent : list) {
+            if("1".equals(pzMenuContent.getMenuLimited()) &&(pzMenuContent.getMenuCount()==null || pzMenuContent.getMenuCount()==0)){
+                addMessageAjax(returnMap, "0", "请修改[ "+pzMenuContent.getMenuDetail()+" ]套餐限量份数！！！");
+                return returnMap;
+            }
             eatDate+=pzMenuContent.getEatDate()+",";
         }
         //新增：防止同一个菜单重复提交

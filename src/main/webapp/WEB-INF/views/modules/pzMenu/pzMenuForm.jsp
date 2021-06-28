@@ -102,23 +102,27 @@
                 $(this).next().hide();
             })
 
-        } else {
+        }else if(d==""){
             $("select[name*='menuLimited']").each(function () {
-
-                if ($(this).val() == "0") {
-
                     $(this).val(0);
                     $(this).trigger("chosen:updated");
                     $(this).show();
-
+                    $(this).next().val("0");
+                    $(this).next().hide();
+            })
+        } else {
+            $("select[name*='menuLimited']").each(function () {
+                if ($(this).val() == "0") {
+                    $(this).val(0);
+                    $(this).trigger("chosen:updated");
+                    $(this).show();
                     $(this).next().val("");
                     $(this).next().hide();
                 } else {
                     $(this).show();
                     $(this).next().show();
+
                 }
-
-
             })
 
         }
@@ -129,7 +133,7 @@
             $(d).next().val("");
             $(d).next().hide();
         } else {
-            $(d).next().val("");
+            $(d).next().val("0");
             $(d).next().show();
         }
     }
@@ -138,7 +142,6 @@
     var scripts = [null, '${ctxStatic}/layui/js/layer.js', null];
     $('.page-content-area').ace_ajax('loadScripts', scripts, function () {
         jQuery(function ($) {
-
             //修改页面禁止选择套餐名称
             var menuName = "${pzMenu.menuName}";
             if (menuName != "") {
@@ -147,6 +150,8 @@
                         $(this).remove();
                     }
                 });
+            }else{
+
             }
             menuNameChanges("${pzMenu.menuName}");
             layui.use('upload', function () {

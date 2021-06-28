@@ -176,6 +176,7 @@
 	poc.CONTENT_ID as contentId,
 	poc.EAT_FLAG as eatFlag,
 	pm.MENU_IMG_URL AS imgUrl,
+	so.name AS restaurantName,
 	pm.MENU_NAME AS menuName,
 	pmc.MENU_DETAIL as menuDetail,
 	pmc.EAT_DATE as eatDate,
@@ -184,6 +185,7 @@ FROM
 	pz_order_content poc
 	LEFT JOIN pz_menu_content pmc ON pmc.ID = poc.CONTENT_ID
 	LEFT JOIN pz_menu pm ON pm.ID = pmc.MENU_ID
+	LEFT JOIN sys_office so on pm.RESTAURANT_ID=so.ID
 WHERE
 	poc.ORDER_ID = #{orderId} ORDER BY pmc.EAT_DATE
     </select>

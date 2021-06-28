@@ -354,7 +354,7 @@ public class WxOrderController extends BaseController {
                         map.put("eatFlagName", "已预定");
                     }
                     map.put("checkFlag", true);
-
+                    map.put("menuDetail",map.get("menuName") + "套餐:" + map.get("menuDetail"));
                 }
 //            List<String> orderContentEatDateList = new ArrayList<>();
 //            if(mapList.size() != 5){
@@ -472,6 +472,7 @@ public class WxOrderController extends BaseController {
                         map.put("eatFlagName", "已结束");
                         map.put("checkFlag", false);
                     }
+                    map.put("menuDetail",map.get("menuName") + "套餐:" + map.get("menuDetail"));
                 }
 //          List<String> orderContentEatDateList = new ArrayList<>();
 //            if(mapList.size() != currentWeekEatDateList.size()){

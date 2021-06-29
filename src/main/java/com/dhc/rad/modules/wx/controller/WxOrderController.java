@@ -779,6 +779,11 @@ public class WxOrderController extends BaseController {
                 try {
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                     endDate = sdf.parse(endTime);
+                    //比订餐截至时间增加一小时
+                    Calendar cal = Calendar.getInstance();
+                    cal.setTime(endDate);
+                    cal.add(Calendar.HOUR, 1);
+                    endDate = cal.getTime();
                 } catch (ParseException e) {
                     message = "系统错误,请联系管理员!";
                     break;
@@ -850,7 +855,6 @@ public class WxOrderController extends BaseController {
                         continue;
                     }
 
-                    //判断用户是否有充足的餐券数
                     //获取用户当前剩余餐券数
                     BigDecimal userIntegral = new BigDecimal(0);
                     if (userId != null) {

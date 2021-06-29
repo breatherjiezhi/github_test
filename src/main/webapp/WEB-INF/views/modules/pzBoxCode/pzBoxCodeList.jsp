@@ -90,9 +90,6 @@
             var grid_selector = "#grid-table";
             var pager_selector = "#grid-pager";
             var toolbarTop = grid_selector + '_toppager';
-            var isAdd = true;
-            var isShow = "";
-            var isShow2 = "";
 
             $('.input-daterange').datepicker({
                 autoclose: true,
@@ -202,7 +199,7 @@
                     editfunc: openDialogEdit,
                     edittext: "<span data-locale='edit'>编辑</span>",
                     edittitle: '',
-                    add: isAdd,
+                    add: true,
                     addicon: 'ace-icon fa fa-plus',
                     addfunc: openDialogAdd,
                     addtext: "<span data-locale='add'>新增</span>",

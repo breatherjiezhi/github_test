@@ -1,5 +1,4 @@
 <%@ page import="com.dhc.rad.common.utils.StringUtils" %>
-<%@ page import="com.dhc.rad.modules.sys.utils.UserUtils" %>
 <%@ page contentType="text/html; charset=utf-8"%>
 <%@ include file = "GenXmlData.jsp" %>
 <%

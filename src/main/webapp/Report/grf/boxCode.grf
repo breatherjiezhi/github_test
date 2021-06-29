@@ -16,7 +16,7 @@
 	},
 	"DetailGrid":{
 		"Recordset":{
-			"ConnectionString":"MYSQL;\r\nDatabase=2021pzdc;\r\nPassword=KF@32rjb;\r\nPort=3306;\r\nServer=172.16.2.91;\r\nUser=root;",
+			"ConnectionString":"MYSQL;\r\nDatabase=2021pzdc;\r\nPassword=KF@32rjb;\r\nPort=3306;\r\nServer=127.0.0.1;\r\nUser=root;",
 			"QuerySQL":"select pbc.ID as BOX_ID,CONCAT(sso.`NAME`,pbc.BOX_CODE) as BOX_CN_NAME,sso.`NAME` as 'RESTAURANT_NAME',pbc.BOX_CODE\r\nfrom pz_box_code pbc\r\nleft join sys_office sso on pbc.RESTAURANT_ID=sso.ID WHERE pbc.del_flag = '0'   limit 2",
 			"Field":[
 				{
@@ -50,13 +50,13 @@
 						{
 							"Type":"Barcode",
 							"Name":"Barcode1",
-							"Left":6.05896,
+							"Left":0.211667,
 							"Top":7.64646,
-							"Width":16.219,
+							"Width":29.1835,
 							"Height":9.39271,
 							"BarcodeType":"QRCode",
 							"CaptionPosition":"None",
-							"Text":"box,[#BOX_ID#],[#BOX_CODE#]",
+							"Text":"box,[#BOX_ID#],[#BOX_CN_NAME#]",
 							"Font":{
 								"Name":"宋体",
 								"Size":720000,
@@ -67,10 +67,10 @@
 						{
 							"Type":"MemoBox",
 							"Name":"MemoBox5",
-							"Left":6.05896,
-							"Top":2.64583,
-							"Width":16.219,
-							"Height":4.78896,
+							"Left":0.211667,
+							"Top":0.79375,
+							"Width":29.1835,
+							"Height":6.00604,
 							"Font":{
 								"Name":"宋体",
 								"Size":997500,

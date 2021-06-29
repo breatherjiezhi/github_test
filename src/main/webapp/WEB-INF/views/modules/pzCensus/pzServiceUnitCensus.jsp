@@ -70,10 +70,6 @@
                                         <i class="fa fa-refresh" aria-hidden="true" style="margin-right: 5px"></i>
                                         <span data-locale='reset'>重置</span>
                                     </button>
-                                    <button class="btn btn-info btn-sm" type="button" style="color: orange !important;border-color: orange" onclick="printOrders();" >
-                                        <i class="fa fa-search" aria-hidden="true" style="margin-right: 5px"></i>
-                                        <span data-locale='query'>打印</span>
-                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -91,7 +87,6 @@
         <div class="widget-box" style="display:none" id="setStationDivId"></div>
     </div>
 </div>
-<div id="printArea" style="margin-left: 50px;display: none;"></div>
 <script type="text/javascript">
 
     var scripts = [null, '${ctxStatic}/assets/js/fuelux/fuelux.spinner.js', '${ctxStatic}/assets/js/date-time/bootstrap-datepicker.js',
@@ -117,10 +112,7 @@
             var grid_selector = "#grid-table";
             var pager_selector = "#grid-pager";
             var toolbarTop = grid_selector + '_toppager';
-            var isAdd = true;
-            var isAlldel = false;
-            var isShow = "";
-            var isShow2 = "";
+
 
             $('.input-daterange').datepicker({
                 autoclose: true,
@@ -210,42 +202,57 @@
                 editurl: "/dummy.html",//nothing is saved
                 caption: "<span data-locale='StatisticsList'>统计列表</span>&nbsp;&nbsp;&nbsp;&nbsp;<span id='menuTotal' style='color:#3f67e7;'></span>",
                 gridComplete: function () {
-                    $("#printArea").html("");
-                    var ids = $(grid_selector).jqGrid('getDataIDs');
-                    for (var i = 0; i < ids.length; i++) {
-                        var id = ids[i];
-                        // 获取每一列数据明细
-                        var rowData = $("#grid-table").getRowData(id);
-                        var printAreaInfo = " <div class='popfi'>";
-                        printAreaInfo += "<div id='qrCode" + i + "' class='qrcss'></div>";
-                        printAreaInfo += "<div class='invis'><table>";
-                        printAreaInfo += "<tr><td colspan='2' class='tex-s'>" + rowData.serviceUnitName + "</td></tr>";
-                        printAreaInfo += "<tr><td>" + rowData.areaName + "</td><td class='tex-r'>" + rowData.restaurantName + "</td></tr>";
-                        printAreaInfo += "</table></div>";
-                        printAreaInfo += "<div class='tab1'><table>";
-                        printAreaInfo += "<tr><th style='text-align:center;'>A</th><th style='text-align:center;'>B</th><th style='text-align:center;'>C</th></tr>";
-                        printAreaInfo += "<tr><th style='text-align:center;'>" + rowData.countA + "</th><th style='text-align:center;'>" + rowData.countB + "</th><th style='text-align:center;'>" + rowData.countC + "</th></tr>";
-                        printAreaInfo += "<tr><th style='text-align:center;'>D</th><th style='text-align:center;'>E</th><th style='text-align:center;'>F</th></tr>";
-                        printAreaInfo += "<tr><th style='text-align:center;'>" + rowData.countD + "</th><th style='text-align:center;'>" + rowData.countE + "</th><th style='text-align:center;'>" + rowData.countF + "</th></tr>";
-                        printAreaInfo += "</table></div>";
-                        printAreaInfo += "<div class='dotted'/>";
-                        printAreaInfo += "</div>";
-                        $("#printArea").append(printAreaInfo);
-                        var qrCodeId = "qrCode" + i;
-                        // var qrcode = new QRCode(qrCodeId);
-                        var qrCodeObj = new QRCode(qrCodeId, {
-                            // text: result.rows.serviceUnitId,
-                            text: "serviceUnit" + "," + rowData.serviceUnitId + "," + rowData.serviceUnitName + "," + rowData.areaName,
-                            width: 100,
-                            height: 100,
-                            colorDark : "#000000",
-                            colorLight : "#ffffff"
-                        });
-                        qrCodeObj.makeCode("serviceunit" + "," + rowData.serviceUnitId + "," + rowData.serviceUnitName + "," + rowData.areaName);
-                    }
+                    getMenuTotal();
                 }
             });
 
+
+            jQuery(grid_selector).jqGrid('navGrid', pager_selector,
+                {
+                    edit: false,
+                    editicon: 'ace-icon fa fa-pencil',
+                    editfunc: '',
+                    edittext: "<span data-locale='edit'>编辑</span>",
+                    edittitle: '',
+                    add: false,
+                    addicon: 'ace-icon fa fa-plus',
+                    addfunc: '',
+                    addtext: "<span data-locale='add'>新增</span>",
+                    addtitle: '',
+                    del: false,
+                    delicon: 'ace-icon fa fa-trash-o',
+                    delfunc: '',
+                    deltext: "<span data-locale='BatchDelete'>删除</span>",
+                    deltitle: '',
+                    search: false,
+                    refresh: true,
+                    refreshicon: 'ace-icon fa fa-refresh',
+                    refreshtext: "<span data-locale='refresh'>刷新</span>",
+                    refreshtitle: '',
+                    view: false,
+                    cloneToTop: true
+                },
+                {}, // use default settings for edit
+                {}, // use default settings for add
+                {},  // delete instead that del:false we need this
+                {multipleSearch: true}, // enable the advanced searching
+                {closeOnEscape: true} /* allow the view dialog to be closed when user press ESC key*/
+            ).jqGrid("navButtonAdd",toolbarTop,{
+                caption:"<span data-locale='BarcodePrinting'>订单打印</span>",
+                buttonicon:"ace-icon fa fa-download",
+                title:"订单打印",
+                onClickButton: printOrderCode,
+                position:"first" ,
+                id:"printOrderCode"
+            });
+
+
+
+            function printOrderCode() {
+                var eatDate = $("#eatDate").val();
+                var serviceUnitName = $("#serviceUnitName").val();
+                window.open("${ctxReport}/HtmReport/doPrintOrderCode.htm?param=''&restaurantId=${officeId}&roleFlag=${roleFlag}&serviceUnitName="+serviceUnitName+"&eatDate="+eatDate);
+            }
 
             $("#query").click(function () {
                 var eatDate = $("#eatDate").val();
@@ -256,10 +263,6 @@
                     postData: {'eatDate': eatDate, 'serviceUnitName': serviceUnitName}, //发送数据
                     page: 1
                 }).trigger("reloadGrid"); //重新载入
-
-                getMenuTotal();
-                // 加载打印数据
-                // getPrintText();
             });
             /*$("#name").keydown(function (e) {
                 if (e.keyCode == 13)
@@ -271,11 +274,10 @@
                 $(grid_selector).jqGrid('setGridParam', {
                     url: "${ctx}/pzCensus/searchPage",
                     mtype: "post",
-                    postData: {'serviceUnitName': ''},
+                    postData: {'eatDate': '','serviceUnitName': ''},
                     page: 1
                 }).trigger("reloadGrid"); //重新载入
-                // 加载打印数据
-                // getPrintText();
+
             });
 
 
@@ -298,10 +300,7 @@
                 $('.ui-helper-hidden-accessible').remove();
             });
         });
-        getMenuTotal();
 
-        // 加载打印数据
-        // getPrintText();
 
         function getMenuTotal() {
             var eatDate = $("#eatDate").val();
@@ -317,62 +316,6 @@
 
     });
 
-    // 加载打印数据
-    function getPrintText() {
-        $("#printArea").html("");
-        var eatDate = $("#eatDate").val();
-        var serviceUnitName = $("#serviceUnitName").val();
-        $.post("${ctx}/pzCensus/searchPage", {
-            'eatDate': eatDate,
-            'serviceUnitName': serviceUnitName
-        }, function (result) {
-            if (result != null) {
-                for (var i = 0; i < result.rows.length; i++) {
-                    var printAreaInfo = " <div class='popfi'>";
-                    printAreaInfo += "<div id='qrCode" + i + "' class='qrcss'></div>";
-                    printAreaInfo += "<div class='invis'><table>";
-                    printAreaInfo += "<tr><td>投料点：</td><td class='tex-r'>" + result.rows[i].areaName + "</td></tr>";
-                    printAreaInfo += "<tr><td>" + result.rows[i].serviceUnitName + "</td><td class='tex-r'>" + result.rows[i].restaurantName + "</td></tr>";
-                    printAreaInfo += "</table></div>";
-                    printAreaInfo += "<div class='tab1'><table>";
-                    printAreaInfo += "<tr><th style='text-align:center;'>A</th><th style='text-align:center;'>B</th><th style='text-align:center;'>C</th></tr>";
-                    printAreaInfo += "<tr><th style='text-align:center;'>" + result.rows[i].countA + "</th><th style='text-align:center;'>" + result.rows[i].countB + "</th><th style='text-align:center;'>" + result.rows[i].countC + "</th></tr>";
-                    printAreaInfo += "<tr><th style='text-align:center;'>D</th><th style='text-align:center;'>E</th><th style='text-align:center;'>F</th></tr>";
-                    printAreaInfo += "<tr><th style='text-align:center;'>" + result.rows[i].countD + "</th><th style='text-align:center;'>" + result.rows[i].countE + "</th><th style='text-align:center;'>" + result.rows[i].countF + "</th></tr>";
-                    printAreaInfo += "</table></div>";
-                    printAreaInfo += "<div class='dotted'/>";
-                    printAreaInfo += "</div>";
-                    $("#printArea").append(printAreaInfo);
-                    var qrCodeId = "qrCode" + i;
-                    // var qrcode = new QRCode(qrCodeId);
-                    var qrCodeObj = new QRCode(qrCodeId, {
-                        // text: result.rows.serviceUnitId,
-                        text: "serviceUnit" + "," + result.rows[i].serviceUnitId + "," + result.rows[i].serviceUnitName,
-                        width: 100,
-                        height: 100,
-                        colorDark : "#000000",
-                        colorLight : "#ffffff"
-                    });
-                    qrCodeObj.makeCode("serviceunit" + "," + result.rows[i].serviceUnitId + "," + result.rows[i].serviceUnitName);
-                }
-            }
-        });
-    }
 
-    var LODOP;
-    function printOrders() {
-        var printA = $("#printArea").find(".popfi").length;
-        if (printA > 35) {
-            alert("打印内容超长，请重新选择！");
-            return;
-        }
-        var cssStyle = "<style>" + document.getElementById("css-style").innerHTML + "</style>";
-        var textHtml = cssStyle + "<body>" + document.getElementById("printArea").innerHTML + "</body>";
-        //$("#printArea").jqprint();
-        LODOP=getLodop();
-        LODOP.PRINT_INIT(); // 打印初始化
-        LODOP.SET_PRINT_PAGESIZE(1,800,820*printA,"");  // 设置纸张大小,纸张高度最大32500
-        LODOP.ADD_PRINT_HTM(0,40,'100%','100%',textHtml); // 设置打印内容
-        LODOP.PREVIEW();
-    }
+
 </script>

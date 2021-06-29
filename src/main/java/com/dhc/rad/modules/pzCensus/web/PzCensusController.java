@@ -42,6 +42,8 @@ public class PzCensusController extends BaseController {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String eatDate = sdf.format(new Date());
         pzCensus.setEatDate(eatDate);
+        model.addAttribute("officeId", UserUtils.getUser().getOffice().getId());
+        model.addAttribute("roleFlag", !(UserUtils.getRoleFlag("admin") || UserUtils.getRoleFlag("admins")));
         return "modules/pzCensus/pzServiceUnitCensus";
     }
 

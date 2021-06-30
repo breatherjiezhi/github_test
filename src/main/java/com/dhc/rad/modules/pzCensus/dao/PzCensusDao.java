@@ -15,13 +15,19 @@ public interface PzCensusDao extends CrudDao<PzCensus> {
 
     List<PzCensus> findCensusSum(PzCensus pzCensus);
 
+    List<String> findEatDate(@Param("beginDate") String beginDate, @Param("endDate") String endDate);
+
+
+    //按人员统计查询
     List<Map<String, Object>> selectUserCensus(@Param("restaurantId") String restaurantId, @Param("officeId") String officeId,
                                                @Param("beginDate") String beginDate, @Param("endDate") String endDate,
                                                @Param("pageNo") Integer pageNo, @Param("pageSize") Integer pageSize);
 
 
-
-    List<String> findEatDate(@Param("beginDate") String beginDate, @Param("endDate") String endDate);
+    //按部门结算查询
+    List<Map<String, Object>> selectDeptCensus(@Param("restaurantId") String restaurantId, @Param("officeId") String officeId,
+                                               @Param("beginDate") String beginDate, @Param("endDate") String endDate,
+                                               @Param("pageNo") Integer pageNo, @Param("pageSize") Integer pageSize);
 
 
 }

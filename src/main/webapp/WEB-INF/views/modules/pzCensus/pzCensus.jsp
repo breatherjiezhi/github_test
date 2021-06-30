@@ -47,7 +47,11 @@
                                     </button>
                                     <button class="btn btn-info btn-sm" type="button" style="color: orange !important;border-color: orange" onclick="download();" >
                                         <i class="fa fa-search" aria-hidden="true" style="margin-right: 5px"></i>
-                                        <span data-locale='export'>导出execl</span>
+                                        <span data-locale='export'>导出统计execl</span>
+                                    </button>
+                                    <button class="btn btn-info btn-sm" type="button" style="color: orange !important;border-color: orange" onclick="downloadDept();" >
+                                        <i class="fa fa-search" aria-hidden="true" style="margin-right: 5px"></i>
+                                        <span data-locale='export'>导出结算execl</span>
                                     </button>
                                     <shiro:hasPermission name="batch:user:order">
                                     <button class="btn btn-info btn-sm" type="button" style="color: orange !important;border-color: orange" onclick="batchUserOrder();" >
@@ -257,6 +261,13 @@
         window.location.href="${ctx}/pzCensus/downUserCensus?beginDate="+beginDate+"&endDate="+endDate;
     }
 
+
+    function downloadDept() {
+        var beginDate = $("#beginDate").val();
+        var endDate = $("#endDate").val();
+        $("#query").click();
+        window.location.href="${ctx}/pzCensus/downDeptCensus?beginDate="+beginDate+"&endDate="+endDate;
+    }
 
 
     function batchUserOrder() {

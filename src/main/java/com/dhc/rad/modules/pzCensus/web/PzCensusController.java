@@ -193,7 +193,7 @@ public class PzCensusController extends BaseController {
 
 
     @RequestMapping(value = {"downUserCensus"})
-    public String findUserCensus(PzCensus pzCensus, HttpServletResponse response, RedirectAttributes redirectAttributes) throws Exception {
+    public String downUserCensus(PzCensus pzCensus, HttpServletResponse response, RedirectAttributes redirectAttributes) throws Exception {
         Map<String, Object> returnMap = new HashMap<>();
 
         String officeId = pzCensus.getServiceUnitId();
@@ -221,7 +221,10 @@ public class PzCensusController extends BaseController {
 
 
         try {
-            String fileName = "订餐统计汇总.xlsx";
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+            String nowDate = sdf.format(new Date());
+
+            String fileName = "订餐统计汇总"+nowDate+".xlsx";
             title+=beginDate+"至"+endDate+"订餐统计";
 
             //表格获取列数据使用key值
@@ -254,6 +257,64 @@ public class PzCensusController extends BaseController {
         return null;
     }
 
+
+
+    @RequestMapping(value = {"downDeptCensus"})
+    public String downDeptCensus(PzCensus pzCensus, HttpServletResponse response, RedirectAttributes redirectAttributes) throws Exception {
+        Map<String, Object> returnMap = new HashMap<>();
+
+        String officeId = pzCensus.getServiceUnitId();
+        String beginDate = pzCensus.getBeginDate();
+        String endDate = pzCensus.getEndDate();
+
+        String restaurantId = null;
+
+        String title = "";
+
+        if(StringUtils.isNotBlank(officeId)){
+            String officeName =  officeService.get(officeId) !=null ? officeService.get(officeId).getName():"";
+            title+=officeName+"_";
+        }
+
+
+
+        if(!(UserUtils.getRoleFlag("admin")||UserUtils.getRoleFlag("admins"))){
+            restaurantId = UserUtils.getUser().getOffice().getId();
+            String  restaurantName = officeService.get(restaurantId) !=null ? officeService.get(restaurantId).getName():"";
+            title+=restaurantName+"_";
+        }
+
+        List<String> eadDateList = pzCensusService.findEatDate(beginDate,endDate);
+
+
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+            String nowDate = sdf.format(new Date());
+
+            String fileName = "订餐结算汇总"+nowDate+".xlsx";
+            title+=beginDate+"至"+endDate+"订餐结算统计";
+
+            //表格获取列数据使用key值
+            List<String> headerKeyList = new ArrayList<>();
+
+            //表格列头名称
+            List<String> headerList = new ArrayList<>();
+            headerList.add("部门名称");
+            headerKeyList.add("serviceUnitName");
+            headerList.add("餐饮公司");
+            headerKeyList.add("restaurantName");
+            for (String eatDate : eadDateList) {
+                headerList.add(eatDate);
+                headerKeyList.add(eatDate);
+            }
+            List<Map<String,Object>> list = pzCensusService.findDeptCensusPage(restaurantId,officeId,beginDate,endDate,null,null);
+            new ExportExcel(title,headerList).setMapDataList(list,headerKeyList).write(response, fileName).dispose();
+            return null;
+        } catch (Exception e) {
+            addMessage(redirectAttributes, "导入模板下载失败！失败信息：" + e.getMessage());
+        }
+        return null;
+    }
 
 
 }

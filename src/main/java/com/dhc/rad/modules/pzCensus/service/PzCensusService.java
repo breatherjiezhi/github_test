@@ -59,7 +59,7 @@ public class PzCensusService extends CrudService<PzCensusDao, PzCensus> {
 
 
     /**
-     *
+     * 按人员统计查询
      * @param restaurantId
      * @param officeId
      * @param beginDate
@@ -72,6 +72,24 @@ public class PzCensusService extends CrudService<PzCensusDao, PzCensus> {
                                                       String beginDate,String endDate,
                                                       Integer pageNo,Integer pageSize){
         return   pzCensusDao.selectUserCensus(restaurantId,officeId,beginDate,endDate,pageNo,pageSize);
+    }
+
+
+
+    /**
+     * 按人员统计查询
+     * @param restaurantId
+     * @param officeId
+     * @param beginDate
+     * @param endDate
+     * @param pageNo
+     * @param pageSize
+     * @return
+     */
+    public List<Map<String,Object>> findDeptCensusPage(String restaurantId,String officeId,
+                                                       String beginDate,String endDate,
+                                                       Integer pageNo,Integer pageSize){
+        return   pzCensusDao.selectDeptCensus(restaurantId,officeId,beginDate,endDate,pageNo,pageSize);
     }
 
     /**

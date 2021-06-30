@@ -203,18 +203,19 @@ public class PzCensusController extends BaseController {
         String restaurantId = null;
 
         String title = "";
+        String fileName ="";
 
         if(StringUtils.isNotBlank(officeId)){
             String officeName =  officeService.get(officeId) !=null ? officeService.get(officeId).getName():"";
             title+=officeName+"_";
+            fileName+=officeName+"_";
         }
-
-
 
         if(!(UserUtils.getRoleFlag("admin")||UserUtils.getRoleFlag("admins"))){
             restaurantId = UserUtils.getUser().getOffice().getId();
             String  restaurantName = officeService.get(restaurantId) !=null ? officeService.get(restaurantId).getName():"";
             title+=restaurantName+"_";
+            fileName+=restaurantName+"_";
         }
 
         List<String> eadDateList = pzCensusService.findEatDate(beginDate,endDate);
@@ -224,7 +225,7 @@ public class PzCensusController extends BaseController {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
             String nowDate = sdf.format(new Date());
 
-            String fileName = "订餐统计汇总"+nowDate+".xlsx";
+            fileName += beginDate+"至"+endDate+"订餐统计汇总"+nowDate+".xlsx";
             title+=beginDate+"至"+endDate+"订餐统计";
 
             //表格获取列数据使用key值
@@ -252,7 +253,7 @@ public class PzCensusController extends BaseController {
             new ExportExcel(title,headerList).setMapDataList(list,headerKeyList).write(response, fileName).dispose();
             return null;
         } catch (Exception e) {
-            addMessage(redirectAttributes, "导入模板下载失败！失败信息：" + e.getMessage());
+            addMessage(redirectAttributes, "下载失败！失败信息：" + e.getMessage());
         }
         return null;
     }
@@ -270,18 +271,20 @@ public class PzCensusController extends BaseController {
         String restaurantId = null;
 
         String title = "";
+        String fileName ="";
 
         if(StringUtils.isNotBlank(officeId)){
             String officeName =  officeService.get(officeId) !=null ? officeService.get(officeId).getName():"";
             title+=officeName+"_";
+            fileName+=officeName+"_";
         }
-
 
 
         if(!(UserUtils.getRoleFlag("admin")||UserUtils.getRoleFlag("admins"))){
             restaurantId = UserUtils.getUser().getOffice().getId();
             String  restaurantName = officeService.get(restaurantId) !=null ? officeService.get(restaurantId).getName():"";
             title+=restaurantName+"_";
+            fileName+=restaurantName+"_";
         }
 
         List<String> eadDateList = pzCensusService.findEatDate(beginDate,endDate);
@@ -291,7 +294,7 @@ public class PzCensusController extends BaseController {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
             String nowDate = sdf.format(new Date());
 
-            String fileName = "订餐结算汇总"+nowDate+".xlsx";
+            fileName += beginDate+"至"+endDate+"订餐结算汇总"+nowDate+".xlsx";
             title+=beginDate+"至"+endDate+"订餐结算统计";
 
             //表格获取列数据使用key值
@@ -311,7 +314,7 @@ public class PzCensusController extends BaseController {
             new ExportExcel(title,headerList).setMapDataList(list,headerKeyList).write(response, fileName).dispose();
             return null;
         } catch (Exception e) {
-            addMessage(redirectAttributes, "导入模板下载失败！失败信息：" + e.getMessage());
+            addMessage(redirectAttributes, "下载失败！失败信息：" + e.getMessage());
         }
         return null;
     }

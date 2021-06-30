@@ -150,7 +150,7 @@
 
 
     <select id="findEatDate" statementType="CALLABLE" resultType="java.lang.String">
-        SELECT DISTINCT EAT_DATE from pz_menu_content where EAT_DATE&gt;=#{beginDate} AND EAT_DATE&lt;=#{endDate}
+        SELECT DISTINCT EAT_DATE from pz_census where EAT_DATE&gt;=#{beginDate} AND EAT_DATE&lt;=#{endDate}
     </select>
 
 

@@ -279,7 +279,7 @@ public class WxOrderController extends BaseController {
             pzScoreLog.setScoreDescription(description);
 
             //订餐：新增订单信息 新增用户积分记录信息 更新用户积分(sys_user)
-            Integer flag = wxOrderService.orderMenu(pzMenu, pzOrder, contentIds, user, pzScoreLog);
+            Integer flag = wxOrderService.orderMenu(pzOrder, contentIds, user, pzScoreLog);
 
             if (flag > 0) {
                 returnMap.put("consumeIntegral", couponCount.toString());
@@ -908,7 +908,7 @@ public class WxOrderController extends BaseController {
                     String description = "管理员批量订餐-" + user.getId() + "-" + user.getLoginName() + "：" + pzScoreLog.getScoreChange() + "积分";
                     pzScoreLog.setScoreDescription(description);
                     //订餐：新增订单信息 新增用户积分记录信息 更新用户积分(sys_user)
-                    wxOrderService.orderMenu(pzMenu2, pzOrder, contentIds, user, pzScoreLog);
+                    wxOrderService.orderMenu(pzOrder, contentIds, user, pzScoreLog);
                 }
             } finally {
                 // 是否还是锁定状态

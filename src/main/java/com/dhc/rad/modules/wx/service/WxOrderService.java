@@ -69,7 +69,7 @@ public class WxOrderService extends CrudService<PzMenuDao, PzMenu> {
      * @Date: 2021/4/28
      */
     @Transactional
-    public Integer orderMenu(PzMenu pzMenu, PzOrder pzOrder, List<String> contentIds, User currentUser, PzScoreLog pzScoreLog) {
+    public Integer orderMenu(PzOrder pzOrder, List<String> contentIds, User currentUser, PzScoreLog pzScoreLog) {
 
 
         //新增订单
@@ -77,7 +77,6 @@ public class WxOrderService extends CrudService<PzMenuDao, PzMenu> {
 
         //订单更新人始终是用户自己,创建人可以是管理员(管理员批量点餐)
         pzOrder.setUpdateBy(currentUser);
-
         Integer insertOrder = pzOrderDao.insert(pzOrder);
 
         //扣除积分

@@ -94,6 +94,16 @@ public class SystemService extends BaseService implements InitializingBean {
 	public User getUserByLoginName(String loginName) {
 		return UserUtils.getByLoginName(loginName);
 	}
+
+
+	/**
+	 * 根据登录名获取用户
+	 * @param loginName
+	 * @return
+	 */
+	public User getUserByLoginNameDB(String loginName) {
+		return UserUtils.getByLoginNameDB(loginName);
+	}
 	
 	/**
 	 * 根据卡号获取用户

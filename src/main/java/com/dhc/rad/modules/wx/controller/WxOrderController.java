@@ -5,7 +5,6 @@ import com.dhc.rad.common.utils.ConstantUtils;
 import com.dhc.rad.common.utils.StringUtils;
 import com.dhc.rad.common.utils.TimeUtils;
 import com.dhc.rad.common.web.BaseController;
-import com.dhc.rad.modbus.entity.func.Util;
 import com.dhc.rad.modules.pzMenu.entity.PzMenu;
 import com.dhc.rad.modules.pzMenu.service.PzMenuService;
 import com.dhc.rad.modules.pzMenuContent.entity.PzMenuContent;
@@ -17,10 +16,8 @@ import com.dhc.rad.modules.pzOrderContent.service.PzOrderContentService;
 import com.dhc.rad.modules.pzScoreLog.entity.PzScoreLog;
 import com.dhc.rad.modules.pzUserScore.entity.PzUserScore;
 import com.dhc.rad.modules.pzUserScore.service.PzUserScoreService;
-import com.dhc.rad.modules.sys.entity.ConfigInfo;
 import com.dhc.rad.modules.sys.entity.Office;
 import com.dhc.rad.modules.sys.entity.User;
-import com.dhc.rad.modules.sys.service.ConfigInfoService;
 import com.dhc.rad.modules.sys.service.OfficeService;
 import com.dhc.rad.modules.sys.service.SystemService;
 import com.dhc.rad.modules.sys.utils.ConfigInfoUtils;
@@ -37,10 +34,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.math.BigDecimal;
-import java.sql.Time;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
@@ -279,7 +276,7 @@ public class WxOrderController extends BaseController {
             pzScoreLog.setScoreDescription(description);
 
             //订餐：新增订单信息 新增用户积分记录信息 更新用户积分(sys_user)
-            Integer flag = wxOrderService.orderMenu(pzOrder, contentIds, user, pzScoreLog);
+            Integer flag = wxOrderService.orderMenu(pzOrder, contentIds, user, pzScoreLog,false);
 
             if (flag > 0) {
                 returnMap.put("consumeIntegral", couponCount.toString());
@@ -908,7 +905,20 @@ public class WxOrderController extends BaseController {
                     String description = "管理员批量订餐-" + user.getId() + "-" + user.getLoginName() + "：" + pzScoreLog.getScoreChange() + "积分";
                     pzScoreLog.setScoreDescription(description);
                     //订餐：新增订单信息 新增用户积分记录信息 更新用户积分(sys_user)
-                    wxOrderService.orderMenu(pzOrder, contentIds, user, pzScoreLog);
+                    //判断最近一次点餐是否全为不吃
+                    String id = orderList.get(0).getId();
+                    PzOrderContent condition = new PzOrderContent();
+                    condition.setOrderId(id);
+                    List<PzOrderContent> conditionList = pzOrderContentService.findList(condition);
+                    Boolean flag = true;
+                    for (PzOrderContent pzOrderContent : conditionList) {
+                        if(pzOrderContent.getEatFlag() == 1){
+                            flag = false;
+                            break;
+                        }
+                    }
+
+                    wxOrderService.orderMenu(pzOrder, contentIds, user, pzScoreLog, flag);
                 }
             } finally {
                 // 是否还是锁定状态

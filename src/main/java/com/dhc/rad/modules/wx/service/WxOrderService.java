@@ -20,7 +20,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -64,28 +63,51 @@ public class WxOrderService extends CrudService<PzMenuDao, PzMenu> {
 
     /**
      * @Description: 订餐功能
-     * @Param: menuId:套餐编号 remainMenuCount:剩余套餐数量 pzOrder:订单实体 user:用户实体 pzScoreLog:积分记录实体
+     * @Param: menuId:套餐编号 remainMenuCount:剩余套餐数量 pzOrder:订单实体 user:用户实体 pzScoreLog:积分记录实体 flag:判断用户默认是否都不吃的标识
      * @return: Integer
      * @Date: 2021/4/28
      */
     @Transactional
-    public Integer orderMenu(PzOrder pzOrder, List<String> contentIds, User currentUser, PzScoreLog pzScoreLog) {
+    public Integer orderMenu(PzOrder pzOrder, List<String> contentIds, User currentUser, PzScoreLog pzScoreLog, boolean flag) {
 
 
         //新增订单
         pzOrder.preInsert();
-
+        //eatFlag为false时即全为不吃时，将pz_order_content中eat_flag置为0， 积分进行返还，并进行记录
+        //pz_order中no_eat_date
+        if(flag){
+          pzOrder.setNoEatDate(pzOrder.getEatDate());
+        }
         //订单更新人始终是用户自己,创建人可以是管理员(管理员批量点餐)
         pzOrder.setUpdateBy(currentUser);
         Integer insertOrder = pzOrderDao.insert(pzOrder);
 
-        //扣除积分
+        //扣除餐券
         currentUser.preUpdate();
         Integer updateIntegral = userDao.updateIntegral(currentUser);
 
         //新增记录
         pzScoreLog.preInsert();
         int logInsert = pzScoreLogDao.insert(pzScoreLog);
+
+        //新增个人餐厅积分，新增积分转换记录
+        if(flag){
+            PzUserScore userScore = new PzUserScore();
+            userScore.setUserId(pzOrder.getUserId());
+            userScore.setRestaurantId(pzOrder.getRestaurantId());
+            userScore.setCanteenIntegral(pzOrder.getMenuIntegral());
+
+            userScore.preInsert();
+            pzUserScoreDao.insert(userScore);
+
+            //新增积分转换记录
+            pzScoreLog.setId(null);
+            pzScoreLog.setScoreType(2);
+            pzScoreLog.setScoreClassify(1);
+            pzScoreLog.setScoreChange("+" + pzOrder.getMenuIntegral());
+            pzScoreLog.preInsert();
+            pzScoreLogDao.insert(pzScoreLog);
+        }
 
         //更新套餐余量和生成订单详情
         Integer result = 0;
@@ -95,6 +117,12 @@ public class WxOrderService extends CrudService<PzMenuDao, PzMenu> {
             PzOrderContent pzOrderContent = new PzOrderContent();
             pzOrderContent.setContentId(contentId);
             pzOrderContent.setOrderId(pzOrder.getId());
+
+            //将pz_order_content中eat_flag置为0
+            if(flag){
+               pzOrderContent.setEatFlag(0);
+            }
+
             //套餐限量，需要更新套餐余量
             PzMenuContent pzMenuContent = pzMenuContentDao.get(contentId);
             if("1".equals(pzMenuContent.getMenuLimited())){

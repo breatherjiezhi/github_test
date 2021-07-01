@@ -97,7 +97,7 @@ public class SystemService extends BaseService implements InitializingBean {
 
 
 	/**
-	 * 根据登录名获取用户
+	 * 根据登录名获取用户(数据库查询)
 	 * @param loginName
 	 * @return
 	 */

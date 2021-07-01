@@ -10,6 +10,7 @@ import java.util.Map;
 
 //import com.dhc.rad.pbd.pbdproject.dao.PbdProjectDao;
 //import com.dhc.rad.pbd.pbdproject.entity.PbdProject;
+import com.dhc.rad.modules.wx.utils.RedissonUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.UnavailableSecurityManagerException;
 import org.apache.shiro.session.InvalidSessionException;
@@ -31,6 +32,8 @@ import com.dhc.rad.modules.sys.entity.Role;
 import com.dhc.rad.modules.sys.entity.User;
 import com.dhc.rad.modules.sys.security.SystemAuthorizingRealm.Principal;
 import com.google.common.collect.Lists;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 
 /**
  * 用户工具类
@@ -59,7 +62,7 @@ public class UserUtils {
     public static final String CACHE_OFFICE_LIST = "officeList";
     public static final String CACHE_OFFICE_ALL_LIST = "officeAllList";
 
-
+    private static final RedissonClient redissonClient = RedissonUtils.getRedissonClient(0);
     /**
      * 获取当前用户所分配的项目以及组织
      */
@@ -134,14 +137,28 @@ public class UserUtils {
      * @return 取不到返回null
      */
     public static User getByLoginNameDB(String loginName) {
-        User user = userDao.getByLoginName(new User(null, loginName));
-        if (user == null) {
-            return null;
+        //设置锁定资源名称
+        RLock lock = redissonClient.getLock("getUserLock");
+        try {
+            lock.lock();
+
+            User user = userDao.getByLoginName(new User(null, loginName));
+            if (user == null) {
+                return null;
+            }
+            user.setRoleList(roleDao.findList(new Role(user)));
+            CacheUtils.put(USER_CACHE, USER_CACHE_ID_ + user.getId(), user);
+            CacheUtils.put(USER_CACHE, USER_CACHE_LOGIN_NAME_ + user.getLoginName(), user);
+            return user;
+        } finally {
+            // 是否还是锁定状态
+            if (lock.isLocked()) {
+                // 是否是当前执行线程的锁
+                if (lock.isHeldByCurrentThread()) {
+                    lock.unlock(); // 释放锁
+                }
+            }
         }
-        user.setRoleList(roleDao.findList(new Role(user)));
-        CacheUtils.put(USER_CACHE, USER_CACHE_ID_ + user.getId(), user);
-        CacheUtils.put(USER_CACHE, USER_CACHE_LOGIN_NAME_ + user.getLoginName(), user);
-        return user;
     }
 
 

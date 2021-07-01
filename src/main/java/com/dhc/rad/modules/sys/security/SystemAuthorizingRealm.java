@@ -50,7 +50,6 @@ public class SystemAuthorizingRealm extends AuthorizingRealm {
 
     private SystemService systemService;
 
-    private static final RedissonClient redissonClient = RedissonUtils.getRedissonClient(0);
 
     /**
      * 认证回调函数, 登录时调用
@@ -58,10 +57,7 @@ public class SystemAuthorizingRealm extends AuthorizingRealm {
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authcToken) {
 
-        //设置锁定资源名称
-        RLock lock = redissonClient.getLock("getUserLock");
-        try {
-            lock.lock();
+
 
             UsernamePasswordToken token = (UsernamePasswordToken) authcToken;
 
@@ -121,15 +117,6 @@ public class SystemAuthorizingRealm extends AuthorizingRealm {
                     return null;
                 }
             }
-        } finally {
-            // 是否还是锁定状态
-            if (lock.isLocked()) {
-                // 是否是当前执行线程的锁
-                if (lock.isHeldByCurrentThread()) {
-                    lock.unlock(); // 释放锁
-                }
-            }
-        }
 
     }
 

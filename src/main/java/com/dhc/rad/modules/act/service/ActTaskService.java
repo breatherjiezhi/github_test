@@ -241,7 +241,7 @@ public class ActTaskService extends BaseService {
 //					List<HistoricIdentityLink> il = historyService.getHistoricIdentityLinksForProcessInstance(procInsId);
 					if (il.size() > 0){
 						if (StringUtils.isNotBlank(il.get(0).getStartUserId())){
-							User user = UserUtils.getByLoginName(il.get(0).getStartUserId());
+							User user = UserUtils.getByLoginNameDB(il.get(0).getStartUserId());
 							if (user != null){
 								e.setAssignee(histIns.getAssignee());
 								e.setAssigneeName(user.getName());
@@ -251,7 +251,7 @@ public class ActTaskService extends BaseService {
 				}
 				// 获取任务执行人名称
 				if (StringUtils.isNotEmpty(histIns.getAssignee())){
-					User user = UserUtils.getByLoginName(histIns.getAssignee());
+					User user = UserUtils.getByLoginNameDB(histIns.getAssignee());
 					if (user != null){
 						e.setAssignee(histIns.getAssignee());
 						e.setAssigneeName(user.getName());

@@ -57,8 +57,6 @@ public class SystemAuthorizingRealm extends AuthorizingRealm {
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authcToken) {
 
-
-
             UsernamePasswordToken token = (UsernamePasswordToken) authcToken;
 
             int activeSessionSize = getSystemService().getSessionDao().getActiveSessions(false).size();
@@ -80,7 +78,7 @@ public class SystemAuthorizingRealm extends AuthorizingRealm {
             // 校验用户名密码
             if ("".equals(token.getCardID()) || token.getCardID() == null) {
                 // 用户名密码登录
-                User user = getSystemService().getUserByLoginNameDB(token.getUsername());
+                User user = getSystemService().getUserByLoginName(token.getUsername());
                 if (user != null) {
                     boolean isOK = SystemService.validatePassword(String.valueOf(token.getPassword()), user.getPassword());
                     if (!isOK) {

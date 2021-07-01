@@ -116,19 +116,19 @@ public class UserUtils {
      * @param loginName
      * @return 取不到返回null
      */
-    public static User getByLoginName(String loginName) {
-        User user = (User) CacheUtils.get(USER_CACHE, USER_CACHE_LOGIN_NAME_ + loginName);
-        if (user == null) {
-            user = userDao.getByLoginName(new User(null, loginName));
-            if (user == null) {
-                return null;
-            }
-            user.setRoleList(roleDao.findList(new Role(user)));
-            CacheUtils.put(USER_CACHE, USER_CACHE_ID_ + user.getId(), user);
-            CacheUtils.put(USER_CACHE, USER_CACHE_LOGIN_NAME_ + user.getLoginName(), user);
-        }
-        return user;
-    }
+//    public static User getByLoginName(String loginName) {
+//        User user = (User) CacheUtils.get(USER_CACHE, USER_CACHE_LOGIN_NAME_ + loginName);
+//        if (user == null) {
+//            user = userDao.getByLoginName(new User(null, loginName));
+//            if (user == null) {
+//                return null;
+//            }
+//            user.setRoleList(roleDao.findList(new Role(user)));
+//            CacheUtils.put(USER_CACHE, USER_CACHE_ID_ + user.getId(), user);
+//            CacheUtils.put(USER_CACHE, USER_CACHE_LOGIN_NAME_ + user.getLoginName(), user);
+//        }
+//        return user;
+//    }
 
     /**
      * 根据登录名获取用户(数据库获取)

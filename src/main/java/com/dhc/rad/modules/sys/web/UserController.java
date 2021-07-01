@@ -536,7 +536,7 @@ public class UserController extends BaseController {
     @RequestMapping(value = "checkLoginNameAjax")
     public Map<String, Object> checkLoginNameAjax(String loginName, String id) {
         Map<String, Object> map = new HashMap<String, Object>();
-        User user = systemService.getUserByLoginNameDB(loginName);
+        User user = systemService.getUserByLoginName(loginName);
         if (user == null) {
             map.put("valid", true);
         } else if (id != null && !id.equals("")) {

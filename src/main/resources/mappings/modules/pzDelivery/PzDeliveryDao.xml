@@ -206,8 +206,6 @@
         FROM pz_delivery a
         WHERE eat_date = #{eatDate} and  restaurant_id = #{restaurantId} and service_unit_id = #{serviceUnitId}  and del_flag ='0' order by CREATE_DATE desc limit 1
     </select>
-
-
     <select id="findInfoByAreaId" resultType="map">
 SELECT
   DISTINCT sa.ID,
@@ -222,7 +220,7 @@ FROM
   LEFT JOIN sys_area sa ON so.AREA_ID = sa.id
   LEFT JOIN pz_box_code pbc ON pbc.id = pd.box_id
 WHERE
-  pd.del_flag = '0' AND sa.ID = #{areaId} AND pd.RESTAURANT_ID =#{restaurantId}
+  pd.del_flag = '0' AND sa.ID = #{areaId} AND pd.RESTAURANT_ID =#{restaurantId} and pd.EAT_DATE=#{eatDate}
   AND pbc.BOX_CODE IS NOT NULL
 </select>
 

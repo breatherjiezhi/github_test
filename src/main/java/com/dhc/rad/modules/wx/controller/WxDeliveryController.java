@@ -265,7 +265,10 @@ public class WxDeliveryController {
         //根据登录用户获取officeId
         String restaurantId = UserUtils.getUser().getOffice().getId();
 
-        List<Map<String, Object>> mapList = pzDeliveryService.findInfoByAreaId(areaId, restaurantId);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String nowDate = sdf.format(new Date());
+
+        List<Map<String, Object>> mapList = pzDeliveryService.findInfoByAreaId(areaId, restaurantId,nowDate);
 
         if (mapList.size() != 0) {
             returnMap.put("data", mapList);

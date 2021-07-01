@@ -27,5 +27,5 @@ public interface PzDeliveryDao extends CrudDao<PzDelivery> {
 
     PzDelivery getDelivery(PzDelivery pzDelivery);
 
-    List<Map<String,Object>> findInfoByAreaId(@Param("areaId") String areaId, @Param("restaurantId") String restaurantId);
+    List<Map<String,Object>> findInfoByAreaId(@Param("areaId") String areaId, @Param("restaurantId") String restaurantId,@Param("eatDate")String eatDate);
 }

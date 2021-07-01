@@ -71,7 +71,8 @@ public class PzDeliveryService extends CrudService<PzDeliveryDao, PzDelivery> {
         return pzDeliveryDao.deleteByIds(ids);
     }
 
-    public List<Map<String,Object>> findInfoByAreaId(String areaId,String restaurantId){
-        return pzDeliveryDao.findInfoByAreaId(areaId,restaurantId);
+    public List<Map<String,Object>> findInfoByAreaId(String areaId,String restaurantId,String eatDate){
+
+        return pzDeliveryDao.findInfoByAreaId(areaId,restaurantId,eatDate);
     }
 }

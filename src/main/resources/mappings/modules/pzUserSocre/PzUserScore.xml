@@ -123,10 +123,10 @@
         </set>
         WHERE  id = #{id} and del_flag ='0'
     </update>
-    <update id="updateUserScore" parameterType="com.dhc.rad.modules.pzUserScore.entity.PzUserScore">
+    <update id="subtractScoreByRestaurantIdAndUserId" parameterType="com.dhc.rad.modules.pzUserScore.entity.PzUserScore">
         UPDATE pz_user_score
         <set>
-            <if test ="null != canteenIntegral">  canteen_integral = #{canteenIntegral},</if>
+            <if test ="null != canteenIntegral">  canteen_integral = canteen_integral - #{canteenIntegral},</if>
             <if test ="null != createBy and ''!= createBy">  CREATE_BY = #{createBy.id},</if>
             <if test ="null != updateBy and ''!= updateBy">  UPDATE_BY = #{updateBy.id},</if>
             <if test ="null != createDate and ''!= createDate">  CREATE_DATE = #{createDate},</if>
@@ -134,9 +134,19 @@
             <if test ="null != remarks and ''!= remarks">  remarks = #{remarks}</if>
         </set>
         WHERE  restaurant_id = #{restaurantId} and  user_id= #{userId} and del_flag ='0'
-
     </update>
-
+    <update id="addScoreByRestaurantIdAndUserId" parameterType="com.dhc.rad.modules.pzUserScore.entity.PzUserScore">
+        UPDATE pz_user_score
+        <set>
+            <if test ="null != canteenIntegral">  canteen_integral = canteen_integral + #{canteenIntegral},</if>
+            <if test ="null != createBy and ''!= createBy">  CREATE_BY = #{createBy.id},</if>
+            <if test ="null != updateBy and ''!= updateBy">  UPDATE_BY = #{updateBy.id},</if>
+            <if test ="null != createDate and ''!= createDate">  CREATE_DATE = #{createDate},</if>
+            <if test ="null != updateDate and ''!= updateDate">  UPDATE_DATE = #{updateDate},</if>
+            <if test ="null != remarks and ''!= remarks">  remarks = #{remarks}</if>
+        </set>
+        WHERE  restaurant_id = #{restaurantId} and  user_id= #{userId} and del_flag ='0'
+    </update>
 
     <select id="findList" resultMap="BaseResultMap">
         SELECT
@@ -192,7 +202,7 @@
     <update id="updateCanteenIntegral">
        update pz_user_score
        set canteen_integral = canteen_integral - #{canteenIntegral}
-       WHERE  restaurant_id = #{restaurantId} and  user_id= #{userId} and del_flag ='0'
+       WHERE  restaura1nt_id = #{restaurantId} and  user_id= #{userId} and del_flag ='0'
     </update>
 
 

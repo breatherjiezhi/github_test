@@ -1,6 +1,7 @@
 package com.dhc.rad.modules.wx.service;
 
 import com.dhc.rad.common.service.CrudService;
+import com.dhc.rad.common.utils.ObjectUtils;
 import com.dhc.rad.modules.pzMenu.dao.PzMenuDao;
 import com.dhc.rad.modules.pzMenu.entity.PzMenu;
 import com.dhc.rad.modules.pzMenuContent.dao.PzMenuContentDao;
@@ -98,7 +99,7 @@ public class WxOrderService extends CrudService<PzMenuDao, PzMenu> {
             userScore.setCanteenIntegral(pzOrder.getMenuIntegral());
 
             userScore.preInsert();
-            pzUserScoreDao.insert(userScore);
+            pzUserScoreDao.addScoreByRestaurantIdAndUserId(userScore);
 
             //新增积分转换记录
             pzScoreLog.setId(null);
@@ -154,12 +155,12 @@ public class WxOrderService extends CrudService<PzMenuDao, PzMenu> {
     public Integer saveOrUpdate(PzOrder pzOrder, PzScoreLog pzScoreLog, PzUserScore pzUserScore, PzOrderContent pzOrderContent) {
         //新增/更新个人餐厅积分信息
         Integer updateUserScore = null;
-        if (pzUserScore.getId() == null) {
+        if (ObjectUtils.isEmpty(pzUserScoreDao.getByUserIdAndRestaurantId(pzUserScore.getUserId(),pzUserScore.getRestaurantId()))) {
             pzUserScore.preInsert();
             updateUserScore = pzUserScoreDao.insert(pzUserScore);
         } else {
             pzUserScore.preUpdate();
-            updateUserScore = pzUserScoreDao.updateUserScore(pzUserScore);
+            updateUserScore = pzUserScoreDao.addScoreByRestaurantIdAndUserId(pzUserScore);
         }
         //修改订单数据
         pzOrder.preUpdate();
@@ -175,11 +176,12 @@ public class WxOrderService extends CrudService<PzMenuDao, PzMenu> {
         return (updateUserScore > 0 && update > 0 && insert > 0 && updateOrderContent > 0) ? 1 : 0;
     }
 
+    //订餐改为吃
     @Transactional
     public Integer updateData(PzUserScore pzUserScore, PzScoreLog pzScoreLog, PzOrder pzOrder, PzOrderContent pzOrderContent) {
         //更新pzUserScore
         pzUserScore.preUpdate();
-        Integer updateUserScore = pzUserScoreDao.updateUserScore(pzUserScore);
+        Integer updateUserScore = pzUserScoreDao.subtractScoreByRestaurantIdAndUserId(pzUserScore);
         //新增pzScoreLog
         pzScoreLog.preInsert();
         int insertLog = pzScoreLogDao.insert(pzScoreLog);

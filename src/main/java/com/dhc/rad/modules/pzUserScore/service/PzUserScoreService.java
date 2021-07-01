@@ -24,7 +24,7 @@ public class PzUserScoreService extends CrudService<PzUserScoreDao, PzUserScore>
     @Transactional(readOnly = false)
     public Integer saveOrUpdate(PzUserScore pzUserScore) {
         if(ObjectUtils.isNotEmpty(pzUserScore)){
-            if(StringUtils.isNotBlank(pzUserScore.getId())){
+            if(ObjectUtils.isNotEmpty(pzUserScoreDao.getByUserIdAndRestaurantId(pzUserScore.getUserId(),pzUserScore.getRestaurantId()))){
                 pzUserScore.preUpdate();
                 return pzUserScoreDao.update(pzUserScore);
             }else{

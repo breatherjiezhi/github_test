@@ -53,7 +53,7 @@
             <if test="null != contentId and ''!= contentId">
                 content_id,
             </if>
-            <if test="null != eatFlag and ''!= eatFlag">
+            <if test="null!= eatFlag">
                 eat_flag,
             </if>
             <if test="null != createBy and ''!= createBy">
@@ -85,7 +85,7 @@
             <if test="null != contentId and ''!= contentId">
                 #{contentId},
             </if>
-            <if test="null != eatFlag and ''!= eatFlag">
+            <if test="null != eatFlag">
                 #{eatFlag},
             </if>
             <if test="null != createBy and ''!= createBy">
@@ -141,7 +141,7 @@
         WHERE del_flag ='0'
         <if test="null != orderId and ''!= orderId">AND order_id = #{orderId}</if>
         <if test="null != contentId and ''!= contentId">AND content_id = #{contentId}</if>
-        <if test="null != eatFlag and ''!= eatFlag">AND eat_flag = #{eatFlag}</if>
+        <if test="null!= eatFlag">AND eat_flag = #{eatFlag}</if>
         <if test="null != updateBy and ''!= updateBy">AND UPDATE_BY = #{updateBy.id}</if>
         <if test="null != createDate and ''!= createDate">AND CREATE_DATE = #{createDate}</if>
         <if test="null != updateDate and ''!= updateDate">AND UPDATE_DATE = #{updateDate}</if>
@@ -202,7 +202,7 @@ WHERE
         WHERE poc.del_flag = '0'
         <if test="null != orderId and ''!= orderId">AND poc.order_id = #{orderId}</if>
         <if test="null != userId and ''!= userId">AND (poc.CREATE_BY = #{userId} or po.user_id=#{userId})</if>
-        <if test="null != eatFlag and ''!= eatFlag">AND poc.eat_flag = #{eatFlag}</if>
+        <if test="null!= eatFlag">AND poc.eat_flag = #{eatFlag}</if>
     </select>
 
 

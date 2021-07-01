@@ -228,9 +228,9 @@ public class WxOrderController extends BaseController {
                     Integer compare = remainMenuContentDecimal.compareTo(BigDecimal.ZERO);
                     if (compare < 0) {
                         PzMenu pzMenu = pzMenuService.get(pzMenuContent.getMenuId());
-                        if(StringUtils.isNotBlank(message)){
+                        if (StringUtils.isNotBlank(message)) {
                             message.append(",").append(pzMenuContent.getEatWeek()).append(pzMenu.getMenuName()).append("套餐");
-                        }else{
+                        } else {
                             message.append(pzMenuContent.getEatWeek()).append(pzMenu.getMenuName()).append("套餐");
                         }
 
@@ -239,7 +239,7 @@ public class WxOrderController extends BaseController {
 
             }
 
-            if(StringUtils.isNotBlank(message)){
+            if (StringUtils.isNotBlank(message)) {
                 message.append("数量不足,请修改订单!");
                 addMessageAjax(returnMap, "0", message.toString());
                 return returnMap;
@@ -276,7 +276,7 @@ public class WxOrderController extends BaseController {
             pzScoreLog.setScoreDescription(description);
 
             //订餐：新增订单信息 新增用户积分记录信息 更新用户积分(sys_user)
-            Integer flag = wxOrderService.orderMenu(pzOrder, contentIds, user, pzScoreLog,false);
+            Integer flag = wxOrderService.orderMenu(pzOrder, contentIds, user, pzScoreLog, false);
 
             if (flag > 0) {
                 returnMap.put("consumeIntegral", couponCount.toString());
@@ -497,237 +497,255 @@ public class WxOrderController extends BaseController {
     @ResponseBody
     public Map<String, Object> chooseEatOrNoEat(@RequestParam("mark") String mark, @RequestParam("contentId") String contentId) {
         Map<String, Object> returnMap = new HashMap<>();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        //判断参数是否为空
-        if (mark == null || contentId == null) {
-            returnMap.put("data", null);
-            returnMap.put("status", ConstantUtils.ResCode.PARMERROR);
-            returnMap.put("message", ConstantUtils.ResCode.ParameterException);
-            return returnMap;
-        }
-        User user = UserUtils.getUser();
-        //根据contentId查询eatDate
-        PzMenuContent pzMenuContent = pzMenuContentService.get(contentId);
-        String date = pzMenuContent.getEatDate();
-        //判断当前时间是否已到截至时间
-        String noEatTime = ConfigInfoUtils.getConfigVal("pzOrderEndDate").trim();
-        String endTime = date + " " + noEatTime;
-        Calendar currentDate = Calendar.getInstance();
-        currentDate.add(Calendar.DAY_OF_MONTH, 1);
-        String currDate = sdf.format(currentDate.getTime());
 
+        //设置锁定资源名称
+        RLock eatOrNoEatLock = redissonClient.getLock("eatOrNoEatLock");
 
-        Date endDate = null;
-        Date cDate = null;
         try {
-            endDate = sdf.parse(endTime);
-            cDate = sdf.parse(currDate);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        if (cDate.after(endDate)) {
-            returnMap.put("data", null);
-            returnMap.put("status", ConstantUtils.ResCode.NODATA);
-            returnMap.put("message", ConstantUtils.ResCode.ENDDATE);
-            return returnMap;
-        }
-
-        //根据orderId获取订单信息
-        String userId = user.getId();
-        PzOrderContent pzOrderContent = pzOrderContentService.getByContentIdAndCreateBy(contentId, userId);
-        PzOrder pzOrder = pzOrderService.get(pzOrderContent.getOrderId());
-        if (pzOrder == null) {
-            returnMap.put("data", null);
-            returnMap.put("status", ConstantUtils.ResCode.NODATA);
-            returnMap.put("message", ConstantUtils.ResCode.INFONOEXIST);
-            return returnMap;
-        }
-        //判断传入的date是否在eatDate或者noEatDate中
-        String eatDate = pzOrder.getEatDate();
-        String noEatDate = pzOrder.getNoEatDate();
-        //传入的日期不在eatDate中
-        if (eatDate != null && !eatDate.contains(date)) {
-            returnMap.put("data", null);
-            returnMap.put("status", ConstantUtils.ResCode.NODATA);
-            returnMap.put("message", ConstantUtils.ResCode.ParameterException);
-            return returnMap;
-        }
-
-        //选择不吃
-        if (mark.equals("false")) {
-            //传入的日期在noEatDate中
-            if (noEatDate != null) {
-                if (noEatDate.contains(date)) {
-                    returnMap.put("data", null);
-                    returnMap.put("status", ConstantUtils.ResCode.NODATA);
-                    returnMap.put("message", ConstantUtils.ResCode.DATEEXIST);
-                    return returnMap;
-                }
-            }
-            //将不吃日期设置到noEatDate中
-            if (noEatDate == null || noEatDate.equals("")) {
-                noEatDate = "" + date + ",";
-            } else {
-                noEatDate = noEatDate + date + ",";
-            }
-            pzOrder.setNoEatDate(noEatDate);
-            //pz_user_score表中增加个人餐厅积分数
-            PzUserScore pzUserScore = null;
-            pzUserScore = pzUserScoreService.getByUserIdAndRestaurantId(pzOrder.getUserId(), pzOrder.getRestaurantId());
-            //TODO:餐券与积分 1：1
-            if (pzUserScore != null) {
-                BigDecimal canteenIntegral = pzUserScore.getCanteenIntegral();
-                BigDecimal newCanteenIntegral = canteenIntegral.add(new BigDecimal(1));
-                pzUserScore.setCanteenIntegral(newCanteenIntegral);
-            } else {
-                pzUserScore = new PzUserScore();
-                pzUserScore.setRestaurantId(pzOrder.getRestaurantId());
-                pzUserScore.setUserId(pzOrder.getUserId());
-                pzUserScore.setCanteenIntegral(new BigDecimal(1));
-            }
-
-            //新增记录数据
-            PzScoreLog pzScoreLog = new PzScoreLog();
-            //餐厅id
-            String restaurantId = pzOrder.getRestaurantId();
-            if (restaurantId != null) {
-                pzScoreLog.setRestaurantId(restaurantId);
-            }
-            //用户id
-            pzScoreLog.setUserId(pzOrder.getUserId());
-            //积分类型
-            pzScoreLog.setScoreType(Global.SCORE_TYPE_CHANGE);
-            //积分分类
-            pzScoreLog.setScoreClassify(Global.SCORE_CLASSIFY_INTEGRAL);
-            //变动积分
-            String scoreChange = "+1";
-            pzScoreLog.setScoreChange(scoreChange);
-            //积分描述
-            String description = user.getId() + "-" + user.getLoginName() + "：" + pzScoreLog.getScoreChange() + "积分";
-            pzScoreLog.setScoreDescription(description);
-
-            //更新pz_order_content信息
-            PzOrderContent orderContent = new PzOrderContent();
-            orderContent.setId(pzOrderContent.getId());
-            orderContent.setEatFlag(0);
-
-            //更新订单信息 新增记录信息 更新个人餐厅积分信息
-            Integer flag = wxOrderService.saveOrUpdate(pzOrder, pzScoreLog, pzUserScore, orderContent);
-
-            if (flag > 0) {
+            eatOrNoEatLock.lock();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            //判断参数是否为空
+            if (mark == null || contentId == null) {
                 returnMap.put("data", null);
-                returnMap.put("status", ConstantUtils.ResCode.SUCCESS);
-                returnMap.put("message", ConstantUtils.ResCode.SUCCESSMSG);
-            } else {
+                returnMap.put("status", ConstantUtils.ResCode.PARMERROR);
+                returnMap.put("message", ConstantUtils.ResCode.ParameterException);
+                return returnMap;
+            }
+            User user = UserUtils.getUser();
+            //根据contentId查询eatDate
+            PzMenuContent pzMenuContent = pzMenuContentService.get(contentId);
+            String date = pzMenuContent.getEatDate();
+            //判断当前时间是否已到截至时间
+            String noEatTime = ConfigInfoUtils.getConfigVal("pzOrderEndDate").trim();
+            String endTime = date + " " + noEatTime;
+            Calendar currentDate = Calendar.getInstance();
+            currentDate.add(Calendar.DAY_OF_MONTH, 1);
+            String currDate = sdf.format(currentDate.getTime());
+
+
+            Date endDate = null;
+            Date cDate = null;
+            try {
+                endDate = sdf.parse(endTime);
+                cDate = sdf.parse(currDate);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            if (cDate.after(endDate)) {
                 returnMap.put("data", null);
-                returnMap.put("status", ConstantUtils.ResCode.SERVERERROR);
-                returnMap.put("message", ConstantUtils.ResCode.UPDATEFAIL);
+                returnMap.put("status", ConstantUtils.ResCode.NODATA);
+                returnMap.put("message", ConstantUtils.ResCode.ENDDATE);
+                return returnMap;
             }
 
-            //选择吃
-        } else if ("true".equals(mark)) {
-            if (!noEatDate.contains(date)) {
+            //根据orderId获取订单信息
+            String userId = user.getId();
+            PzOrderContent pzOrderContent = pzOrderContentService.getByContentIdAndCreateBy(contentId, userId);
+            PzOrder pzOrder = pzOrderService.get(pzOrderContent.getOrderId());
+            if (pzOrder == null) {
                 returnMap.put("data", null);
                 returnMap.put("status", ConstantUtils.ResCode.NODATA);
                 returnMap.put("message", ConstantUtils.ResCode.INFONOEXIST);
                 return returnMap;
             }
-            //判断pz_user_score表中个人餐厅积分是否充足
-            PzUserScore pzUserScore = pzUserScoreService.getByUserIdAndRestaurantId(pzOrder.getUserId(), pzOrder.getRestaurantId());
-            BigDecimal canteenIntegral = pzUserScore.getCanteenIntegral();
-            canteenIntegral = canteenIntegral.subtract(new BigDecimal(1));
-            int compareTo = canteenIntegral.compareTo(BigDecimal.ZERO);
-            if (compareTo < 0) {
+            //判断传入的date是否在eatDate或者noEatDate中
+            String eatDate = pzOrder.getEatDate();
+            String noEatDate = pzOrder.getNoEatDate();
+            //传入的日期不在eatDate中
+            if (eatDate != null && !eatDate.contains(date)) {
                 returnMap.put("data", null);
-                returnMap.put("status", ConstantUtils.ResCode.SERVERERROR);
-                returnMap.put("message", ConstantUtils.ResCode.INTEGRALNOTENOUGH);
+                returnMap.put("status", ConstantUtils.ResCode.NODATA);
+                returnMap.put("message", ConstantUtils.ResCode.ParameterException);
                 return returnMap;
             }
-            //TODO:餐券积分 1：1
-            pzUserScore.setCanteenIntegral(canteenIntegral);
-            //向pz_score_log记录表添加数据
-            PzScoreLog pzScoreLog = new PzScoreLog();
-            //用户id
-            pzScoreLog.setUserId(pzOrder.getUserId());
-            //餐厅id
-            pzScoreLog.setRestaurantId(pzOrder.getRestaurantId());
-            //积分类型
-            pzScoreLog.setScoreType(Global.SCORE_TYPE_DEDUCT);
-            //积分分类
-            pzScoreLog.setScoreClassify(Global.SCORE_CLASSIFY_INTEGRAL);
-            //变动积分
-            pzScoreLog.setScoreChange("-1");
-            //积分描述
-            String description = user.getId() + "-" + user.getLoginName() + "：" + pzScoreLog.getScoreChange() + "积分";
-            pzScoreLog.setScoreDescription(description);
-            //pz_order表中no_eat_date删除吃的日期
-            if (noEatDate != null) {
-                if (noEatDate.contains(date)) {
-                    String newNoEatDate = noEatDate.replace(date + ",", "");
-                    pzOrder.setNoEatDate(newNoEatDate);
-                }
-            }
-            //更新pz_order_content信息
-            PzOrderContent orderContent = new PzOrderContent();
-            orderContent.setId(pzOrderContent.getId());
-            orderContent.setEatFlag(1);
-            //更新用户积分数据 新增积分记录数据 更新订单数据
-            Integer updateData = wxOrderService.updateData(pzUserScore, pzScoreLog, pzOrder, orderContent);
 
-            if (updateData > 0) {
-                returnMap.put("data", null);
-                returnMap.put("status", ConstantUtils.ResCode.SUCCESS);
-                returnMap.put("message", ConstantUtils.ResCode.SUCCESSMSG);
+            //选择不吃
+            if (mark.equals("false")) {
+                //传入的日期在noEatDate中
+                if (noEatDate != null) {
+                    if (noEatDate.contains(date)) {
+                        returnMap.put("data", null);
+                        returnMap.put("status", ConstantUtils.ResCode.NODATA);
+                        returnMap.put("message", ConstantUtils.ResCode.DATEEXIST);
+                        return returnMap;
+                    }
+                }
+                //将不吃日期设置到noEatDate中
+                if (noEatDate == null || noEatDate.equals("")) {
+                    noEatDate = "" + date + ",";
+                } else {
+                    noEatDate = noEatDate + date + ",";
+                }
+                pzOrder.setNoEatDate(noEatDate);
+                //pz_user_score表中增加个人餐厅积分数
+                PzUserScore pzUserScore = new PzUserScore();
+                pzUserScore.setUserId(pzOrder.getUserId());
+                pzUserScore.setRestaurantId(pzOrder.getRestaurantId());
+                pzUserScore.setCanteenIntegral(new BigDecimal(1));
+
+//            pzUserScore = pzUserScoreService.getByUserIdAndRestaurantId(pzOrder.getUserId(), pzOrder.getRestaurantId());
+//            //TODO:餐券与积分 1：1
+//            if (pzUserScore != null) {
+//                BigDecimal canteenIntegral = pzUserScore.getCanteenIntegral();
+//                BigDecimal newCanteenIntegral = canteenIntegral.add(new BigDecimal(1));
+//                pzUserScore.setCanteenIntegral(newCanteenIntegral);
+//            } else {
+//                pzUserScore = new PzUserScore();
+//                pzUserScore.setRestaurantId(pzOrder.getRestaurantId());
+//                pzUserScore.setUserId(pzOrder.getUserId());
+//                pzUserScore.setCanteenIntegral(new BigDecimal(1));
+//            }
+
+                //新增记录数据
+                PzScoreLog pzScoreLog = new PzScoreLog();
+                //餐厅id
+                String restaurantId = pzOrder.getRestaurantId();
+                if (restaurantId != null) {
+                    pzScoreLog.setRestaurantId(restaurantId);
+                }
+                //用户id
+                pzScoreLog.setUserId(pzOrder.getUserId());
+                //积分类型
+                pzScoreLog.setScoreType(Global.SCORE_TYPE_CHANGE);
+                //积分分类
+                pzScoreLog.setScoreClassify(Global.SCORE_CLASSIFY_INTEGRAL);
+                //变动积分
+                String scoreChange = "+1";
+                pzScoreLog.setScoreChange(scoreChange);
+                //积分描述
+                String description = user.getId() + "-" + user.getLoginName() + "：" + pzScoreLog.getScoreChange() + "积分";
+                pzScoreLog.setScoreDescription(description);
+
+                //更新pz_order_content信息
+                PzOrderContent orderContent = new PzOrderContent();
+                orderContent.setId(pzOrderContent.getId());
+                orderContent.setEatFlag(0);
+
+                //更新订单信息 新增记录信息 更新个人餐厅积分信息
+                Integer flag = wxOrderService.saveOrUpdate(pzOrder, pzScoreLog, pzUserScore, orderContent);
+
+                if (flag > 0) {
+                    returnMap.put("data", null);
+                    returnMap.put("status", ConstantUtils.ResCode.SUCCESS);
+                    returnMap.put("message", ConstantUtils.ResCode.SUCCESSMSG);
+                } else {
+                    returnMap.put("data", null);
+                    returnMap.put("status", ConstantUtils.ResCode.SERVERERROR);
+                    returnMap.put("message", ConstantUtils.ResCode.UPDATEFAIL);
+                }
+
+                //选择吃
+            } else if ("true".equals(mark)) {
+                if (!noEatDate.contains(date)) {
+                    returnMap.put("data", null);
+                    returnMap.put("status", ConstantUtils.ResCode.NODATA);
+                    returnMap.put("message", ConstantUtils.ResCode.INFONOEXIST);
+                    return returnMap;
+                }
+                //判断pz_user_score表中个人餐厅积分是否充足
+                PzUserScore pzUserScore = pzUserScoreService.getByUserIdAndRestaurantId(pzOrder.getUserId(), pzOrder.getRestaurantId());
+                BigDecimal canteenIntegral = pzUserScore.getCanteenIntegral();
+                canteenIntegral = canteenIntegral.subtract(new BigDecimal(1));
+                int compareTo = canteenIntegral.compareTo(BigDecimal.ZERO);
+                if (compareTo < 0) {
+                    returnMap.put("data", null);
+                    returnMap.put("status", ConstantUtils.ResCode.SERVERERROR);
+                    returnMap.put("message", ConstantUtils.ResCode.INTEGRALNOTENOUGH);
+                    return returnMap;
+                }
+                //TODO:餐券积分 1：1
+                pzUserScore.setCanteenIntegral(new BigDecimal(1));
+                //向pz_score_log记录表添加数据
+                PzScoreLog pzScoreLog = new PzScoreLog();
+                //用户id
+                pzScoreLog.setUserId(pzOrder.getUserId());
+                //餐厅id
+                pzScoreLog.setRestaurantId(pzOrder.getRestaurantId());
+                //积分类型
+                pzScoreLog.setScoreType(Global.SCORE_TYPE_DEDUCT);
+                //积分分类
+                pzScoreLog.setScoreClassify(Global.SCORE_CLASSIFY_INTEGRAL);
+                //变动积分
+                pzScoreLog.setScoreChange("-1");
+                //积分描述
+                String description = user.getId() + "-" + user.getLoginName() + "：" + pzScoreLog.getScoreChange() + "积分";
+                pzScoreLog.setScoreDescription(description);
+                //pz_order表中no_eat_date删除吃的日期
+                if (noEatDate != null) {
+                    if (noEatDate.contains(date)) {
+                        String newNoEatDate = noEatDate.replace(date + ",", "");
+                        pzOrder.setNoEatDate(newNoEatDate);
+                    }
+                }
+                //更新pz_order_content信息
+                PzOrderContent orderContent = new PzOrderContent();
+                orderContent.setId(pzOrderContent.getId());
+                orderContent.setEatFlag(1);
+                //更新用户积分数据 新增积分记录数据 更新订单数据
+                Integer updateData = wxOrderService.updateData(pzUserScore, pzScoreLog, pzOrder, orderContent);
+
+                if (updateData > 0) {
+                    returnMap.put("data", null);
+                    returnMap.put("status", ConstantUtils.ResCode.SUCCESS);
+                    returnMap.put("message", ConstantUtils.ResCode.SUCCESSMSG);
+                } else {
+                    returnMap.put("data", null);
+                    returnMap.put("status", ConstantUtils.ResCode.SERVERERROR);
+                    returnMap.put("message", ConstantUtils.ResCode.UPDATEFAIL);
+                }
+
             } else {
                 returnMap.put("data", null);
-                returnMap.put("status", ConstantUtils.ResCode.SERVERERROR);
-                returnMap.put("message", ConstantUtils.ResCode.UPDATEFAIL);
+                returnMap.put("status", ConstantUtils.ResCode.PARMERROR);
+                returnMap.put("message", ConstantUtils.ResCode.ParameterException);
+                return returnMap;
             }
 
-        } else {
-            returnMap.put("data", null);
-            returnMap.put("status", ConstantUtils.ResCode.PARMERROR);
-            returnMap.put("message", ConstantUtils.ResCode.ParameterException);
-            return returnMap;
-        }
+            SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");
+            String nowDate = sdf1.format(new Date());
+            List<Map<String, Object>> eatDateList = new ArrayList<>();
 
-        SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");
-        String nowDate = sdf1.format(new Date());
-        List<Map<String, Object>> eatDateList = new ArrayList<>();
+            String[] eatDateTemp = pzOrder.getEatDate() == null ? new String[0] : pzOrder.getEatDate().split(",");
+            noEatDate = noEatDate == null ? "" : pzOrder.getNoEatDate();
+            for (int i = 0; i < eatDateTemp.length; i++) {
+                Map<String, Object> tempList = new HashMap<String, Object>();
+                if (StringUtils.isNotBlank(eatDateTemp[i])) {
+                    tempList.put("eatDate", eatDateTemp[i]);
+                    //当前日期是否可吃
+                    if (noEatDate.indexOf(eatDateTemp[i]) >= 0) {
+                        tempList.put("eatFlag", false);
+                    } else {
+                        tempList.put("eatFlag", true);
+                    }
+                    //yes为可选 no为不可选
+                    String enDate = eatDateTemp[i] + " " + noEatTime;
 
-        String[] eatDateTemp = pzOrder.getEatDate() == null ? new String[0] : pzOrder.getEatDate().split(",");
-        noEatDate = noEatDate == null ? "" : pzOrder.getNoEatDate();
-        for (int i = 0; i < eatDateTemp.length; i++) {
-            Map<String, Object> tempList = new HashMap<String, Object>();
-            if (StringUtils.isNotBlank(eatDateTemp[i])) {
-                tempList.put("eatDate", eatDateTemp[i]);
-                //当前日期是否可吃
-                if (noEatDate.indexOf(eatDateTemp[i]) >= 0) {
-                    tempList.put("eatFlag", false);
-                } else {
-                    tempList.put("eatFlag", true);
+                    Date eDate = null;
+                    try {
+                        eDate = sdf.parse(enDate);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+
+
+                    if (cDate.after(eDate)) {
+                        tempList.put("checkFlag", false);
+                    } else {
+                        tempList.put("checkFlag", true);
+                    }
                 }
-                //yes为可选 no为不可选
-                String enDate = eatDateTemp[i] + " " + noEatTime;
-
-                Date eDate = null;
-                try {
-                     eDate =  sdf.parse(enDate);
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-
-
-
-                if (cDate.after(eDate)) {
-                    tempList.put("checkFlag", false);
-                } else {
-                    tempList.put("checkFlag", true);
+                eatDateList.add(tempList);
+            }
+            returnMap.put("eatDateList", eatDateList);
+        } finally {
+            // 是否还是锁定状态
+            if (eatOrNoEatLock.isLocked()) {
+                // 是否是当前执行线程的锁
+                if (eatOrNoEatLock.isHeldByCurrentThread()) {
+                    eatOrNoEatLock.unlock(); // 释放锁
                 }
             }
-            eatDateList.add(tempList);
         }
-        returnMap.put("eatDateList", eatDateList);
 
         return returnMap;
 
@@ -912,7 +930,7 @@ public class WxOrderController extends BaseController {
                     List<PzOrderContent> conditionList = pzOrderContentService.findList(condition);
                     Boolean flag = true;
                     for (PzOrderContent pzOrderContent : conditionList) {
-                        if(pzOrderContent.getEatFlag() == 1){
+                        if (pzOrderContent.getEatFlag() == 1) {
                             flag = false;
                             break;
                         }

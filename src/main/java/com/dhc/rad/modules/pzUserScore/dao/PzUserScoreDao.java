@@ -20,7 +20,9 @@ public interface PzUserScoreDao extends CrudDao<PzUserScore> {
      */
     Integer deleteByIds(List<String> ids);
 
-    Integer updateUserScore(PzUserScore pzUserScore);
+    Integer subtractScoreByRestaurantIdAndUserId(PzUserScore pzUserScore);
+
+    Integer addScoreByRestaurantIdAndUserId(PzUserScore pzUserScore);
 
     PzUserScore getByUserIdAndRestaurantId(@Param("userId") String userId, @Param("restaurantId") String restaurantId);
 

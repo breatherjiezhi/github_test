@@ -62,7 +62,6 @@ public class UserUtils {
     public static final String CACHE_OFFICE_LIST = "officeList";
     public static final String CACHE_OFFICE_ALL_LIST = "officeAllList";
 
-    private static final RedissonClient redissonClient = RedissonUtils.getRedissonClient(0);
     /**
      * 获取当前用户所分配的项目以及组织
      */
@@ -137,10 +136,6 @@ public class UserUtils {
      * @return 取不到返回null
      */
     public static User getByLoginNameDB(String loginName) {
-        //设置锁定资源名称
-        RLock lock = redissonClient.getLock("getUserLock");
-        try {
-            lock.lock();
 
             User user = userDao.getByLoginName(new User(null, loginName));
             if (user == null) {
@@ -150,15 +145,7 @@ public class UserUtils {
             CacheUtils.put(USER_CACHE, USER_CACHE_ID_ + user.getId(), user);
             CacheUtils.put(USER_CACHE, USER_CACHE_LOGIN_NAME_ + user.getLoginName(), user);
             return user;
-        } finally {
-            // 是否还是锁定状态
-            if (lock.isLocked()) {
-                // 是否是当前执行线程的锁
-                if (lock.isHeldByCurrentThread()) {
-                    lock.unlock(); // 释放锁
-                }
-            }
-        }
+
     }
 
 

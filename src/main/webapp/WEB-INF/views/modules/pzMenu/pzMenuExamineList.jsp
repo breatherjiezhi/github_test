@@ -48,7 +48,6 @@
             });
 
 
-
             var reSizeHeight = function () {
                 var strs = $.getWindowSize().toString().split(",");
                 var jqgrid_height = strs[0] - 340;  //随着搜索部分的高度变化，设置这里的高度，保持page条在底部
@@ -131,8 +130,8 @@
                         var menuName = getDictLabel(${fns:toJson(fns:getDictList("pz_menu_type_name"))}, rowData.menuName);
 
 
-                        var  viewBtn = '<div class="action-buttons" style="white-space:normal">'+
-                            '<a data-action="examine" data-id="'+rowData.id+'" href="javascript:void(0);" class="tooltip-success green" data-rel="tooltip" title="审核"  style="border-color:#69aa46 "><i class="ace-icon fa fa-check bigger-130"></i></a>'+
+                        var viewBtn = '<div class="action-buttons" style="white-space:normal">' +
+                            '<a data-action="examine" data-id="' + rowData.id + '" href="javascript:void(0);" class="tooltip-success green" data-rel="tooltip" title="审核"  style="border-color:#69aa46 "><i class="ace-icon fa fa-check bigger-130"></i></a>' +
                             '</div>';
 
                         $(grid_selector).jqGrid('setRowData', ids[i], {
@@ -142,7 +141,7 @@
                         });
 
                         //删除按钮
-                        $(grid_selector).find('a[data-action=examine]').on('click', function(event) {
+                        $(grid_selector).find('a[data-action=examine]').on('click', function (event) {
                             $(grid_selector).jqGrid('resetSelection');
                             var id = $(this).attr('data-id');
                             _view(id);
@@ -158,11 +157,11 @@
                     editicon: 'ace-icon fa fa-pencil',
                     edittext: "<span data-locale='edit'>编辑</span>",
                     edittitle: '',
-                    add:false,
+                    add: false,
                     addicon: 'ace-icon fa fa-plus',
                     addtext: "<span data-locale='add'>新增</span>",
                     addtitle: '',
-                    del:false,
+                    del: false,
                     delicon: 'ace-icon fa fa-trash-o',
                     deltext: "<span data-locale='BatchDelete'>批量删除</span>",
                     deltitle: '',
@@ -171,11 +170,11 @@
                     refreshicon: 'ace-icon fa fa-refresh',
                     refreshtext: "<span data-locale='refresh'>刷新</span>",
                     refreshtitle: '',
-                    view: false,
-                    viewicon : 'ace-icon fa fa-search-plus grey',
-                    viewfunc : openDialogView,
-                    viewtext:"<span data-locale='examine'>审核</span>",
-                    viewtitle:'',
+                    view: true,
+                    viewicon: 'ace-icon fa fa-search-plus grey',
+                    viewfunc: batchUpdateStatus,
+                    viewtext: "<span>批量审核</span>",
+                    viewtitle: '',
                     cloneToTop: true
                 },
                 {}, // use default settings for edit
@@ -186,17 +185,33 @@
             )
 
 
-            function openDialogView() {
+            function batchUpdateStatus() {
                 var selectedIds = $(grid_selector).jqGrid("getGridParam", "selarrrow");
-                if(selectedIds.length>1){
-                    //失败
-                    $.msg_show.Init({
-                        'msg':'请您选择一条记录',
-                        'type':'error'
+                var ids = selectedIds + "";
+                var params = {"ids": ids};
+                if (selectedIds.length > 0) {
+                    $.msg_confirm.Init({
+                        'msg': '确认要审核通过所选的记录吗？',//这个参数可选，默认值：'这是信息提示！'
+                        'confirm_fn': function () {
+                            $.post("${ctx}/pzMenu/batchUpdateStatus", params, function (result) {
+                                if (result.messageStatus == "1") {
+                                    $.msg_show.Init({
+                                        'msg': result.message,
+                                        'type': 'success'
+                                    });
+                                } else if (result.messageStatus == "0") {
+                                    $.msg_show.Init({
+                                        'msg': result.message,
+                                        'type': 'error'
+                                    });
+                                }
+                                $(grid_selector).trigger("reloadGrid");
+                            });
+                        },//这个参数可选，默认值：function(){} 空的方法体
+                        'cancel_fn': function () {
+                            $(grid_selector).jqGrid('resetSelection');
+                        }//这个参数可选，默认值：function(){} 空的方法体
                     });
-
-                }else{
-                    _view(selectedIds[0]);
                 }
             }
 
@@ -218,7 +233,7 @@
                                 "class": "btn btn-primary btn-minier",
                                 "data-locale": "pass",
                                 click: function () {
-                                   var params = {"id": id,"menuStatus":"3","examineInfo":"审核通过"};
+                                    var params = {"id": id, "menuStatus": "3", "examineInfo": "审核通过"};
                                     $.post("${ctx}/pzMenu/updateStatus", params, function (result) {
                                         if (result.messageStatus == "1") {
                                             $.msg_show.Init({
@@ -241,9 +256,9 @@
                                 "class": "btn btn-primary btn-minier",
                                 "data-locale": "noPass",
                                 click: function () {
-                                    var examineInfo=prompt("请输入审核不通过原因","");
-                                    if(examineInfo!=''){
-                                        var params = {"id": id,"menuStatus":"2","examineInfo":examineInfo};
+                                    var examineInfo = prompt("请输入审核不通过原因", "");
+                                    if (examineInfo != '') {
+                                        var params = {"id": id, "menuStatus": "2", "examineInfo": examineInfo};
                                         $.post("${ctx}/pzMenu/updateStatus", params, function (result) {
                                             if (result.messageStatus == "1") {
                                                 $.msg_show.Init({
@@ -259,7 +274,7 @@
                                                 });
                                             }
                                         });
-                                    }else{
+                                    } else {
                                         alert("请输入审核不通过原因!");
                                     }
                                 }
@@ -284,13 +299,14 @@
                     });
                 });
             }
+
             //search list by condition
             $("#query").click(function () {
                 var menuStatus = $("#menuStatus").val();
                 $(grid_selector).jqGrid('setGridParam', {
                     url: "${ctx}/pzMenu/findMenuListByNoExamine",
                     mtype: "post",
-                    postData: { 'menuStatus': menuStatus}, //发送数据
+                    postData: {'menuStatus': menuStatus}, //发送数据
                     page: 1
                 }).trigger("reloadGrid"); //重新载入
             });

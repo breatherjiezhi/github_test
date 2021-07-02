@@ -19,6 +19,7 @@ import com.dhc.rad.modules.sys.service.SystemService;
 import com.dhc.rad.modules.sys.utils.UserUtils;
 import com.sun.xml.internal.bind.v2.TODO;
 import jodd.time.TimeUtil;
+import org.activiti.explorer.util.StringUtil;
 import org.activiti.explorer.util.time.timeunit.WeekTimeUnit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -72,7 +73,7 @@ public class PzMenuController extends BaseController {
     public Map<String, Object> searchPage(PzMenu pzMenu, HttpServletRequest request, HttpServletResponse response) {
         String officeId = UserUtils.getUser().getOffice().getId();
 
-        if(!(UserUtils.getRoleFlag("admin") || UserUtils.getRoleFlag("admins"))){
+        if (!(UserUtils.getRoleFlag("admin") || UserUtils.getRoleFlag("admins"))) {
             pzMenu.setRestaurantId(officeId);
         }
 
@@ -92,11 +93,11 @@ public class PzMenuController extends BaseController {
     public String form(PzMenu pzMenu, Model model) {
         List<PzMenuContent> pzMenuContentList = new ArrayList<PzMenuContent>();
 
-        if(pzMenu!=null&&StringUtils.isNotBlank(pzMenu.getId())){
-            pzMenuContentList =  pzMenuContentService.findAllListByMenuId(pzMenu.getId());
-        }else{
-            if(pzMenuContentList.size()==0){
-               List<String> list =  TimeUtils.getNextWeekEatDate();
+        if (pzMenu != null && StringUtils.isNotBlank(pzMenu.getId())) {
+            pzMenuContentList = pzMenuContentService.findAllListByMenuId(pzMenu.getId());
+        } else {
+            if (pzMenuContentList.size() == 0) {
+                List<String> list = TimeUtils.getNextWeekEatDate();
                 for (String temp : list) {
                     PzMenuContent pmc = new PzMenuContent();
                     pmc.setEatDate(temp);
@@ -119,8 +120,8 @@ public class PzMenuController extends BaseController {
         Integer flag = 0;
         User user = UserUtils.getUser();
 
-        if(StringUtils.isEmpty(pzMenu.getMenuName())){
-            addMessageAjax(returnMap, "0", pzMenu.getMenuName()+"不能为空！！！");
+        if (StringUtils.isEmpty(pzMenu.getMenuName())) {
+            addMessageAjax(returnMap, "0", pzMenu.getMenuName() + "不能为空！！！");
             return returnMap;
         }
 
@@ -136,23 +137,23 @@ public class PzMenuController extends BaseController {
             }
         }
 
-        List<PzMenuContent> list =  pzMenu.getPzMenuContentList();
+        List<PzMenuContent> list = pzMenu.getPzMenuContentList();
         String eatDate = "";
         for (PzMenuContent pzMenuContent : list) {
-            if("1".equals(pzMenuContent.getMenuLimited()) &&(pzMenuContent.getMenuCount()==null || pzMenuContent.getMenuCount()==0)){
-                addMessageAjax(returnMap, "0", "请修改[ "+pzMenuContent.getMenuDetail()+" ]套餐限量份数！！！");
+            if ("1".equals(pzMenuContent.getMenuLimited()) && (pzMenuContent.getMenuCount() == null || pzMenuContent.getMenuCount() == 0)) {
+                addMessageAjax(returnMap, "0", "请修改[ " + pzMenuContent.getMenuDetail() + " ]套餐限量份数！！！");
                 return returnMap;
             }
-            eatDate+=pzMenuContent.getEatDate()+",";
+            eatDate += pzMenuContent.getEatDate() + ",";
         }
         //新增：防止同一个菜单重复提交
-        if(StringUtils.isEmpty(pzMenuId)){
+        if (StringUtils.isEmpty(pzMenuId)) {
             PzMenu condition = new PzMenu();
             condition.setMenuName(pzMenu.getMenuName());
             condition.setEatDate(eatDate);
             condition.setRestaurantId(user.getOffice().getId());
             List<PzMenu> menuList = pzMenuService.findList(condition);
-            if(menuList.size() >0){
+            if (menuList.size() > 0) {
                 addMessageAjax(returnMap, "0", "下周菜单已添加");
                 return returnMap;
             }
@@ -161,7 +162,7 @@ public class PzMenuController extends BaseController {
 
         pzMenu.setEatDate(eatDate);
         pzMenu.setRestaurantId(user.getOffice().getId());
-        flag = pzMenuService.saveOrUpdate(pzMenu,list);
+        flag = pzMenuService.saveOrUpdate(pzMenu, list);
 
 
         if (flag > 0) {
@@ -216,14 +217,14 @@ public class PzMenuController extends BaseController {
     /**
      * @Description: 审核菜单是否合格
      * @Param: pzMenu
-     * @return: Map<String,Object>
+     * @return: Map<String   ,   Object>
      * @Date: 2021/4/21
      */
     @RequestMapping(value = "updateStatus", method = RequestMethod.POST)
     @ResponseBody
     public Map<String, Object> updateMenuStatus(PzMenu pzMenu, HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> returnMap = new HashMap<>();
-        if(!UserUtils.getRoleFlag("admins") && !UserUtils.getRoleFlag("admin") && !UserUtils.getRoleFlag("gcs")){
+        if (!UserUtils.getRoleFlag("admins") && !UserUtils.getRoleFlag("admin") && !UserUtils.getRoleFlag("gcs")) {
             addMessageAjax(returnMap, "0", "无权修改此数据！");
             return returnMap;
         }
@@ -242,16 +243,16 @@ public class PzMenuController extends BaseController {
         User user = UserUtils.getUser();
         if (!user.getId().equals(pzMenu.getCreateBy().getId())) {
             //管理员审批菜单： 只有当菜单状态为待审核时，管理员才能操作
-            if(menuStatusAgo!=null &&  menuStatusAgo == Global.MENU_STATUS_SUBMIT){
-                if( !UserUtils.getRoleFlag("admins") && !UserUtils.getRoleFlag("admin")){
+            if (menuStatusAgo != null && menuStatusAgo == Global.MENU_STATUS_SUBMIT) {
+                if (!UserUtils.getRoleFlag("admins") && !UserUtils.getRoleFlag("admin")) {
                     addMessageAjax(returnMap, "0", "非管理员无权修改此数据！");
                     return returnMap;
                 }
             }
 
             //供应商操作菜单：只有当菜单状态为非待审核（保存并修改  审核不通过）时，才能修改状态
-            if(menuStatusAgo != null && (menuStatusAgo == Global.MENU_STATUS_SAVEANDUPDATE || menuStatusAgo == Global.MENU_STATUS_NOPASS)){
-                if(!UserUtils.getRoleFlag("gcs")){
+            if (menuStatusAgo != null && (menuStatusAgo == Global.MENU_STATUS_SAVEANDUPDATE || menuStatusAgo == Global.MENU_STATUS_NOPASS)) {
+                if (!UserUtils.getRoleFlag("gcs")) {
                     addMessageAjax(returnMap, "0", "非供应商无权修改此数据！");
                     return returnMap;
                 }
@@ -274,6 +275,55 @@ public class PzMenuController extends BaseController {
         return returnMap;
     }
 
+
+    /**
+     * @Description: 批量审核通过
+     * @Param: pzMenu
+     * @return: Map<String   ,   Object>
+     * @Date: 2021/4/21
+     */
+    @RequestMapping(value = "batchUpdateStatus", method = RequestMethod.POST)
+    @ResponseBody
+    public Map<String, Object> batchUpdateStatus(String ids, HttpServletRequest request, HttpServletResponse response) {
+        Map<String, Object> returnMap = new HashMap<>();
+        if (!UserUtils.getRoleFlag("admins") && !UserUtils.getRoleFlag("admin")) {
+            addMessageAjax(returnMap, "0", "无权使用此功能！");
+            return returnMap;
+        }
+
+        if (StringUtils.isNotBlank(ids)) {
+            List<String> idList = Arrays.asList(ids.split(","));
+
+            Integer flag = 0;
+
+            //批量修改菜单状态
+            for (String id : idList) {
+                if(StringUtils.isNotBlank(id)){
+                    PzMenu menu = pzMenuService.get(id.trim());
+                    if(menu!=null && menu.getMenuStatus()==1){
+                        PzMenu pzMenu = new PzMenu();
+                        pzMenu.setId(id.trim());
+                        pzMenu.setExamineInfo("审核通过");
+                        pzMenu.setMenuStatus(3);
+                        flag += pzMenuService.updateMenuStatus(pzMenu);
+                    }
+                }
+            }
+            if (flag > 0) {
+                addMessageAjax(returnMap, "1", "批量审核成功");
+            } else {
+                addMessageAjax(returnMap, "0", "批量审核成功");
+            }
+            //返回
+            return returnMap;
+        } else {
+            addMessageAjax(returnMap, "0", "参数错误！");
+            return returnMap;
+        }
+
+    }
+
+
     @RequestMapping(value = "import", method = RequestMethod.GET)
     public String impTroubleExcels(HttpServletRequest request, HttpServletResponse response, Model model) {
         return "modules/pzMenu/pzMenuFileInfo";
@@ -285,7 +335,7 @@ public class PzMenuController extends BaseController {
      * @param pzMenu
      * @param request
      * @param response
-     * @return Map<String   ,   Object>
+     * @return Map<String               ,               Object>
      */
     @RequestMapping(value = {"findMenuListByNoExamine"})
     @ResponseBody

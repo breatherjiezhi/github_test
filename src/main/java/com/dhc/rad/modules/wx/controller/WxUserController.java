@@ -12,7 +12,10 @@ import com.dhc.rad.modules.sys.service.OfficeService;
 import com.dhc.rad.modules.sys.service.SystemService;
 import com.dhc.rad.modules.sys.utils.UserUtils;
 import com.dhc.rad.modules.wx.service.WxUserService;
+import com.dhc.rad.modules.wx.utils.RedissonUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -42,6 +45,8 @@ public class WxUserController extends BaseController {
     @Autowired
     private WxUserService wxUserService;
 
+    private static final RedissonClient redissonClient = RedissonUtils.getRedissonClient(1);
+
     /**
      * 返回用户信息
      *
@@ -52,46 +57,58 @@ public class WxUserController extends BaseController {
     @RequestMapping(value = "infoData")
     public Map<String, Object> infoData() {
 
-        Map<String, Object> returnMap = new HashMap<>();
-        User user = systemService.getUserId(UserUtils.getUser().getId());
+        //设置锁定资源名称
+        RLock lock = redissonClient.getLock("infoDataLock");
+        try {
+            lock.lock();
+
+            Map<String, Object> returnMap = new HashMap<>();
+            User user = systemService.getUserId(UserUtils.getUser().getId());
 
 
-        if (user != null) {
-            Map<String, Object> data = new HashMap<>();
-            data.put("name", user.getName());
-            data.put("no", user.getNo());
-            data.put("officeName", user.getOffice().getName());
-            data.put("officeId", user.getOffice().getId());
-            data.put("userIntegral", user.getUserIntegral());
+            if (user != null) {
+                Map<String, Object> data = new HashMap<>();
+                data.put("name", user.getName());
+                data.put("no", user.getNo());
+                data.put("officeName", user.getOffice().getName());
+                data.put("officeId", user.getOffice().getId());
+                data.put("userIntegral", user.getUserIntegral());
 
-            //查询是否有待审核数据
-            ChangeInfo changeInfo = new ChangeInfo();
-            changeInfo.setChangeType(1);
-            changeInfo.setApplyStatus(2);
-            changeInfo.setCreateBy(user);
+                //查询是否有待审核数据
+                ChangeInfo changeInfo = new ChangeInfo();
+                changeInfo.setChangeType(1);
+                changeInfo.setApplyStatus(2);
+                changeInfo.setCreateBy(user);
 
-            List<ChangeInfo> list = changeInfoService.findList(changeInfo);
-            if (list.size() > 0) {
-                data.put("officeFlag", true);
+                List<ChangeInfo> list = changeInfoService.findList(changeInfo);
+                if (list.size() > 0) {
+                    data.put("officeFlag", true);
+                } else {
+                    data.put("officeFlag", false);
+                }
+                returnMap.put("data", data);
+                returnMap.put("status", ConstantUtils.ResCode.SUCCESS);
+                returnMap.put("message", ConstantUtils.ResCode.SUCCESSMSG);
             } else {
-                data.put("officeFlag", false);
+                returnMap.put("data", null);
+                returnMap.put("status", ConstantUtils.ResCode.NODATA);
+                returnMap.put("message", ConstantUtils.ResCode.NODATAMSG);
             }
-            returnMap.put("data", data);
-            returnMap.put("status", ConstantUtils.ResCode.SUCCESS);
-            returnMap.put("message", ConstantUtils.ResCode.SUCCESSMSG);
-        } else {
-            returnMap.put("data", null);
-            returnMap.put("status", ConstantUtils.ResCode.NODATA);
-            returnMap.put("message", ConstantUtils.ResCode.NODATAMSG);
+            return returnMap;
+        } finally {
+            // 是否还是锁定状态
+            if (lock.isLocked()) {
+                // 是否是当前执行线程的锁
+                if (lock.isHeldByCurrentThread()) {
+                    lock.unlock(); // 释放锁
+                }
+            }
         }
-
-
-        return returnMap;
     }
 
 
     /**
-     * 返回用户信息
+     * 查询服务单元
      *
      * @return
      */
@@ -129,7 +146,7 @@ public class WxUserController extends BaseController {
         User user = systemService.getUserId(UserUtils.getUser().getId());
 
 
-        if(user.getOffice().getId().equals(newValue)){
+        if (user.getOffice().getId().equals(newValue)) {
             returnMap.put("status", ConstantUtils.ResCode.PARMERROR);
             returnMap.put("message", ConstantUtils.ResCode.ParameterException);
         }
@@ -214,11 +231,11 @@ public class WxUserController extends BaseController {
             returnMap.put("message", ConstantUtils.ResCode.ParameterException);
             return returnMap;
         }
-       Integer flag = wxUserService.applyChange(id,applyFlag);
-        if(flag>0){
+        Integer flag = wxUserService.applyChange(id, applyFlag);
+        if (flag > 0) {
             returnMap.put("status", ConstantUtils.ResCode.SUCCESS);
             returnMap.put("message", ConstantUtils.ResCode.SUCCESSMSG);
-        }else{
+        } else {
             returnMap.put("status", ConstantUtils.ResCode.SERVERERROR);
             returnMap.put("message", ConstantUtils.ResCode.FAILMSG);
         }

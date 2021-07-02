@@ -426,8 +426,8 @@ public class UserUtils {
      */
     public static List<Office> getOfficeList() {
         @SuppressWarnings("unchecked")
-        List<Office> officeList = (List<Office>) getCache(CACHE_OFFICE_LIST);
-        if (officeList == null) {
+        List<Office> officeList = new ArrayList<>();
+//        if (officeList == null) {
             User user = getUser();
             if (user.isAdmin()) {
                 officeList = convertOfficeTree(officeDao.findAllList(new Office()));
@@ -437,7 +437,7 @@ public class UserUtils {
                 officeList = convertOfficeTree(officeDao.findList(office));
             }
             putCache(CACHE_OFFICE_LIST, officeList);
-        }
+//        }
         return officeList;
     }
 

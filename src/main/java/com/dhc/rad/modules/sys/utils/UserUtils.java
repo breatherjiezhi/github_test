@@ -137,14 +137,14 @@ public class UserUtils {
      */
     public static User getByLoginNameDB(String loginName) {
 
-            User user = userDao.getByLoginName(new User(null, loginName));
-            if (user == null) {
-                return null;
-            }
-            user.setRoleList(roleDao.findList(new Role(user)));
-            CacheUtils.put(USER_CACHE, USER_CACHE_ID_ + user.getId(), user);
-            CacheUtils.put(USER_CACHE, USER_CACHE_LOGIN_NAME_ + user.getLoginName(), user);
-            return user;
+        User user = userDao.getByLoginName(new User(null, loginName));
+        if (user == null) {
+            return null;
+        }
+        user.setRoleList(roleDao.findList(new Role(user)));
+        CacheUtils.put(USER_CACHE, USER_CACHE_ID_ + user.getId(), user);
+        CacheUtils.put(USER_CACHE, USER_CACHE_LOGIN_NAME_ + user.getLoginName(), user);
+        return user;
 
     }
 
@@ -395,27 +395,27 @@ public class UserUtils {
      */
     public static List<Area> getAreaList() {
         @SuppressWarnings("unchecked")
-        List<Area> areaList = (List<Area>) getCache(CACHE_AREA_LIST);
-        if (areaList == null) {
-            areaList = areaDao.findAllList(new Area());
-            List<Area> result = new ArrayList<Area>();
-            Map<String, Area> map = new HashMap<String, Area>();
-            for (Area area : areaList) {
-                map.put(area.getId(), area);
-                if (area.getParentId().equals(Area.getRootId())) {
-                    result.add(area);
-                }
+        List<Area> areaList = new ArrayList<>();//(List<Area>) getCache(CACHE_AREA_LIST);
+//        if (areaList == null) {
+        areaList = areaDao.findAllList(new Area());
+        List<Area> result = new ArrayList<Area>();
+        Map<String, Area> map = new HashMap<String, Area>();
+        for (Area area : areaList) {
+            map.put(area.getId(), area);
+            if (area.getParentId().equals(Area.getRootId())) {
+                result.add(area);
             }
-            for (Area area : areaList) {
-                String pid = area.getParentId();
-                if (map.get(pid) != null) {
-                    map.get(pid).getSubArea().add(area);
-                }
-            }
-            areaList.clear();
-            areaList = result;
-            putCache(CACHE_AREA_LIST, areaList);
         }
+        for (Area area : areaList) {
+            String pid = area.getParentId();
+            if (map.get(pid) != null) {
+                map.get(pid).getSubArea().add(area);
+            }
+        }
+        areaList.clear();
+        areaList = result;
+        putCache(CACHE_AREA_LIST, areaList);
+//        }
         return areaList;
     }
 
@@ -428,15 +428,15 @@ public class UserUtils {
         @SuppressWarnings("unchecked")
         List<Office> officeList = new ArrayList<>();
 //        if (officeList == null) {
-            User user = getUser();
-            if (user.isAdmin()) {
-                officeList = convertOfficeTree(officeDao.findAllList(new Office()));
-            } else {
-                Office office = new Office();
-                office.getSqlMap().put("dsf", BaseService.dataScopeFilter(user, "a", ""));
-                officeList = convertOfficeTree(officeDao.findList(office));
-            }
-            putCache(CACHE_OFFICE_LIST, officeList);
+        User user = getUser();
+        if (user.isAdmin()) {
+            officeList = convertOfficeTree(officeDao.findAllList(new Office()));
+        } else {
+            Office office = new Office();
+            office.getSqlMap().put("dsf", BaseService.dataScopeFilter(user, "a", ""));
+            officeList = convertOfficeTree(officeDao.findList(office));
+        }
+        putCache(CACHE_OFFICE_LIST, officeList);
 //        }
         return officeList;
     }
@@ -448,10 +448,10 @@ public class UserUtils {
      */
     public static List<Office> getOfficeAllList() {
         @SuppressWarnings("unchecked")
-        List<Office> officeList = (List<Office>) getCache(CACHE_OFFICE_ALL_LIST);
-        if (officeList == null) {
-            officeList = convertOfficeTree(officeDao.findAllList(new Office()));
-        }
+        List<Office> officeList = new ArrayList<>();
+//        if (officeList == null) {
+        officeList = convertOfficeTree(officeDao.findAllList(new Office()));
+//        }
         return officeList;
     }
 

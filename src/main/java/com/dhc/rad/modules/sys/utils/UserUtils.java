@@ -81,16 +81,16 @@ public class UserUtils {
      * @return 取不到返回null
      */
     public static User get(String id) {
-        User user = (User) CacheUtils.get(USER_CACHE, USER_CACHE_ID_ + id);
+        // User user = (User) CacheUtils.get(USER_CACHE, USER_CACHE_ID_ + id);
+        //if (user == null) {
+        User user = userDao.get(id);
         if (user == null) {
-            user = userDao.get(id);
-            if (user == null) {
-                return null;
-            }
-            user.setRoleList(roleDao.findList(new Role(user)));
-            CacheUtils.put(USER_CACHE, USER_CACHE_ID_ + user.getId(), user);
-            CacheUtils.put(USER_CACHE, USER_CACHE_LOGIN_NAME_ + user.getLoginName(), user);
+            return null;
         }
+        user.setRoleList(roleDao.findList(new Role(user)));
+        CacheUtils.put(USER_CACHE, USER_CACHE_ID_ + user.getId(), user);
+        CacheUtils.put(USER_CACHE, USER_CACHE_LOGIN_NAME_ + user.getLoginName(), user);
+        //}
         return user;
     }
 
@@ -156,18 +156,18 @@ public class UserUtils {
      * @return 取不到返回null
      */
     public static User getByCardID(String cardID) {
-        User user = (User) CacheUtils.get(USER_CACHE, USER_CACHE_LOGIN_NAME_ + cardID);
+//        User user = (User) CacheUtils.get(USER_CACHE, USER_CACHE_LOGIN_NAME_ + cardID);
+//        if (user == null) {
+        User userInfo = new User();
+        userInfo.setCardID(cardID);
+        User user = userDao.getByCardID(userInfo);
         if (user == null) {
-            User userInfo = new User();
-            userInfo.setCardID(cardID);
-            user = userDao.getByCardID(userInfo);
-            if (user == null) {
-                return null;
-            }
-            user.setRoleList(roleDao.findList(new Role(user)));
-            CacheUtils.put(USER_CACHE, USER_CACHE_ID_ + user.getId(), user);
-            CacheUtils.put(USER_CACHE, USER_CACHE_LOGIN_NAME_ + user.getLoginName(), user);
+            return new User();
         }
+        user.setRoleList(roleDao.findList(new Role(user)));
+        CacheUtils.put(USER_CACHE, USER_CACHE_ID_ + user.getId(), user);
+        CacheUtils.put(USER_CACHE, USER_CACHE_LOGIN_NAME_ + user.getLoginName(), user);
+//        }
         return user;
     }
 
@@ -178,18 +178,18 @@ public class UserUtils {
      * @return 取不到返回null
      */
     public static User getByQCode(String qCode) {
-        User user = (User) CacheUtils.get(USER_CACHE, USER_CACHE_LOGIN_NAME_ + qCode);
+//        User user = (User) CacheUtils.get(USER_CACHE, USER_CACHE_LOGIN_NAME_ + qCode);
+//        if (user == null) {
+        User userInfo = new User();
+        userInfo.setqCode(qCode);
+        User user = userDao.getByQCode(userInfo);
         if (user == null) {
-            User userInfo = new User();
-            userInfo.setqCode(qCode);
-            user = userDao.getByQCode(userInfo);
-            if (user == null) {
-                return null;
-            }
-            user.setRoleList(roleDao.findList(new Role(user)));
-            CacheUtils.put(USER_CACHE, USER_CACHE_ID_ + user.getId(), user);
-            CacheUtils.put(USER_CACHE, USER_CACHE_LOGIN_NAME_ + user.getLoginName(), user);
+            return null;
         }
+        user.setRoleList(roleDao.findList(new Role(user)));
+        CacheUtils.put(USER_CACHE, USER_CACHE_ID_ + user.getId(), user);
+        CacheUtils.put(USER_CACHE, USER_CACHE_LOGIN_NAME_ + user.getLoginName(), user);
+//        }
         return user;
     }
 
@@ -245,18 +245,18 @@ public class UserUtils {
      */
     public static List<Role> getRoleList() {
         @SuppressWarnings("unchecked")
-        List<Role> roleList = (List<Role>) getCache(CACHE_ROLE_LIST);
-        if (roleList == null) {
-            User user = getUser();
-            if (user.isAdmin()) {
-                roleList = roleDao.findAllList(new Role());
-            } else {
-                Role role = new Role();
-                role.getSqlMap().put("dsf", BaseService.dataScopeFilter(user.getCurrentUser(), "o", "u"));
-                roleList = roleDao.findList(role);
-            }
-            putCache(CACHE_ROLE_LIST, roleList);
+        List<Role> roleList = new ArrayList<>(); //(List<Role>) getCache(CACHE_ROLE_LIST);
+        // if (roleList == null) {
+        User user = getUser();
+        if (user.isAdmin()) {
+            roleList = roleDao.findAllList(new Role());
+        } else {
+            Role role = new Role();
+            role.getSqlMap().put("dsf", BaseService.dataScopeFilter(user.getCurrentUser(), "o", "u"));
+            roleList = roleDao.findList(role);
         }
+        putCache(CACHE_ROLE_LIST, roleList);
+        // }
         return roleList;
     }
 
@@ -267,18 +267,18 @@ public class UserUtils {
      */
     public static List<Menu> getMenuList() {
         @SuppressWarnings("unchecked")
-        List<Menu> menuList = (List<Menu>) getCache(CACHE_MENU_LIST);
-        if (menuList == null || menuList.isEmpty()) {
-            User user = getUser();
-            if (user.isAdmin()) {
-                menuList = menuDao.findAllList(new Menu());
-            } else {
-                Menu m = new Menu();
-                m.setUserId(user.getId());
-                menuList = menuDao.findByUserId(m);
-            }
-            putCache(CACHE_MENU_LIST, menuList);
+        List<Menu> menuList = new ArrayList<>();// (List<Menu>) getCache(CACHE_MENU_LIST);
+        //if (menuList == null || menuList.isEmpty()) {
+        User user = getUser();
+        if (user.isAdmin()) {
+            menuList = menuDao.findAllList(new Menu());
+        } else {
+            Menu m = new Menu();
+            m.setUserId(user.getId());
+            menuList = menuDao.findByUserId(m);
         }
+        putCache(CACHE_MENU_LIST, menuList);
+        // }
         return menuList;
     }
 
@@ -288,17 +288,17 @@ public class UserUtils {
      * @return
      */
     public static List<Menu> getMobileMenuList() {
-        List<Menu> menuList = Lists.newArrayList();
-        if (menuList == null || menuList.isEmpty()) {
-            User user = getUser();
-            if (user.isAdmin()) {
-                menuList = menuDao.findAllList(new Menu());
-            } else {
-                Menu m = new Menu();
-                m.setUserId(user.getId());
-                menuList = menuDao.findMobileMenuByUserId(m);
-            }
+        List<Menu> menuList = new ArrayList<>();
+        // if (menuList == null || menuList.isEmpty()) {
+        User user = getUser();
+        if (user.isAdmin()) {
+            menuList = menuDao.findAllList(new Menu());
+        } else {
+            Menu m = new Menu();
+            m.setUserId(user.getId());
+            menuList = menuDao.findMobileMenuByUserId(m);
         }
+        // }
         return menuList;
     }
 
@@ -309,51 +309,51 @@ public class UserUtils {
      * @return
      */
     public static List<Menu> getPadMenuList() {
-        List<Menu> menuList = Lists.newArrayList();
-        if (menuList == null || menuList.isEmpty()) {
-            User user = getUser();
-            if (user.isAdmin()) {
-                menuList = menuDao.findAllList(new Menu());
-            } else {
-                Menu m = new Menu();
-                m.setUserId(user.getId());
-                menuList = menuDao.findPadMenuByUserId(m);
-            }
+        List<Menu> menuList = new ArrayList<>();
+        // if (menuList == null || menuList.isEmpty()) {
+        User user = getUser();
+        if (user.isAdmin()) {
+            menuList = menuDao.findAllList(new Menu());
+        } else {
+            Menu m = new Menu();
+            m.setUserId(user.getId());
+            menuList = menuDao.findPadMenuByUserId(m);
         }
+        // }
         return menuList;
     }
 
 
     // 手机菜单
     public static List<Menu> getMobileRoleList() {
-        List<Menu> roleList = Lists.newArrayList();
-        if (roleList == null || roleList.isEmpty()) {
-            User user = getUser();
-            if (user.isAdmin()) {
-                roleList = menuDao.findAllList(new Menu());
-            } else {
-                Menu m = new Menu();
-                m.setUserId(user.getId());
-                roleList = menuDao.findMobileMenuByRole(m);
-            }
+        List<Menu> roleList = new ArrayList<>();
+        // if (roleList == null || roleList.isEmpty()) {
+        User user = getUser();
+        if (user.isAdmin()) {
+            roleList = menuDao.findAllList(new Menu());
+        } else {
+            Menu m = new Menu();
+            m.setUserId(user.getId());
+            roleList = menuDao.findMobileMenuByRole(m);
         }
+        // }
         return roleList;
     }
 
 
     // 平板菜单
     public static List<Menu> getPadRoleList() {
-        List<Menu> roleList = Lists.newArrayList();
-        if (roleList == null || roleList.isEmpty()) {
-            User user = getUser();
-            if (user.isAdmin()) {
-                roleList = menuDao.findAllList(new Menu());
-            } else {
-                Menu m = new Menu();
-                m.setUserId(user.getId());
-                roleList = menuDao.findPadMenuByRole(m);
-            }
+        List<Menu> roleList = new ArrayList<>();
+        //if (roleList == null || roleList.isEmpty()) {
+        User user = getUser();
+        if (user.isAdmin()) {
+            roleList = menuDao.findAllList(new Menu());
+        } else {
+            Menu m = new Menu();
+            m.setUserId(user.getId());
+            roleList = menuDao.findPadMenuByRole(m);
         }
+        // }
         return roleList;
     }
 
@@ -364,7 +364,7 @@ public class UserUtils {
      */
     public static List<Menu> getTreeMenuList(Boolean all) {
         @SuppressWarnings("unchecked")
-        List<Menu> menuList = (List<Menu>) getCache(CACHE_TREE_MENU_LIST);
+        List<Menu> menuList = new ArrayList<>();//(List<Menu>) getCache(CACHE_TREE_MENU_LIST);
         //if (menuList == null){
         List<Menu> result = new ArrayList<Menu>();
         menuList = getMenuList();

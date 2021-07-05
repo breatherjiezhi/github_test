@@ -2,19 +2,6 @@
 <%@ page contentType="text/html; charset=utf-8"%>
 <%@ include file = "GenXmlData.jsp" %>
 <%
-    String str = request.getParameter("param");
-    String temp=null;
-    if(StringUtils.isNotBlank(str)){
-        String[] strTemp =  str.split(",");
-        for (int i =0 ;i<strTemp.length;i++){
-            if(StringUtils.isNotBlank(temp)){
-                temp += ",'"+strTemp[i]+"'";
-            }else{
-                temp = "'"+strTemp[i]+"'";
-            }
-        }
-    }
-
 
     String serviceUnitName = request.getParameter("serviceUnitName");
     String restaurantId = request.getParameter("restaurantId");

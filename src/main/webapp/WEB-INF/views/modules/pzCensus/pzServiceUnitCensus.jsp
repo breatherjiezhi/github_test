@@ -72,7 +72,7 @@
                                     </button>
                                     <button class="btn btn-info btn-sm" type="button" style="color: orange !important;border-color: orange" onclick="printOrders();" >
                                         <i class="fa fa-search" aria-hidden="true" style="margin-right: 5px"></i>
-                                        <span data-locale='query'>打印</span>
+                                        <span data-locale='query' title="打印当前页面订单">打印</span>
                                     </button>
                                 </div>
                             </div>
@@ -276,7 +276,7 @@
                 {multipleSearch: true}, // enable the advanced searching
                 {closeOnEscape: true} /* allow the view dialog to be closed when user press ESC key*/
             ).jqGrid("navButtonAdd",toolbarTop,{
-                caption:"<span data-locale='BarcodePrinting'>订单打印</span>",
+                caption:"<span data-locale='BarcodePrinting' title='一次性打印全部订单,不需要等待页面加载'>订单打印</span>",
                 buttonicon:"ace-icon fa fa-download",
                 title:"订单打印",
                 onClickButton: printOrderCode,

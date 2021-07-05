@@ -39,9 +39,7 @@ FROM
 	LEFT JOIN sys_user su ON po.user_id = su.id
 	LEFT JOIN sys_office so ON su.office_id = so.id
 	LEFT JOIN sys_area sa ON so.AREA_ID = sa.id
-	LEFT JOIN pz_delivery pd ON po.RESTAURANT_ID = pd.RESTAURANT_ID
-	AND po.SERVICE_UNIT_ID = pd.SERVICE_UNIT_ID
-	AND pd.EAT_DATE = #{eatDate}
+	LEFT JOIN pz_delivery pd ON po.RESTAURANT_ID = pd.RESTAURANT_ID AND po.SERVICE_UNIT_ID = pd.SERVICE_UNIT_ID AND pd.EAT_DATE = #{eatDate}
 	LEFT JOIN pz_box_code pbc ON pbc.id = pd.box_id
 WHERE
 	po.EAT_DATE = #{eatDates} AND so.ID= #{officeId}  AND pmc.MENU_DETAIL is not NULL

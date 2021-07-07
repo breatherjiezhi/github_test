@@ -18,18 +18,21 @@
                     <form:form id="searchForm" modelAttribute="pzCensus" class="form-horizontal">
                         <div class="form-group">
                             <div class="col-xs-12 col-sm-4 no-padding">
-                            <div class="new-search clearfix">
-                                <label class=" col-xs-12 col-sm-4" for="beginDate" data-locale="DateRange">日期范围</label>
-                                <div class="input-daterange input-group ">
-                                    <input autocomplete="off" type="text" class="input-sm form-control newsearchInput  width-100" id="beginDate" name="beginDate" value="${pzCensus.beginDate}"/>
-                                    <span class="input-group-addon"><i class="fa fa-exchange"></i></span>
-                                    <input autocomplete="off" type="text" class="input-sm form-control newsearchInput  width-100" id="endDate" name="endDate"  value="${pzCensus.endDate}"/>
+                                <div class="new-search clearfix">
+                                    <label class=" col-xs-12 col-sm-4" for="beginDate"
+                                           data-locale="DateRange">日期范围</label>
+                                    <div class="input-daterange input-group ">
+                                        <input autocomplete="off" type="text"
+                                               class="input-sm form-control newsearchInput  width-100" id="beginDate"
+                                               name="beginDate" value="${pzCensus.beginDate}"/>
+                                        <span class="input-group-addon"><i class="fa fa-exchange"></i></span>
+                                        <input autocomplete="off" type="text"
+                                               class="input-sm form-control newsearchInput  width-100" id="endDate"
+                                               name="endDate" value="${pzCensus.endDate}"/>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        </div>
-
-
 
 
                         <div class="form-group">
@@ -45,19 +48,24 @@
                                         <i class="fa fa-refresh" aria-hidden="true" style="margin-right: 5px"></i>
                                         <span data-locale='reset'>重置</span>
                                     </button>
-                                    <button class="btn btn-info btn-sm" type="button" style="color: orange !important;border-color: orange" onclick="download();" >
+                                    <button class="btn btn-info btn-sm" type="button"
+                                            style="color: orange !important;border-color: orange" onclick="download();">
                                         <i class="fa fa-search" aria-hidden="true" style="margin-right: 5px"></i>
                                         <span data-locale='export'>导出统计execl</span>
                                     </button>
-                                    <button class="btn btn-info btn-sm" type="button" style="color: orange !important;border-color: orange" onclick="downloadDept();" >
+                                    <button class="btn btn-info btn-sm" type="button"
+                                            style="color: orange !important;border-color: orange"
+                                            onclick="downloadDept();">
                                         <i class="fa fa-search" aria-hidden="true" style="margin-right: 5px"></i>
                                         <span data-locale='export'>导出结算execl</span>
                                     </button>
                                     <shiro:hasPermission name="batch:user:order">
-                                    <button class="btn btn-info btn-sm" type="button" style="color: orange !important;border-color: orange" onclick="batchUserOrder();" >
-                                        <i class="fa fa-search" aria-hidden="true" style="margin-right: 5px"></i>
-                                        <span data-locale='query' title="批量给之前订过餐但下周未订用户订餐">批量订餐</span>
-                                    </button>
+                                        <button class="btn btn-info btn-sm" type="button"
+                                                style="color: orange !important;border-color: orange"
+                                                onclick="batchUserOrder();">
+                                            <i class="fa fa-search" aria-hidden="true" style="margin-right: 5px"></i>
+                                            <span data-locale='query' title="批量给之前订过餐但下周未订用户订餐">批量订餐</span>
+                                        </button>
                                     </shiro:hasPermission>
                                 </div>
                             </div>
@@ -193,7 +201,7 @@
                     for (var i = 0; i < ids.length; i++) {
                         var id = ids[i];
                         var rowData = $("#grid-table").getRowData(id);
-                        var total = parseInt(rowData.countA)+parseInt(rowData.countB)+parseInt(rowData.countC)+parseInt(rowData.countD)+parseInt(rowData.countE)+parseInt(rowData.countF);
+                        var total = parseInt(rowData.countA) + parseInt(rowData.countB) + parseInt(rowData.countC) + parseInt(rowData.countD) + parseInt(rowData.countE) + parseInt(rowData.countF);
 
                         $(grid_selector).jqGrid('setRowData', ids[i], {
                             total: total
@@ -226,7 +234,7 @@
                 $(grid_selector).jqGrid('setGridParam', {
                     url: "${ctx}/pzCensus/findCensus",
                     mtype: "post",
-                    postData: {'beginDate': '','endDate':''},
+                    postData: {'beginDate': '', 'endDate': ''},
                     page: 1
                 }).trigger("reloadGrid"); //重新载入
             });
@@ -257,16 +265,16 @@
     function download() {
         var beginDate = $("#beginDate").val();
         var endDate = $("#endDate").val();
+        window.open("${ctx}/pzCensus/downUserCensus?beginDate=" + beginDate + "&endDate=" + endDate);
         $("#query").click();
-        window.location.href="${ctx}/pzCensus/downUserCensus?beginDate="+beginDate+"&endDate="+endDate;
     }
 
 
     function downloadDept() {
         var beginDate = $("#beginDate").val();
         var endDate = $("#endDate").val();
+        window.open("${ctx}/pzCensus/downDeptCensus?beginDate=" + beginDate + "&endDate=" + endDate);
         $("#query").click();
-        window.location.href="${ctx}/pzCensus/downDeptCensus?beginDate="+beginDate+"&endDate="+endDate;
     }
 
 

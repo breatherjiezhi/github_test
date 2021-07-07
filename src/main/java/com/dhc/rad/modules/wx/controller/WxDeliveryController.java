@@ -200,6 +200,8 @@ public class WxDeliveryController {
             if (orderList.size() > 0) {
                 List<Map<String, Object>> data = new ArrayList<Map<String, Object>>();
 
+                Map<String, Integer> totalData = new HashMap<String, Integer>();
+
                 for (OrderVo orderVo : orderList) {
                     Map<String, Object> map = new HashMap<String, Object>();
                     map.put("eatDate", orderVo.getEatDate());
@@ -210,6 +212,15 @@ public class WxDeliveryController {
                     map.put("restaurantName", orderVo.getRestaurantName());
                     map.put("areaLocation", orderVo.getAreaLocation());
                     map.put("boxName", orderVo.getBoxName());
+
+                    if(orderVo.isDeliveryFlag()){
+                        if(totalData.containsKey(orderVo.getBoxName())){
+                            totalData.put(orderVo.getBoxName(), totalData.get(orderVo.getBoxName()).intValue()+1);
+                        }else{
+                            totalData.put(orderVo.getBoxName(),1);
+                        }
+                    }
+
                     if (StringUtils.isNotBlank(orderVo.getNoEatDate()) && orderVo.getNoEatDate().indexOf(eatDate) > 0) {
                         map.put("eatFlag", false);
                     } else {
@@ -219,8 +230,8 @@ public class WxDeliveryController {
                     data.add(map);
                 }
 
-
                 returnMap.put("data", data);
+                returnMap.put("totalData", totalData);
                 returnMap.put("status", ConstantUtils.ResCode.SUCCESS);
                 returnMap.put("message", ConstantUtils.ResCode.SUCCESSMSG);
             } else {

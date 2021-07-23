@@ -345,6 +345,37 @@ public class TimeUtils {
     }
 
     /**
+     * 根据当前时间获取上周1-7
+     */
+    public  static  List<String> getLastWeekDateList(){
+        List<String> list = new ArrayList<>();
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date());
+        // 获得当前日期是一个星期的第几天
+        int dayWeek = cal.get(Calendar.DAY_OF_WEEK);
+        if (1 == dayWeek) {
+            cal.add(Calendar.DAY_OF_MONTH, -1);
+        }
+        // 设置一个星期的第一天，按中国的习惯一个星期的第一天是星期一
+        cal.setFirstDayOfWeek(Calendar.MONDAY);
+        // 获得当前日期是一个星期的第几天
+        int day = cal.get(Calendar.DAY_OF_WEEK);
+        cal.add(Calendar.DATE, cal.getFirstDayOfWeek() - day);
+
+        cal.add(Calendar.DAY_OF_WEEK, -7);
+
+        for (int i = 0; i < 7; i++) {
+            list.add(simpleDateFormat.format(cal.getTime()));
+            cal.add(Calendar.DAY_OF_MONTH, 1);
+        }
+
+        return list;
+    }
+
+
+
+
+    /**
      * @Description: 根据当前时间获取当前周1-7
      * @Param: null
      * @return: List<String>
@@ -426,6 +457,36 @@ public class TimeUtils {
 
         return dateList;
     }
+
+
+
+
+    /**
+     * @Description: 根据当前时间获取当前周的eatDate
+     * @Param: null
+     * @return: String
+     * @Date: 2020/2/28
+     */
+    public static List<String> getLastWeekEatDate() {
+        //获取当前时间当前周时间集合
+        List<String> lastWeekDateList = getLastWeekDateList();
+        //去除当前周节假日日期
+        List<String>  dateList= new ArrayList<>();
+        dateList = lastWeekDateList.stream()
+                .filter(date -> {
+                    Holiday holiday = holidayDao.getByDate(date);
+                    return holiday == null;
+                })
+                .collect(Collectors.toList());
+
+        //根据当前用户id 根据当前时间获取当前周1-7时间
+//        String currentDate = eatDateList.stream().collect(Collectors.joining(","));
+
+        return dateList;
+    }
+
+
+
 
     /**
      * @Description: 根据当前时间获取当前周的eatDate

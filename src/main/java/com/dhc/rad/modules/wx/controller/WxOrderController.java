@@ -22,6 +22,7 @@ import com.dhc.rad.modules.sys.service.OfficeService;
 import com.dhc.rad.modules.sys.service.SystemService;
 import com.dhc.rad.modules.sys.utils.ConfigInfoUtils;
 import com.dhc.rad.modules.sys.utils.UserUtils;
+import com.dhc.rad.modules.wx.service.OrderVoService;
 import com.dhc.rad.modules.wx.utils.RedissonUtils;
 import com.dhc.rad.modules.wx.service.WxOrderService;
 import org.redisson.api.RLock;
@@ -70,6 +71,9 @@ public class WxOrderController extends BaseController {
     @Autowired
     private PzOrderContentService pzOrderContentService;
 
+    @Autowired
+    private OrderVoService orderVoService;
+
 
     @Autowired
     private OfficeService officeService;
@@ -80,7 +84,7 @@ public class WxOrderController extends BaseController {
     /**
      * @Description: 订餐功能
      * @Param: menuId：套餐id
-     * @return: Map<String   ,       Object>
+     * @return: Map<String       ,               Object>
      * @Date: 2021/5/6
      */
     @RequestMapping(value = "orderMenu", method = RequestMethod.POST)
@@ -160,10 +164,11 @@ public class WxOrderController extends BaseController {
                 String orderId = order.getId();
                 Integer personalContentCount = pzOrderContentService.findCountByOrderId(orderId, userId, null);
                 // 2.查询pz_order_content中该用户不吃的条数 = 需要扣除对应个人餐厅积分数（需要判断个人餐厅积分是否足够）
-                String contentId = contentIds.get(0);
-                PzMenuContent pzMenuContent = pzMenuContentService.get(contentId);
-                PzMenu pzMenu = pzMenuService.get(pzMenuContent.getMenuId());
-                PzUserScore userScore = pzUserScoreService.getByUserIdAndRestaurantId(userId, pzMenu.getRestaurantId());
+                String restaurantId = order.getRestaurantId();
+//                String contentId = contentIds.get(0);
+               /* PzMenuContent pzMenuContent = pzMenuContentService.get(contentId);
+                PzMenu pzMenu = pzMenuService.get(pzMenuContent.getMenuId());*/
+                PzUserScore userScore = pzUserScoreService.getByUserIdAndRestaurantId(userId, restaurantId);
                 Integer eatFlagFalseCount = pzOrderContentService.findCountByOrderId(orderId, userId, "0");
                 if (userScore != null) {
                     BigDecimal userScoreCanteenIntegral = userScore.getCanteenIntegral();
@@ -302,7 +307,7 @@ public class WxOrderController extends BaseController {
     /**
      * @Description: 查询当前用户下一周的订餐信息
      * @Param: null
-     * @return: Map<String   ,       Object>
+     * @return: Map<String       ,               Object>
      * @Date: 2021/4/29
      */
     @RequestMapping(value = "findOrderNextWeek", method = RequestMethod.POST)
@@ -354,7 +359,7 @@ public class WxOrderController extends BaseController {
                         map.put("eatFlagName", "已预定");
                     }
                     map.put("checkFlag", true);
-                    map.put("menuDetail",map.get("menuName") + "套餐:" + map.get("menuDetail"));
+                    map.put("menuDetail", map.get("menuName") + "套餐:" + map.get("menuDetail"));
                 }
 //            List<String> orderContentEatDateList = new ArrayList<>();
 //            if(mapList.size() != 5){
@@ -402,7 +407,7 @@ public class WxOrderController extends BaseController {
     /**
      * @Description: 查询当前用户当前周的订餐信息
      * @Param: null
-     * @return: Map<String   ,       Object>
+     * @return: Map<String       ,               Object>
      * @Date: 2021/4/29
      */
     @RequestMapping(value = "findOrderCurrentWeek", method = RequestMethod.POST)
@@ -468,11 +473,16 @@ public class WxOrderController extends BaseController {
                         }
                         map.put("checkFlag", true);
                     } else {
+                        String eatFlag = map.get("eatFlag").toString().trim();
+                        if ("0".equals(eatFlag)) {
+                            map.put("eatFlagName", "不吃,已结束");
+                        } else {
+                            map.put("eatFlagName", "已吃,已结束");
+                        }
                         map.put("eatFlag", "3");
-                        map.put("eatFlagName", "已结束");
                         map.put("checkFlag", false);
                     }
-                    map.put("menuDetail",map.get("menuName") + "套餐:" + map.get("menuDetail"));
+                    map.put("menuDetail", map.get("menuName") + "套餐:" + map.get("menuDetail"));
                 }
 //          List<String> orderContentEatDateList = new ArrayList<>();
 //            if(mapList.size() != currentWeekEatDateList.size()){
@@ -520,7 +530,7 @@ public class WxOrderController extends BaseController {
     /**
      * @Description: 吃/不吃
      * @Param: mark:吃/不吃的标志 orderId:订单id date:日期
-     * @return: Map<String   ,       Object>
+     * @return: Map<String       ,               Object>
      * @Date: 2021/4/30
      */
     @RequestMapping(value = "chooseEatOrNoEat", method = RequestMethod.POST)
@@ -987,6 +997,45 @@ public class WxOrderController extends BaseController {
         }
 
         return returnMap;
+    }
+
+    /**
+     * 查询上周套餐排行
+     * @param pageSize
+     * @return
+     */
+    @RequestMapping(value = "findMenuRanking", method = RequestMethod.POST)
+    @ResponseBody
+    public Map<String, Object> findMenuRanking(@RequestParam("pageSize") Integer pageSize) {
+
+        Map<String, Object> returnMap = new HashMap<>();
+        //设置锁定资源名称
+        RLock lock = redissonClient.getLock("rankingLock");
+        try {
+            lock.lock();
+            List<String> lastWeekEatDate = TimeUtils.getLastWeekEatDate();
+            String eatDates = lastWeekEatDate.stream().collect(Collectors.joining(",")) + ",";
+            List<Map<String, Object>> menuRanking = orderVoService.findMenuRanking(eatDates, pageSize);
+            if (menuRanking.size()>0) {
+                returnMap.put("data", menuRanking);
+                returnMap.put("status", ConstantUtils.ResCode.SUCCESS);
+                returnMap.put("message", ConstantUtils.ResCode.SUCCESSMSG);
+            }else{
+                returnMap.put("data", null);
+                returnMap.put("status", ConstantUtils.ResCode.NODATA);
+                returnMap.put("message", ConstantUtils.ResCode.NODATAMSG);
+            }
+        } finally {
+            // 是否还是锁定状态
+            if (lock.isLocked()) {
+                // 是否是当前执行线程的锁
+                if (lock.isHeldByCurrentThread()) {
+                    lock.unlock(); // 释放锁
+                }
+            }
+        }
+        return returnMap;
+
     }
 
 

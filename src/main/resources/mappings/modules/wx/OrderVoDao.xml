@@ -48,4 +48,21 @@ WHERE
     </select>
 
 
+    <select id="findMenuRanking" resultType="java.util.Map">
+        SELECT EAT_DATE,EAT_WEEK,RESTAURANT_NAME, MENU_NAME,MENU_DETAIL,total from (
+        select so.`NAME` as RESTAURANT_NAME,pm.MENU_NAME,pmc.EAT_DATE,pmc.EAT_WEEK,pmc.MENU_DETAIL,count(pm.MENU_NAME)
+        as total from pz_order_content poc
+        LEFT JOIN pz_order po on poc.ORDER_ID=po.ID
+        LEFT JOIN pz_menu_content pmc on poc.CONTENT_ID=pmc.ID
+        LEFT JOIN pz_menu pm on pmc.MENU_ID=pm.ID
+        LEFT JOIN sys_office so on po.RESTAURANT_ID=so.id
+        where po.EAT_DATE=#{eatDates}
+        GROUP BY so.`NAME`,pm.MENU_NAME,pmc.MENU_DETAIL,pmc.EAT_DATE,pmc.EAT_WEEK) d ORDER BY d.total DESC
+        <if test="null != pageSize and ''!= pageSize">
+        limit #{pageSize}
+        </if>
+
+
+    </select>
+
 </mapper>

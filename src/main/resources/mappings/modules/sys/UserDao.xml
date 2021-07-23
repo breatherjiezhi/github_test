@@ -799,7 +799,7 @@
         LEFT JOIN sys_office so on a.OFFICE_ID=so.id
 		LEFT JOIN pz_order poo ON poo.USER_ID=a.ID
         WHERE
-        r.ENNAME = 'staff'
+        r.ENNAME = 'staff' and a.DEL_FLAG='0'
         <if test="null != officeId and '' != officeId"> AND so.PARENT_ID=#{officeId}</if>
         AND poo.ID is NOT NULL AND po.id is NULL
     </select>

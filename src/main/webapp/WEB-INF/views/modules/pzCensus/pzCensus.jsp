@@ -287,8 +287,9 @@
                     type: 'post',
                     dataType: 'json',
                     async: true,
+                    timeout:0,
                     beforeSend: function () {
-                        $("body").append('<div id="load" style="position: fixed; top: 0; left: 0;  width: 100%; height: 100%; background: rgba(0, 0, 0, 0.2); z-index: 15000; opacity:0.2; filter: alpha(opacity=40);">' +
+                        $("body").append('<div id="load" style="position: fixed; top: 0; left: 0;  width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); z-index: 15000; opacity:0.2; filter: alpha(opacity=40);">' +
                             '<img style="position: absolute; top: 50%; left: 50%; width: 60px; height: 60px; margin-top: -15px; margin-left: -15px;" src="${ctxStatic}/images/loading.gif"></div>');
                     },
                     complete: function () {

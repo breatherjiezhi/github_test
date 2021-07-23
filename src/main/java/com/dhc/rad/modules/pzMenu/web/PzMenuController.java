@@ -120,6 +120,14 @@ public class PzMenuController extends BaseController {
         Integer flag = 0;
         User user = UserUtils.getUser();
 
+        //TODO:获取当前时间下一周吃饭时间集合
+        List<String> nextWeekDateList = TimeUtils.getNextWeekEatDate();
+
+        if (nextWeekDateList.size() == 0) {
+            addMessageAjax(returnMap, "0", "下周均为放假时间，无需上菜单");
+            return returnMap;
+        }
+
         if (StringUtils.isEmpty(pzMenu.getMenuName())) {
             addMessageAjax(returnMap, "0", pzMenu.getMenuName() + "不能为空！！！");
             return returnMap;

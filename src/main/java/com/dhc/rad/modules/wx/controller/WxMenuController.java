@@ -1,3 +1,4 @@
+/*
 package com.dhc.rad.modules.wx.controller;
 
 
@@ -304,3 +305,4 @@ public class WxMenuController {
 
 
 }
+*/

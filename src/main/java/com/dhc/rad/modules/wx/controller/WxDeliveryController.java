@@ -1,3 +1,4 @@
+/*
 package com.dhc.rad.modules.wx.controller;
 
 
@@ -30,9 +31,11 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
+*/
 /**
  * @author 10951
- */
+ *//*
+
 @Controller
 @RequestMapping(value = "${adminPath}/wx/wxDelivery")
 public class WxDeliveryController {
@@ -54,12 +57,14 @@ public class WxDeliveryController {
 
     private static final RedissonClient redissonClient = RedissonUtils.getRedissonClient(2);
 
-    /**
+    */
+/**
      * @Description: 根据箱子编码和服务单元存储配送信息
      * @Param: boxCode serviceUintId
      * @return: Map<String   ,       Object>
      * @Date: 2021/5/7
-     */
+     *//*
+
     @RequestMapping(value = "saveByBoxIdAndServiceUintId", method = RequestMethod.POST)
     @ResponseBody
     public Map<String, Object> saveByBoxIdAndServiceUintId(@RequestParam("boxId") String boxId, @RequestParam("serviceUnitIdStr") String serviceUnitIdStr) {
@@ -322,3 +327,4 @@ public class WxDeliveryController {
 
 
 }
+*/

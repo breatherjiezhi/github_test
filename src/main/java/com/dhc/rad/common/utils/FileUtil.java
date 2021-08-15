@@ -1,7 +1,6 @@
 package com.dhc.rad.common.utils;
 
 import com.dhc.rad.common.config.Global;
-import com.dhc.rad.common.utils.convertUtils.Doc2PdfUtil;
 import com.dhc.rad.common.utils.convertUtils.PathUtil;
 import com.dhc.rad.common.web.Result;
 import org.springframework.stereotype.Service;
@@ -326,7 +325,7 @@ public class FileUtil {
             if(pdfFile.exists())//pdf文件存在则删除
                 pdfFile.delete();
             //转换
-            Doc2PdfUtil.convert2PDF(word, pdfFile);
+           // Doc2PdfUtil.convert2PDF(word, pdfFile);
         }else{
             System.out.println("要转换的文件不存在");
 
@@ -346,7 +345,7 @@ public class FileUtil {
             if(pdfFile.exists())//pdf文件存在则删除
                 pdfFile.delete();
             //转换
-            Doc2PdfUtil.convert2PDF(word, pdfFile);
+           // Doc2PdfUtil.convert2PDF(word, pdfFile);
         }else{
             System.out.println("要转换的文件不存在");
 

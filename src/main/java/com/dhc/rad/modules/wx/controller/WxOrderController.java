@@ -1,3 +1,4 @@
+/*
 package com.dhc.rad.modules.wx.controller;
 
 import com.dhc.rad.common.config.Global;
@@ -43,9 +44,11 @@ import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 
+*/
 /**
  * @author 10951
- */
+ *//*
+
 @Controller
 @RequestMapping(value = "${adminPath}/wx/wxOrder")
 public class WxOrderController extends BaseController {
@@ -81,12 +84,14 @@ public class WxOrderController extends BaseController {
     private static final RedissonClient redissonClient = RedissonUtils.getRedissonClient(1);
 
 
-    /**
+    */
+/**
      * @Description: 订餐功能
      * @Param: menuId：套餐id
      * @return: Map<String       ,               Object>
      * @Date: 2021/5/6
-     */
+     *//*
+
     @RequestMapping(value = "orderMenu", method = RequestMethod.POST)
     @ResponseBody
     public Map<String, Object> orderMenu(@RequestParam("contentIdStr") String contentIdStr) {
@@ -166,8 +171,10 @@ public class WxOrderController extends BaseController {
                 // 2.查询pz_order_content中该用户不吃的条数 = 需要扣除对应个人餐厅积分数（需要判断个人餐厅积分是否足够）
                 String restaurantId = order.getRestaurantId();
 //                String contentId = contentIds.get(0);
-               /* PzMenuContent pzMenuContent = pzMenuContentService.get(contentId);
-                PzMenu pzMenu = pzMenuService.get(pzMenuContent.getMenuId());*/
+               */
+/* PzMenuContent pzMenuContent = pzMenuContentService.get(contentId);
+                PzMenu pzMenu = pzMenuService.get(pzMenuContent.getMenuId());*//*
+
                 PzUserScore userScore = pzUserScoreService.getByUserIdAndRestaurantId(userId, restaurantId);
                 Integer eatFlagFalseCount = pzOrderContentService.findCountByOrderId(orderId, userId, "0");
                 if (userScore != null) {
@@ -304,12 +311,14 @@ public class WxOrderController extends BaseController {
     }
 
 
-    /**
+    */
+/**
      * @Description: 查询当前用户下一周的订餐信息
      * @Param: null
      * @return: Map<String       ,               Object>
      * @Date: 2021/4/29
-     */
+     *//*
+
     @RequestMapping(value = "findOrderNextWeek", method = RequestMethod.POST)
     @ResponseBody
     public Map<String, Object> findOrderNextWeekById() {
@@ -404,12 +413,14 @@ public class WxOrderController extends BaseController {
     }
 
 
-    /**
+    */
+/**
      * @Description: 查询当前用户当前周的订餐信息
      * @Param: null
      * @return: Map<String       ,               Object>
      * @Date: 2021/4/29
-     */
+     *//*
+
     @RequestMapping(value = "findOrderCurrentWeek", method = RequestMethod.POST)
     @ResponseBody
     public Map<String, Object> findOrderCurrentWeek() {
@@ -527,12 +538,14 @@ public class WxOrderController extends BaseController {
     }
 
 
-    /**
+    */
+/**
      * @Description: 吃/不吃
      * @Param: mark:吃/不吃的标志 orderId:订单id date:日期
      * @return: Map<String       ,               Object>
      * @Date: 2021/4/30
-     */
+     *//*
+
     @RequestMapping(value = "chooseEatOrNoEat", method = RequestMethod.POST)
     @ResponseBody
     public Map<String, Object> chooseEatOrNoEat(@RequestParam("mark") String mark, @RequestParam("contentId") String contentId) {
@@ -792,11 +805,13 @@ public class WxOrderController extends BaseController {
     }
 
 
-    /**
+    */
+/**
      * 部门管理员批量给本部门人订餐
      *
      * @return
-     */
+     *//*
+
     @RequestMapping(value = "batchOrderByUser", method = RequestMethod.POST)
     @ResponseBody
     public Map<String, Object> batchOrderByUser() {
@@ -999,11 +1014,13 @@ public class WxOrderController extends BaseController {
         return returnMap;
     }
 
-    /**
+    */
+/**
      * 查询上周套餐排行
      * @param pageSize
      * @return
-     */
+     *//*
+
     @RequestMapping(value = "findMenuRanking", method = RequestMethod.POST)
     @ResponseBody
     public Map<String, Object> findMenuRanking(@RequestParam("pageSize") Integer pageSize) {
@@ -1040,3 +1057,4 @@ public class WxOrderController extends BaseController {
 
 
 }
+*/

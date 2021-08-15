@@ -1,3 +1,4 @@
+/*
 package com.dhc.rad.common.utils.convertUtils;
 
 import org.apache.log4j.Logger;
@@ -70,3 +71,4 @@ public class Doc2PdfUtil {
 
 
 }
+*/

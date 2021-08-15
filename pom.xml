@@ -1049,7 +1049,7 @@
 				<configuration>
 					<connectors>
 						<connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector">
-							<port>${webserver.port}</port>
+							<port>8888</port>
 						</connector>
 					</connectors>
 					<webAppConfig>
